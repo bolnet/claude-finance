@@ -33,3 +33,6 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "-q --tb=short"
+markers = [
+    "network: marks tests that require live network access (Yahoo Finance, etc.)",
+]
