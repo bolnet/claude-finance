@@ -95,7 +95,7 @@ Plans:
 | 3. ML Workflow Tools | v1.0 | 5/5 | Complete | 2026-03-18 |
 | 4. Web Publishing & Personas | v1.0 | 4/4 | Complete | 2026-03-18 |
 | 5. Demo Command & Flow | v1.1 | 2/2 | Complete | 2026-03-18 |
-| 6. Market Analysis Demos | v1.1 | 0/2 | Not started | - |
+| 6. Market Analysis Demos | 1/2 | In Progress|  | - |
 | 7. ML Workflow Demos | v1.1 | 0/3 | Not started | - |
 | 8. Persona Demos | v1.1 | 0/2 | Not started | - |
 

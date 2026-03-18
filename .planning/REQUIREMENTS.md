@@ -16,12 +16,12 @@ Requirements for the interactive demo milestone. Each maps to roadmap phases.
 
 ### Market Analysis Demos
 
-- [ ] **MRKT-01**: Demo runs `analyze_stock` with a live ticker (e.g. AAPL) and shows price chart
-- [ ] **MRKT-02**: Demo runs `get_returns` and explains daily/cumulative return output
-- [ ] **MRKT-03**: Demo runs `get_volatility` and explains annualized volatility
-- [ ] **MRKT-04**: Demo runs `get_risk_metrics` and explains Sharpe/drawdown/beta
-- [ ] **MRKT-05**: Demo runs `compare_tickers` with two tickers (e.g. AAPL vs MSFT)
-- [ ] **MRKT-06**: Demo runs `correlation_map` and explains the heatmap
+- [x] **MRKT-01**: Demo runs `analyze_stock` with a live ticker (e.g. AAPL) and shows price chart
+- [x] **MRKT-02**: Demo runs `get_returns` and explains daily/cumulative return output
+- [x] **MRKT-03**: Demo runs `get_volatility` and explains annualized volatility
+- [x] **MRKT-04**: Demo runs `get_risk_metrics` and explains Sharpe/drawdown/beta
+- [x] **MRKT-05**: Demo runs `compare_tickers` with two tickers (e.g. AAPL vs MSFT)
+- [x] **MRKT-06**: Demo runs `correlation_map` and explains the heatmap
 
 ### ML Workflow Demos
 
@@ -63,12 +63,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DEMO-02 | Phase 5 | Complete |
 | DEMO-03 | Phase 5 | Complete |
 | DEMO-04 | Phase 5 | Complete |
-| MRKT-01 | Phase 6 | Pending |
-| MRKT-02 | Phase 6 | Pending |
-| MRKT-03 | Phase 6 | Pending |
-| MRKT-04 | Phase 6 | Pending |
-| MRKT-05 | Phase 6 | Pending |
-| MRKT-06 | Phase 6 | Pending |
+| MRKT-01 | Phase 6 | Complete |
+| MRKT-02 | Phase 6 | Complete |
+| MRKT-03 | Phase 6 | Complete |
+| MRKT-04 | Phase 6 | Complete |
+| MRKT-05 | Phase 6 | Complete |
+| MRKT-06 | Phase 6 | Complete |
 | MLWF-01 | Phase 7 | Pending |
 | MLWF-02 | Phase 7 | Pending |
 | MLWF-03 | Phase 7 | Pending |

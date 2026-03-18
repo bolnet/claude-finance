@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Interactive Demo
 status: planning
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-03-18T14:54:58.382Z"
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-18T15:10:24.976Z"
 last_activity: 2026-03-18 — v1.1 roadmap created
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 4
+  completed_plans: 3
   percent: 0
 ---
 
@@ -57,6 +57,7 @@ Phase 8: [ ] [ ]
 *v1.1 metrics will populate after plans complete*
 | Phase 05-demo-command-flow P01 | 13 | 2 tasks | 2 files |
 | Phase 05-demo-command-flow P02 | 15 | 2 tasks | 1 files |
+| Phase 06-market-analysis-demos P01 | 3 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -105,6 +106,8 @@ Recent decisions affecting current work:
 - [Phase 05-demo-command-flow]: /demo takes no arguments — self-running walkthrough with pause-and-explain, CSV skip logic for Steps 9-11
 - [Phase 05-demo-command-flow]: All 13 MCP function names in allowed-tools (13 functions = 11 logical tools; pairs counted as one logical tool)
 - [Phase 05-demo-command-flow]: Frontmatter parser splits on first two --- delimiters only — body can contain --- horizontal rule without breaking slash command tests
+- [Phase 06-market-analysis-demos]: demo.md Steps 3-8 use start: [N days before today, YYYY-MM-DD format] dynamic instruction pattern — computes dates at Claude runtime
+- [Phase 06-market-analysis-demos]: xfail used as CI gate for network tests — tests degrade gracefully when Yahoo Finance unreachable, xpassed when live
 
 ### Pending Todos
 
@@ -116,6 +119,6 @@ None — v1.0 complete. v1.1 roadmap ready.
 
 ## Session Continuity
 
-Last session: 2026-03-18T14:52:01.379Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-03-18T15:10:15.630Z
+Stopped at: Completed 06-01-PLAN.md
 Resume file: None
