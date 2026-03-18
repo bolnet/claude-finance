@@ -26,9 +26,9 @@ Requirements for the interactive demo milestone. Each maps to roadmap phases.
 ### ML Workflow Demos
 
 - [x] **MLWF-01**: Bundled sample CSV file ships with the project for demo use
-- [ ] **MLWF-02**: Demo runs `ingest_csv` on the sample CSV and shows cleaning/EDA output
-- [ ] **MLWF-03**: Demo runs `predict_liquidity` (train + predict) and explains regression results
-- [ ] **MLWF-04**: Demo runs `classify_investor` (train + predict) and explains classification results
+- [x] **MLWF-02**: Demo runs `ingest_csv` on the sample CSV and shows cleaning/EDA output
+- [x] **MLWF-03**: Demo runs `predict_liquidity` (train + predict) and explains regression results
+- [x] **MLWF-04**: Demo runs `classify_investor` (train + predict) and explains classification results
 
 ### Persona Demos
 
@@ -70,9 +70,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MRKT-05 | Phase 6 | Complete |
 | MRKT-06 | Phase 6 | Complete |
 | MLWF-01 | Phase 7 | Complete |
-| MLWF-02 | Phase 7 | Pending |
-| MLWF-03 | Phase 7 | Pending |
-| MLWF-04 | Phase 7 | Pending |
+| MLWF-02 | Phase 7 | Complete |
+| MLWF-03 | Phase 7 | Complete |
+| MLWF-04 | Phase 7 | Complete |
 | PERS-01 | Phase 8 | Pending |
 | PERS-02 | Phase 8 | Pending |
 | PERS-03 | Phase 8 | Pending |
