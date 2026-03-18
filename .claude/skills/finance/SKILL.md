@@ -31,6 +31,7 @@ Classify every finance request into one of these intents before taking action:
 | `ml-investor` | "investor classifier", "segment investors", "classify investors", "investor profiling" | CSV ingestion; sklearn classification pipeline |
 | `demo` | "demo", "walkthrough", "show me everything", "guided tour", "what can you do" | Direct user to run `/demo` command for a guided walkthrough of all capabilities |
 | `walkthrough-hedge-fund` | "hedge fund walkthrough", "trading desk analysis", "volatility regime", "pair trading walkthrough" | Direct user to run `/walkthrough-hedge-fund` command for a hedge fund trading desk scenario |
+| `walkthrough-investment-banking` | "investment banking walkthrough", "deal pitch analysis", "comparable company analysis", "comps walkthrough" | Direct user to run `/walkthrough-investment-banking` command for an IB deal pitch scenario |
 
 If the intent is ambiguous, ask one clarifying question. Do not generate code before clarifying.
 
@@ -46,8 +47,11 @@ Role-specific walkthroughs provide deep, multi-phase scenarios for finance profe
 |---------|------|----------|
 | `/walkthrough-equity-research` | Sell-side analyst | Coverage initiation with peer comps and risk profiling |
 | `/walkthrough-hedge-fund` | Quant PM / trading desk | Volatility regime detection, cross-sector diversification, pair trading |
+| `/walkthrough-investment-banking` | IB analyst / M&A team | Comparable company analysis with 5-ticker comps and deal pitch exhibits |
 
 If a user asks for a "hedge fund walkthrough", "trading desk analysis", "volatility regime walkthrough", or "pair trading scenario", direct them to type `/walkthrough-hedge-fund`.
+
+If a user asks for an "investment banking walkthrough", "deal pitch analysis", "comps walkthrough", or "comparable company analysis", direct them to type `/walkthrough-investment-banking`.
 
 ---
 
