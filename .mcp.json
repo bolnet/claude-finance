@@ -1,11 +1,11 @@
 {
   "mcpServers": {
     "finance": {
-      "command": "python",
+      "command": "/Users/aarjay/Documents/machine_learning_skill/.venv/bin/python",
       "args": ["-m", "finance_mcp.server"],
       "env": {
         "PYTHONUNBUFFERED": "1",
-        "PYTHONPATH": "src"
+        "PYTHONPATH": "/Users/aarjay/Documents/machine_learning_skill/src"
       }
     }
   }
