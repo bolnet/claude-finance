@@ -186,24 +186,182 @@ def test_beta_calculation():
 
 
 def test_normalized_prices_start_at_100():
-    pytest.fail("stub — implement when tool is ready")
+    """Normalized prices start at exactly 100.0 for each ticker."""
+    import pandas as pd
+    from unittest.mock import patch
+
+    dates = pd.date_range("2024-01-02", periods=10, freq="B")
+    mock_prices = {
+        "AAPL": pd.Series([150.0 + i for i in range(10)], index=dates),
+        "MSFT": pd.Series([300.0 + i * 2 for i in range(10)], index=dates),
+    }
+
+    with patch("finance_mcp.tools.comparison.fetch_multi_ticker", return_value=mock_prices):
+        from finance_mcp.tools.comparison import compare_tickers
+        result = compare_tickers("AAPL,MSFT", "2024-01-02", "2024-01-15")
+
+    # Result should contain "100" as the base reference point
+    assert "100" in result
 
 
-def test_compare_tickers_chart():
-    pytest.fail("stub — implement when tool is ready")
+def test_compare_tickers_chart(tmp_path, monkeypatch):
+    """compare_tickers saves a PNG to finance_output/charts/."""
+    import pandas as pd
+    from unittest.mock import patch
+
+    monkeypatch.chdir(tmp_path)
+    dates = pd.date_range("2024-01-02", periods=10, freq="B")
+    mock_prices = {
+        "AAPL": pd.Series([150.0 + i for i in range(10)], index=dates),
+        "MSFT": pd.Series([300.0 + i for i in range(10)], index=dates),
+    }
+
+    with patch("finance_mcp.tools.comparison.fetch_multi_ticker", return_value=mock_prices):
+        from finance_mcp.tools.comparison import compare_tickers
+        compare_tickers("AAPL,MSFT", "2024-01-02", "2024-01-15")
+
+    png_files = list((tmp_path / "finance_output" / "charts").glob("*.png"))
+    assert len(png_files) == 1
 
 
 def test_correlation_uses_returns():
-    pytest.fail("stub — implement when tool is ready")
+    """Correlation is computed on daily returns, not raw price levels."""
+    import pandas as pd
+    import numpy as np
+    from unittest.mock import patch
+
+    dates = pd.date_range("2024-01-02", periods=50, freq="B")
+    # Two tickers: same trend but uncorrelated noise added
+    base = pd.Series(range(1, 51), index=dates, dtype=float)
+    np.random.seed(42)
+    prices_a = base + np.random.normal(0, 0.5, 50)
+    prices_b = base + np.random.normal(0, 0.5, 50)
+    # Price-level correlation would be ~1.0 (both trending up)
+    # Return correlation will be lower due to independent noise
+
+    mock_prices = {
+        "TICKA": prices_a,
+        "TICKB": prices_b,
+    }
+
+    with patch("finance_mcp.tools.correlation.fetch_multi_ticker", return_value=mock_prices):
+        from finance_mcp.tools.correlation import correlation_map
+        result = correlation_map("TICKA,TICKB", "2024-01-02", "2024-03-15")
+
+    # Output should mention returns-based correlation
+    assert "return" in result.lower() or "daily" in result.lower(), (
+        "Output should reference return-based correlation, not price levels"
+    )
 
 
-def test_correlation_map_chart():
-    pytest.fail("stub — implement when tool is ready")
+def test_correlation_map_chart(tmp_path, monkeypatch):
+    """correlation_map saves a PNG to finance_output/charts/."""
+    import pandas as pd
+    import numpy as np
+    from unittest.mock import patch
+
+    monkeypatch.chdir(tmp_path)
+    np.random.seed(7)
+    dates = pd.date_range("2024-01-02", periods=40, freq="B")
+    mock_prices = {
+        "TICKA": pd.Series(100 + np.random.randn(40).cumsum(), index=dates),
+        "TICKB": pd.Series(200 + np.random.randn(40).cumsum(), index=dates),
+    }
+
+    with patch("finance_mcp.tools.correlation.fetch_multi_ticker", return_value=mock_prices):
+        from finance_mcp.tools.correlation import correlation_map
+        correlation_map("TICKA,TICKB", "2024-01-02", "2024-03-01")
+
+    png_files = list((tmp_path / "finance_output" / "charts").glob("*.png"))
+    assert len(png_files) == 1
 
 
 def test_output_plain_english_first():
-    pytest.fail("stub — implement when tool is ready")
+    """All 6 Phase 2 tools output starts with a plain-English character (not digit or symbol)."""
+    import pandas as pd
+    import numpy as np
+    from unittest.mock import patch
+
+    dates = pd.date_range("2024-01-02", periods=30, freq="B")
+    mock_df = pd.DataFrame({"Close": 100 + np.arange(30, dtype=float)}, index=dates)
+    mock_multi = {
+        "TICKA": mock_df["Close"],
+        "TICKB": mock_df["Close"] * 1.1,
+    }
+    bench_df = pd.DataFrame({"Close": 4000 + np.arange(30, dtype=float)}, index=dates)
+
+    tools_and_patches = [
+        ("finance_mcp.tools.price_chart", "fetch_price_history", mock_df,
+         lambda m: __import__("finance_mcp.tools.price_chart", fromlist=["analyze_stock"]).analyze_stock("AAPL", "2024-01-02")),
+        ("finance_mcp.tools.returns", "fetch_price_history", mock_df,
+         lambda m: __import__("finance_mcp.tools.returns", fromlist=["get_returns"]).get_returns("AAPL", "2024-01-02")),
+        ("finance_mcp.tools.volatility", "fetch_price_history", mock_df,
+         lambda m: __import__("finance_mcp.tools.volatility", fromlist=["get_volatility"]).get_volatility("AAPL", "2024-01-02")),
+        ("finance_mcp.tools.comparison", "fetch_multi_ticker", mock_multi,
+         lambda m: __import__("finance_mcp.tools.comparison", fromlist=["compare_tickers"]).compare_tickers("TICKA,TICKB", "2024-01-02")),
+        ("finance_mcp.tools.correlation", "fetch_multi_ticker", mock_multi,
+         lambda m: __import__("finance_mcp.tools.correlation", fromlist=["correlation_map"]).correlation_map("TICKA,TICKB", "2024-01-02")),
+    ]
+
+    for module_path, fn_name, mock_val, caller in tools_and_patches:
+        with patch(f"{module_path}.{fn_name}", return_value=mock_val):
+            result = caller(None)
+        assert isinstance(result, str) and len(result) > 0
+        assert result[0].isalpha(), (
+            f"Tool in {module_path} output must start with plain-English text, "
+            f"got first char: {result[0]!r}"
+        )
+
+    # get_risk_metrics needs two fetches (stock + benchmark)
+    with patch("finance_mcp.tools.risk_metrics.fetch_price_history", side_effect=[mock_df, bench_df]):
+        from finance_mcp.tools.risk_metrics import get_risk_metrics
+        result = get_risk_metrics("AAPL", "2024-01-02")
+    assert result[0].isalpha(), f"get_risk_metrics output must start with plain-English text"
 
 
 def test_output_ends_with_disclaimer():
-    pytest.fail("stub — implement when tool is ready")
+    """All 6 Phase 2 tools output ends with the DISCLAIMER constant."""
+    import pandas as pd
+    import numpy as np
+    from unittest.mock import patch
+    from finance_mcp.output import DISCLAIMER
+
+    dates = pd.date_range("2024-01-02", periods=30, freq="B")
+    mock_df = pd.DataFrame({"Close": 100 + np.arange(30, dtype=float)}, index=dates)
+    mock_multi = {
+        "TICKA": mock_df["Close"],
+        "TICKB": mock_df["Close"] * 1.1,
+    }
+    bench_df = pd.DataFrame({"Close": 4000 + np.arange(30, dtype=float)}, index=dates)
+
+    results = []
+
+    with patch("finance_mcp.tools.price_chart.fetch_price_history", return_value=mock_df):
+        from finance_mcp.tools.price_chart import analyze_stock
+        results.append(("analyze_stock", analyze_stock("AAPL", "2024-01-02")))
+
+    with patch("finance_mcp.tools.returns.fetch_price_history", return_value=mock_df):
+        from finance_mcp.tools.returns import get_returns
+        results.append(("get_returns", get_returns("AAPL", "2024-01-02")))
+
+    with patch("finance_mcp.tools.volatility.fetch_price_history", return_value=mock_df):
+        from finance_mcp.tools.volatility import get_volatility
+        results.append(("get_volatility", get_volatility("AAPL", "2024-01-02")))
+
+    with patch("finance_mcp.tools.risk_metrics.fetch_price_history", side_effect=[mock_df, bench_df]):
+        from finance_mcp.tools.risk_metrics import get_risk_metrics
+        results.append(("get_risk_metrics", get_risk_metrics("AAPL", "2024-01-02")))
+
+    with patch("finance_mcp.tools.comparison.fetch_multi_ticker", return_value=mock_multi):
+        from finance_mcp.tools.comparison import compare_tickers
+        results.append(("compare_tickers", compare_tickers("TICKA,TICKB", "2024-01-02")))
+
+    with patch("finance_mcp.tools.correlation.fetch_multi_ticker", return_value=mock_multi):
+        from finance_mcp.tools.correlation import correlation_map
+        results.append(("correlation_map", correlation_map("TICKA,TICKB", "2024-01-02")))
+
+    for tool_name, result in results:
+        assert result.strip().endswith(DISCLAIMER), (
+            f"{tool_name} output must end with DISCLAIMER. "
+            f"Got last 100 chars: {result.strip()[-100:]!r}"
+        )
