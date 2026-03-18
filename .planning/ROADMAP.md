@@ -95,10 +95,10 @@ Plans:
   2. Tests validate that each walkthrough file references the expected MCP tools for its scenario
   3. Tests validate that each walkthrough has the required phase structure (multi-phase scenario sections present)
   4. `pytest` passes with 0 failures across all 5 walkthrough test files
-**Plans**: TBD
+**Plans:** 1 plan
 
 Plans:
-- [ ] 12-01: Test files for all 5 walkthroughs — structure validation, tool coverage assertions, pytest integration
+- [ ] 12-01-PLAN.md — Test files for all 5 walkthroughs: structure validation, tool coverage assertions, pytest integration
 
 ## Progress
 
