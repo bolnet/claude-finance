@@ -1,0 +1,4 @@
+credit_score,debt_ratio,region,liquidity_risk
+720,0.35,North,0.3
+580,0.55,East,0.6
+800,0.25,West,0.2
