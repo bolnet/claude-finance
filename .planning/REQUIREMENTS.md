@@ -1,87 +1,93 @@
-# Requirements: Finance AI Skill — v1.2 Role Walkthroughs
+# Requirements: Finance AI Skill — v1.3 GitHub Pages Site
 
 **Defined:** 2026-03-18
 **Core Value:** Finance professionals get professional-grade analysis by describing what they want — the skill writes, runs, and interprets the code for them.
 
-## v1.2 Requirements
+## v1.3 Requirements
 
-Requirements for 5 remaining role-based walkthrough slash commands. Each follows the equity research pattern: multi-phase, auto-running scenario using existing MCP tools with role-specific framing.
+Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 
-### Hedge Fund / Trading Desk
+### Infrastructure
 
-- [x] **HF-01**: User can run `/walkthrough-hedge-fund` for a multi-phase volatility regime and pair trading scenario
-- [x] **HF-02**: Walkthrough covers volatility regime detection across market conditions
-- [x] **HF-03**: Walkthrough covers cross-sector diversification analysis
-- [x] **HF-04**: Walkthrough covers correlation-based pair identification
+- [ ] **INFRA-01**: Site deploys from `docs/` folder on main branch with `.nojekyll` file
+- [ ] **INFRA-02**: Shared HTML template (head, nav bar, footer) used by all pages
+- [ ] **INFRA-03**: All pages are mobile responsive with proper viewport meta
+- [ ] **INFRA-04**: Social card (OG meta image) displays when site is shared on LinkedIn/Twitter
 
-### Investment Banking
+### Landing Page
 
-- [x] **IB-01**: User can run `/walkthrough-investment-banking` for a comparable company analysis scenario
-- [x] **IB-02**: Walkthrough covers 5-ticker comps with relative valuation framing
-- [x] **IB-03**: Walkthrough covers relative performance analysis for deal pitch materials
+- [ ] **LAND-01**: Hero section with finance-outcome headline and CTA targeting finance professionals
+- [ ] **LAND-02**: Real chart output visuals embedded as proof of capability
+- [ ] **LAND-03**: Role-based entry points linking to specific walkthrough sections ("I'm a hedge fund analyst")
+- [ ] **LAND-04**: Stats bar displaying key credibility numbers (11 tools, 6 walkthroughs, etc.)
 
-### FP&A Analyst
+### Features Page
 
-- [x] **FPA-01**: User can run `/walkthrough-fpa` for a data profiling and forecasting prep scenario
-- [x] **FPA-02**: Walkthrough covers CSV data profiling pipeline with target column identification
-- [x] **FPA-03**: Walkthrough covers ERP export cleanup and ML forecasting prep using liquidity predictor
+- [ ] **FEAT-01**: 11 MCP tools displayed organized by category (market analysis vs ML workflows)
+- [ ] **FEAT-02**: Visual examples (chart screenshots) for each tool category
 
-### Private Equity / VC
+### Walkthroughs Page
 
-- [x] **PE-01**: User can run `/walkthrough-private-equity` for a due diligence and portfolio monitoring scenario
-- [x] **PE-02**: Walkthrough covers due diligence scoring using investor classifier
-- [x] **PE-03**: Walkthrough covers multi-prospect comparison and portfolio company monitoring
+- [ ] **WALK-01**: 6 role cards with scenario descriptions and tool usage per role
+- [ ] **WALK-02**: Role-specific chart examples embedded per walkthrough card
 
-### Accounting / Controller
+### Getting Started Page
 
-- [x] **ACCT-01**: User can run `/walkthrough-accounting` for a transaction profiling and anomaly detection scenario
-- [x] **ACCT-02**: Walkthrough covers transaction data profiling via CSV ingestion
-- [x] **ACCT-03**: Walkthrough covers anomaly detection prep and ERP consolidation patterns
+- [ ] **START-01**: Claude Code installation path with copy-paste commands
+- [ ] **START-02**: claude.ai installation path with step-by-step instructions
 
-### Testing
+### Visual Assets
 
-- [x] **TEST-01**: Each walkthrough has a dedicated test file validating structure, phases, and MCP tool coverage
+- [ ] **VIS-01**: 6-8 best charts curated from `finance_output/charts/`
+- [ ] **VIS-02**: All site images web-optimized (800px wide, <150KB each)
+- [ ] **VIS-03**: Favicon for browser tab
 
 ## Future Requirements
 
-None — all 5 remaining walkthroughs scoped for this milestone.
+### Site Enhancements
+
+- **SITE-01**: Dark mode toggle
+- **SITE-02**: Animated hero section with chart transitions
+- **SITE-03**: Blog/changelog page for release notes
+- **SITE-04**: Custom domain (CNAME) configuration
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| New MCP tools | Walkthroughs reuse existing 11 tools |
-| Equity research walkthrough changes | Already shipped in v1.1 |
-| Real-time data feeds | Batch analysis only (existing constraint) |
-| Role-specific ML models | Reuse existing liquidity + investor models |
+| Live interactive demo | GitHub Pages is static; cannot run MCP server |
+| Testimonials section | No real user testimonials yet; placeholder quotes destroy credibility with finance audience |
+| Competitor comparison table | Invites scrutiny, looks defensive |
+| Analytics/tracking | Not needed for v1.3; revisit if custom domain added |
+| Jekyll/SSG build pipeline | Plain HTML is simpler and avoids version conflicts |
 
 ## Traceability
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| HF-01 | Phase 9 | Complete |
-| HF-02 | Phase 9 | Complete |
-| HF-03 | Phase 9 | Complete |
-| HF-04 | Phase 9 | Complete |
-| IB-01 | Phase 9 | Complete |
-| IB-02 | Phase 9 | Complete |
-| IB-03 | Phase 9 | Complete |
-| FPA-01 | Phase 10 | Complete |
-| FPA-02 | Phase 10 | Complete |
-| FPA-03 | Phase 10 | Complete |
-| PE-01 | Phase 11 | Complete |
-| PE-02 | Phase 11 | Complete |
-| PE-03 | Phase 11 | Complete |
-| ACCT-01 | Phase 10 | Complete |
-| ACCT-02 | Phase 10 | Complete |
-| ACCT-03 | Phase 10 | Complete |
-| TEST-01 | Phase 12 | Complete |
+| INFRA-01 | — | Pending |
+| INFRA-02 | — | Pending |
+| INFRA-03 | — | Pending |
+| INFRA-04 | — | Pending |
+| LAND-01 | — | Pending |
+| LAND-02 | — | Pending |
+| LAND-03 | — | Pending |
+| LAND-04 | — | Pending |
+| FEAT-01 | — | Pending |
+| FEAT-02 | — | Pending |
+| WALK-01 | — | Pending |
+| WALK-02 | — | Pending |
+| START-01 | — | Pending |
+| START-02 | — | Pending |
+| VIS-01 | — | Pending |
+| VIS-02 | — | Pending |
+| VIS-03 | — | Pending |
 
 **Coverage:**
-- v1.2 requirements: 17 total
-- Mapped to phases: 17
-- Unmapped: 0 ✓
+- v1.3 requirements: 17 total
+- Mapped to phases: 0
+- Unmapped: 17
 
 ---
 *Requirements defined: 2026-03-18*
-*Last updated: 2026-03-18 — traceability mapped after roadmap creation*
+*Last updated: 2026-03-18 after initial definition*
