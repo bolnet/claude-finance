@@ -80,11 +80,11 @@ Plans:
   1. User sees an analysis step delivered through `/finance-analyst` persona framing (Sharpe/drawdown emphasis, single-stock lens)
   2. User sees the same analysis delivered through `/finance-pm` persona framing (portfolio holdings lens, drawdown/beta lead)
   3. User sees an explicit side-by-side or sequential explanation of how the two personas interpret the same data differently
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 08-01: Persona demo steps — analyst and PM framing of shared analysis, contrast explanation
-- [ ] 08-02: Functional verification — full end-to-end demo run confirmed, human sign-off
+- [ ] 08-01-PLAN.md — Persona demo steps: replace text-only Persona Showcase with Steps 12-14 (analyst framing, PM framing, contrast table) plus structural tests
+- [ ] 08-02-PLAN.md — Functional verification: full test suite regression check and human sign-off on /demo Steps 12-14
 
 ## Progress
 
@@ -100,4 +100,4 @@ Plans:
 | 8. Persona Demos | v1.1 | 0/2 | Not started | - |
 
 ---
-*Last updated: 2026-03-18 — Phase 7 plans created*
+*Last updated: 2026-03-18 — Phase 8 plans created*
