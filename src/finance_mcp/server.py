@@ -13,8 +13,11 @@ import importlib
 
 from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError
+from finance_mcp.tools.price_chart import analyze_stock
 
 mcp = FastMCP("Finance MCP Server")
+
+mcp.add_tool(analyze_stock)
 
 
 @mcp.tool
