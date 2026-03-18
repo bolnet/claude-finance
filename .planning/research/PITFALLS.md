@@ -1,200 +1,235 @@
 # Pitfalls Research
 
-**Domain:** Finance AI Claude Code Skill (yfinance + scikit-learn + natural language interface)
-**Researched:** 2026-03-17
-**Confidence:** HIGH (finance data and ML pitfalls) / MEDIUM (Claude Code skill UX patterns — limited production examples in training data)
+**Domain:** GitHub Pages showcase site added to existing Python/ML project — targeting finance professionals (non-developers)
+**Researched:** 2026-03-18
+**Confidence:** HIGH (GitHub Pages deployment mechanics, web UX) / MEDIUM (finance professional conversion patterns — community sources, no direct A/B test data)
 
 ---
 
 ## Critical Pitfalls
 
-### Pitfall 1: Adjusted vs. Unadjusted Price Confusion
+### Pitfall 1: Broken Asset Paths Due to Project Page URL Prefix
 
 **What goes wrong:**
-yfinance returns split-adjusted and dividend-adjusted closing prices by default (`Close` column), but also provides `Adj Close`. Code that mixes these two columns — or presents raw `Close` as the price history without noting adjustments — produces misleading returns calculations. A 2-for-1 stock split makes it look like the stock dropped 50% overnight in unadjusted data. Users who don't know to ask will receive silently wrong numbers.
+GitHub Pages for a project repository (not a user/org root site) serves at `https://username.github.io/repo-name/`, not at root. Any asset path beginning with `/` (e.g., `href="/css/style.css"`, `src="/images/chart.png"`) resolves to `https://username.github.io/css/style.css` — missing the `/repo-name/` prefix — and returns a 404. Every page loads unstyled, images are broken, and navigation links 404. This is the single most common GitHub Pages deployment failure.
 
 **Why it happens:**
-Developers assume `Close` is already adjusted (it partially is, depending on yfinance version and the ticker). The semantics changed between yfinance 0.1.x and 0.2.x. Code written against older docs silently breaks. The skill generates code that may not pin this behavior explicitly.
+Developers write root-relative paths that work on `localhost` or a custom domain. The `/repo-name/` prefix is invisible during local development. The problem only surfaces after deployment, and the symptom (unstyled pages, broken images) looks like a CSS bug, not a path bug.
 
 **How to avoid:**
-- Always use `Adj Close` explicitly for any return or performance calculation, never `Close`.
-- Add a column presence check: if `Adj Close` is missing from the DataFrame, raise a clear error rather than silently falling back to `Close`.
-- Include a comment in every generated code block stating which column is used and why.
-- Document for the user: "Prices are split and dividend adjusted as of [date]."
+Use strictly relative paths for all assets: `./css/style.css` from the same directory, `../css/style.css` from a subdirectory. Alternatively, set a `<base href="/repo-name/">` tag in the `<head>` of every HTML page and use root-relative paths consistently. If using Jekyll, configure `baseurl: /repo-name` in `_config.yml`. Test the deployed URL — not localhost — before marking phase complete.
 
 **Warning signs:**
-- Overnight price drops of 30–90% in historical charts that don't match news.
-- Returns that look implausibly good or bad around earnings dates.
-- Correlation calculations that look wrong because one series is adjusted and another isn't.
+- Styles load locally but disappear after `git push`
+- Browser DevTools shows 404s for CSS/JS/image files at paths missing the repo name
+- Navigation links work on the homepage but 404 from any subdirectory page
 
 **Phase to address:**
-Phase 1 (core data fetch module). Bake the correct column selection into the data-fetch helper function before any analysis workflow is built on top.
+Phase 1 (site scaffolding and deployment setup). Establish the correct base path convention before a single page is written. Fixing this after content is complete requires touching every `href` and `src` across all pages.
 
 ---
 
-### Pitfall 2: Look-Ahead Bias in ML Feature Engineering
+### Pitfall 2: Jekyll Processing Conflicts with Python Project Files
 
 **What goes wrong:**
-When building the liquidity predictor or investor classifier, features are accidentally constructed using information that would not have been available at prediction time. Classic examples: using the target variable's future value in a lag calculation, computing normalization statistics (mean, std) on the full dataset before train/test split, or using a `fillna(method='ffill')` that fills test data with values that leaked from future training rows.
+GitHub Pages runs Jekyll by default on every repository, even when you want plain HTML. Jekyll has specific reserved directories: folders starting with `_` are processed as Jekyll source. The existing Python project has directories like `src/`, `finance_output/`, and test output that Jekyll may misinterpret, slow down, or fail on. More critically, Jekyll will not serve files in directories starting with `_` or `.`, which includes `.planning/` — fine for privacy, but unexpected. If the site accidentally references any Python source files, Jekyll errors can silently prevent the entire site from building.
 
 **Why it happens:**
-The sklearn `Pipeline` pattern is meant to prevent this, but only when `.fit()` is called exclusively on training data. If a developer fits a `StandardScaler` on `X` before splitting, the scaler has seen the test set. This is a subtle mistake that is trivially easy to make and produces optimistic, unreproducible results.
+Developers assume GitHub Pages is a simple file host. The Jekyll processing layer is invisible until it breaks something. Python projects contain files (`.py`, `__pycache__`, `*.pyc`) that Jekyll either ignores or chokes on depending on configuration.
 
 **How to avoid:**
-- ALWAYS split first, then fit transformers on training data only. Order: `train_test_split` → `Pipeline.fit(X_train, y_train)` → `Pipeline.predict(X_test)`.
-- Never call `.fit_transform()` on the full dataset. Call `.fit_transform(X_train)` then `.transform(X_test)`.
-- For time series data, use `TimeSeriesSplit` from sklearn instead of random `train_test_split`, which preserves temporal order.
-- Add a code comment in every generated pipeline stating the split order explicitly.
+Add a `.nojekyll` file to the `docs/` folder root (or the branch root if using a `gh-pages` branch). This disables Jekyll processing entirely and makes GitHub Pages serve the `docs/` directory as a pure static file server. No `_config.yml` needed, no Liquid template gotchas, no build failures from Python project structure. Pure HTML/CSS/JS in the `docs/` folder is the correct approach for this project.
 
 **Warning signs:**
-- Model accuracy on test data is suspiciously close to training accuracy (gap < 1%).
-- Model performs perfectly on historical data but fails on new data.
-- Cross-validation scores are much better than walk-forward validation scores.
+- GitHub Pages build logs show Jekyll errors or warnings
+- Pages fail to build with no obvious HTML error
+- Python source files appear in the served site or cause 404s upstream
 
 **Phase to address:**
-Phase 2 (ML workflows — liquidity predictor and investor classifier). Must be a design constraint from the first line of the ML modules, not a retrofit.
+Phase 1 (repository and deployment setup). Add `.nojekyll` as the very first file committed to `docs/`. Verify in GitHub repo Settings → Pages that the build source is set to the correct branch and folder before writing any HTML.
 
 ---
 
-### Pitfall 3: Non-Stationarity of Financial Time Series
+### Pitfall 3: Messaging Written for Developers, Not Finance Professionals
 
 **What goes wrong:**
-Linear regression and classification models assume that the statistical properties of features (mean, variance, correlations) are stable over time. Stock prices and most raw financial series are non-stationary — they have trends, regime changes, and heteroscedastic volatility. A model trained on 2019–2022 data will have learned patterns from a low-rate, high-growth regime that do not hold in 2023's rate-shock environment. The skill generates models that appear to work but extrapolate dangerously.
+The site describes the product in technical language that resonates with the builder but alienates the target audience. Examples of what goes wrong: "MCP server with FastMCP 2.x and 11 registered tools over stdio and streamable-HTTP transports" — finance professionals do not know what MCP, FastMCP, stdio, or streamable-HTTP mean and will not try to find out. If the first thing a hedge fund analyst reads is technical architecture, they leave. Bounce rate will be near 100% from the target audience.
 
 **Why it happens:**
-The course curriculum focuses on model mechanics, not time series theory. Analysts trained in cross-sectional statistics apply those tools directly to time series without transformation. The skill inherits this gap if not explicitly addressed.
+The builder knows the product deeply and describes it from the inside out. Technical accuracy feels important. The instinct is to explain how it works, not what the user gets. Finance professionals think in outcomes: "Will this help me get the answer faster? Does it look credible? Do I have to learn Python?"
 
 **How to avoid:**
-- Use returns (percent change) rather than raw prices as model inputs. Returns are closer to stationary.
-- For features that represent levels (e.g., volume, market cap), log-transform before using.
-- Add a stationarity check (Augmented Dickey-Fuller test from `statsmodels`) as a diagnostic step in any regression workflow. If a feature fails the test, log a warning in the output.
-- Communicate to the user: "Note: this model was trained on data from [date range]. Performance in different market regimes may differ."
+Lead with the outcome, not the mechanism. Replace every technical description with its finance equivalent:
+- "MCP server with 11 tools" → "11 built-in analyses: price charts, returns, volatility, ML risk models, and more"
+- "FastMCP stdio transport" → omit entirely
+- "scikit-learn classification pipeline" → "machine learning that classifies investor segments"
+- "yfinance integration" → "live market data from Yahoo Finance"
+
+The hero headline must answer "what do I get?" in under 10 words. The subheadline must answer "how is that possible without me coding?" Every feature description must start with the finance outcome, not the technical mechanism.
 
 **Warning signs:**
-- Model uses raw price as a feature (not returns, not log-returns).
-- R² on training data is high (>0.9) but the feature is a lagged price level.
-- Model was trained in one volatility regime (e.g., COVID period) and applied to another.
+- Any page that uses the words "server," "transport," "stdio," "MCP," "pipeline," or "FastMCP" without immediate plain-English translation
+- Feature descriptions that say "the tool does X" rather than "you can now do X in seconds"
+- The word "Python" appears before the value proposition is established
 
 **Phase to address:**
-Phase 2 (ML workflows). Include a stationarity diagnostic wrapper function that runs before any model fit and logs a warning if non-stationary features are detected.
+Phase 1 (landing page copy) and Phase 2 (features and walkthroughs pages). Write copy from the finance professional's perspective first; add technical notes as secondary detail for the technical users who may also visit.
 
 ---
 
-### Pitfall 4: Survivorship Bias in Universe Selection
+### Pitfall 4: Chart Images That Are Too Large, Too Small, or Unreadable
 
 **What goes wrong:**
-When the skill fetches data for "the S&P 500" or "tech stocks," it fetches data for companies that are currently in the index. Companies that went bankrupt, were acquired, or were delisted between the historical start date and today are excluded. Any analysis of that historical period is therefore biased toward winners, making returns look better and volatility look lower than they actually were.
+The existing `finance_output/charts/` directory contains matplotlib PNG outputs generated for terminal/notebook use — typically 10–15 inch figure size at 100 DPI, saved as 800KB–2MB files. Used directly in the website: (1) they load slowly on mobile connections, (2) they render at the wrong aspect ratio when the browser scales them, and (3) text and axis labels that are readable at full size become illegible when thumbnailed in a gallery. The site looks amateurish, and slow load times increase bounce rate, especially on mobile.
 
 **Why it happens:**
-yfinance has no API for historical index composition. Fetching current S&P 500 constituents and pulling 10 years of history is the easy path and the one the course teaches. The bias is invisible in the output.
+The charts were generated for one purpose (terminal output, reports) and are reused for another (marketing web page). The matplotlib defaults — DPI, figure size, font size, padding — are not web-optimized. Reusing existing output files is the path of least resistance.
 
 **How to avoid:**
-- For v1, limit scope: the skill should not claim to analyze "the S&P 500 historically." It should analyze user-specified tickers.
-- When a user requests a sector or index basket, add a disclaimer in the output: "Note: this analysis uses current index constituents. Companies that were removed from the index before today are excluded, which may overstate historical performance."
-- Do not build a "screen the best performing stocks" workflow — that is pure survivorship bias by construction.
+Export web-optimized versions of the key showcase charts separately:
+- Target: PNG at 800px wide, ~100KB max per chart
+- Use `plt.savefig(path, dpi=96, bbox_inches='tight')` with figure size set to (8, 5) inches
+- Alternatively, export to WebP format which achieves 30–50% smaller file sizes than PNG at equivalent visual quality
+- Provide thumbnails (400px wide) for gallery views, linking to full-size versions
+- Do not copy-paste the raw `finance_output/` files into the site without resizing
+
+For the 5–6 showcase charts on the site, manually optimize is sufficient. If the chart count grows beyond 10, automate with a GitHub Actions step using an image compression action (e.g., Calibre Image Actions).
 
 **Warning signs:**
-- Any workflow that fetches a list of tickers from a current index and then runs historical analysis.
-- Sharpe ratios or returns that look materially better than published index returns for the same period.
+- Any image file in the site's `docs/` folder larger than 500KB
+- Images that display correctly on desktop but overflow their container on mobile
+- Lighthouse performance score below 80 (image sizing is a top contributor)
 
 **Phase to address:**
-Phase 1 (data fetch) and the output formatting layer. Add the disclaimer at the data-fetch level so it propagates to all analysis outputs.
+Phase 2 (visual showcase / features page). Export web-optimized chart versions as part of building that phase, not as a retrofit after deployment.
 
 ---
 
-### Pitfall 5: yfinance Rate Limiting and Silent Data Gaps
+### Pitfall 5: Navigation That Breaks on Mobile or Between Page Levels
 
 **What goes wrong:**
-yfinance wraps Yahoo Finance's unofficial API, which has no rate limit documentation and has changed its throttling behavior multiple times. When rate limited, yfinance does not raise an exception by default — it returns an empty DataFrame or a partial DataFrame with NaN rows for the throttled period. Code that does not check for this produces analyses on incomplete data without any warning to the user.
+Multi-page static sites on GitHub Pages have no server-side routing. Navigation links that use root-absolute paths (`href="/features.html"`) break when the site is at `/repo-name/features.html`. Navigation links that use `href="../features.html"` work from subdirectory pages but 404 from root-level pages. Result: users click navigation on mobile and land on 404 pages, or the hamburger menu opens but anchor links don't close it.
+
+A secondary mobile pitfall: hamburger menus with anchor-only links (`#section`) do not auto-close after navigation. Users tap a section link, the menu stays open, and the page scrolls under it — a known bug when using hash-based routing with JavaScript-free implementations.
 
 **Why it happens:**
-The error mode is silent. `df = yf.download("AAPL", start="2020-01-01")` returns a valid-looking DataFrame even when rows are missing. Developers test with one ticker and it works; production use with many tickers hits limits.
+Navigation is designed on desktop, at root level. Cross-page and cross-level navigation edge cases only appear when testing from subdirectory pages and on actual mobile devices. HTML-only navigation without JavaScript cannot handle menu state on anchor clicks.
 
 **How to avoid:**
-- After every `yf.download()` or `ticker.history()` call, check: `if df.empty: raise DataFetchError(...)` and `if df.isnull().sum().sum() > threshold: warn(...)`.
-- Add a row-count sanity check: for daily data over N trading days, expect approximately `N * 0.99` rows. If significantly fewer are returned, warn the user.
-- For multi-ticker fetches, download serially with a small sleep between requests, or use `yf.download()` with `group_by='ticker'` and validate each sub-frame.
-- Cache successful fetches to disk (using `joblib` or `pickle`) to avoid re-fetching during iterative analysis.
+- Use a single flat file structure inside `docs/` — all pages at the same directory level (`docs/index.html`, `docs/features.html`, `docs/walkthroughs.html`) — so relative links are simply `href="features.html"` from any page, no `../` needed.
+- For mobile menus: add a small JavaScript toggle (10–15 lines) that closes the menu when any nav link is clicked, including anchor links. This is a one-time addition to the shared navigation component.
+- Test navigation on a real mobile device (or DevTools device emulation) from every page before marking the navigation phase complete.
 
 **Warning signs:**
-- Empty or nearly-empty DataFrames returned for valid tickers.
-- NaN clusters appearing at specific date ranges (rate limit periods).
-- Analysis that runs on fewer rows than expected without warning.
+- Navigation works on the landing page but 404s from features or walkthroughs pages
+- Hamburger menu stays open after tapping a link on mobile
+- Any nav link starting with `/` instead of a relative path
 
 **Phase to address:**
-Phase 1 (data fetch module). Build the validation wrapper at the foundation layer.
+Phase 1 (site scaffolding). Set the flat `docs/` directory structure and navigation template as the first deliverable. All subsequent pages inherit from this template.
 
 ---
 
-### Pitfall 6: yfinance API Instability and Version-Breaking Changes
+### Pitfall 6: "Getting Started" That Assumes Developer Familiarity
 
 **What goes wrong:**
-yfinance is not an official API. Yahoo Finance has changed its underlying endpoints multiple times, breaking yfinance releases with no notice. Between 0.1.x and 0.2.x, column names changed (`Adj Close` vs `adj_close`), the multi-ticker download format changed, and timezone handling changed. Code written for one version silently produces wrong results on another.
+The getting started page says things like "clone the repo, run `pip install -e .`, configure your MCP server in `claude_desktop_config.json`" without explaining what any of those steps mean to someone who has never used a terminal. Finance professionals who are Claude.ai browser users have no idea what `pip install`, `claude_desktop_config.json`, or MCP means. If the first step requires opening a terminal, many will stop immediately. The page must convert interest into action — if it creates confusion instead, adoption never happens.
 
 **Why it happens:**
-The library is maintained by community contributors, not Yahoo. Yahoo has no obligation to maintain backward compatibility with yfinance. The skill's generated code will encode assumptions about the API that may break within months.
+The builder knows the install process from their own experience and documents it accurately for a technically literate audience. The target audience's technical floor is invisible until you write for them.
 
 **How to avoid:**
-- Pin yfinance version in requirements: `yfinance==0.2.x` (pin to a specific minor version tested at build time).
-- Wrap all yfinance calls in a thin adapter layer (e.g., `data_fetcher.py`) so that when yfinance breaks, there is a single point of change.
-- In generated code, add the version used as a comment: `# yfinance 0.2.x — column names and API shape validated against this version`.
-- Monitor the yfinance GitHub releases page for breaking changes when updating.
+Write two distinct installation paths on the getting started page:
+1. **Claude.ai browser users** (lower friction): install the plugin, click a link, follow prompts. Describe what they'll see at each step, with screenshots or annotated chart images showing the result.
+2. **Claude Code users** (higher friction): step-by-step terminal instructions with exact copy-paste commands. Preface each command with what it does in plain English: "This command downloads the skill to your computer."
+
+Anticipate the two most common failure points (Python not installed; MCP not configured) and provide troubleshooting links. Never assume the reader has used a terminal before.
 
 **Warning signs:**
-- `KeyError: 'Adj Close'` or `KeyError: 'adj_close'` errors after a package update.
-- `AttributeError` on `Ticker` methods that previously worked.
-- DataFrame shape or column structure unexpectedly different.
+- Getting started page has more than 5 steps without screenshots
+- Any step says "configure" without showing exactly what to put where
+- Terminal commands are shown without explaining what they accomplish
+- The page does not have separate tracks for Claude.ai vs. Claude Code
 
 **Phase to address:**
-Phase 1 (infrastructure setup). Create the adapter layer before writing any analysis code.
+Phase 3 (getting started page). Write the copy by imagining a senior portfolio manager who has never opened a terminal. If they cannot follow it without asking a question, it needs revision.
 
 ---
 
-### Pitfall 7: Treating ML Output as Investment Advice
+### Pitfall 7: GitHub Pages Not Enabled Before Pushing the Workflow
 
 **What goes wrong:**
-The skill produces outputs like "predicted liquidity score: HIGH" or "investor classification: aggressive growth." Without explicit framing, finance professionals may act on these outputs as if they are recommendations. In the US, providing specific investment recommendations without being a registered investment advisor (RIA) is regulated activity. An AI tool that produces outputs indistinguishable from investment advice creates legal and reputational exposure for the developers and users.
+When using GitHub Actions to deploy (the modern approach), you must enable GitHub Pages in the repository Settings → Pages and set the source to "GitHub Actions" before the first workflow run. If the workflow file is pushed first, the `github-pages` environment does not exist yet, the deployment step fails with a permissions or environment error, and the failure message is cryptic. Teams waste time debugging a workflow that is technically correct.
 
 **Why it happens:**
-ML output looks authoritative. Confidence scores feel like certainty. Finance professionals are trained to act on quantitative signals. The skill's UX — "describe what you want, get an answer" — reinforces the perception that the output is a decision.
+It is not obvious that the environment must be pre-created through the UI before the CI/CD can use it. Documentation for GitHub Actions deployment often skips this step or buries it.
 
 **How to avoid:**
-- Every output that includes a prediction, classification, or recommendation MUST include a boilerplate disclaimer: "This output is for educational and analytical purposes only. It is not investment advice and should not be the sole basis for any investment decision. Past model performance does not guarantee future results."
-- Frame outputs as "the model suggests" or "based on historical patterns, the model identifies" — not "you should buy" or "this is classified as high risk."
-- Include model accuracy metrics prominently alongside predictions so users understand the model's error rate.
-- Do not build features that directly say "buy," "sell," or "hold."
+Make "enable GitHub Pages in Settings → Pages, set source to GitHub Actions" the documented first step in the deployment phase plan — before writing any workflow YAML. Verify the setting is saved and the `github-pages` environment appears in the repository's Environments list. Only then push the workflow file.
 
 **Warning signs:**
-- Output text that uses imperative language ("buy X," "avoid Y").
-- Outputs that omit model confidence or accuracy context.
-- Users asking "should I act on this?" — indicates the framing is insufficiently clear.
+- First workflow run fails with "environment 'github-pages' not found" or permissions errors
+- Deployment step shows `Error: HttpError: Not Found` on the pages deploy action
+- Settings → Pages shows "No site" even after workflow succeeds
 
 **Phase to address:**
-Phase 1 (output formatting layer). The disclaimer must be hardcoded into the skill template, not left to per-analysis generation.
+Phase 1 (deployment setup). This is the first action to take — before writing any HTML.
 
 ---
 
-### Pitfall 8: Date and Timezone Handling in Financial Data
+### Pitfall 8: Missing SEO Fundamentals That Prevent Discovery
 
 **What goes wrong:**
-yfinance returns timezone-aware timestamps for intraday data and timezone-naive timestamps for daily data, inconsistently across tickers and time periods. When date filtering, merging, or plotting, mixing aware and naive datetimes causes either a `TypeError` crash or silent misalignment where rows from different date series are merged on the wrong dates (e.g., one series in EST, another in UTC, producing a one-day offset in correlations).
+The site is beautiful and converts well but nobody finds it because: (1) no `<title>` tags beyond the default, (2) no `<meta name="description">` on any page, (3) no `sitemap.xml` submitted to search engines, (4) no Open Graph tags so social shares show blank previews. Finance professionals who hear about the tool and search for it cannot find the GitHub Pages site in results. Shared links on LinkedIn (a primary finance professional channel) show as blank cards with no image or description.
 
 **Why it happens:**
-US market data comes as Eastern Time. International tickers come as their local market time. When merging AAPL (NYSE, ET) with HSBA.L (London, GMT), the timestamps represent different moments and a naive merge aligns wrong dates.
+SEO and social meta tags are not visible during development and are easy to defer. They feel like extras. For a developer tool, the audience might arrive via GitHub directly — but for finance professionals, they may arrive via a LinkedIn post or a team Slack link, where the preview card is the first impression.
 
 **How to avoid:**
-- After every data fetch, normalize timestamps to UTC immediately: `df.index = df.index.tz_convert('UTC')` (for tz-aware) or `df.index = df.index.tz_localize('UTC')` (for tz-naive daily data).
-- Use only date (not datetime) as the index for daily data to avoid timezone issues entirely: `df.index = df.index.date`.
-- When merging multi-ticker DataFrames, use `pd.concat()` with `join='inner'` to align on common dates, then validate that the resulting row count is reasonable.
-- Test with at least one non-US ticker (e.g., a London or Tokyo listing) in the test suite.
+Add to every HTML page's `<head>`:
+```html
+<title>[Page-specific title] | Finance AI Skill</title>
+<meta name="description" content="[Page-specific 150-character description]">
+<meta property="og:title" content="[Page title]">
+<meta property="og:description" content="[Description]">
+<meta property="og:image" content="[Absolute URL to a 1200x630 social card image]">
+<meta property="og:url" content="[Canonical page URL]">
+```
+Generate a `sitemap.xml` listing all pages with their URLs. Create a single 1200x630 social card image (a chart visual + the product name) used as the OG image across all pages. These are one-time additions that require no ongoing maintenance.
 
 **Warning signs:**
-- `TypeError: Cannot compare tz-naive and tz-aware datetime-like objects` errors.
-- Correlation matrices where a pair of related stocks shows near-zero correlation (likely a one-day misalignment).
-- Charts where two series that should track each other are offset by one period.
+- Browser tab shows generic or empty title
+- Sharing a page URL on LinkedIn/Slack shows no description or image
+- Google search of the exact product name does not surface the site within 2 weeks of launch
 
 **Phase to address:**
-Phase 1 (data fetch module). Apply timezone normalization as a mandatory post-processing step in the data fetcher, not in individual analysis workflows.
+Phase 1 (site scaffolding). Add the meta tag template to the shared HTML head before pages are written. It is much harder to add unique descriptions retroactively.
+
+---
+
+### Pitfall 9: Walkthrough Pages That Read Like Feature Lists, Not Stories
+
+**What goes wrong:**
+The walkthroughs page lists the 6 role scenarios as bullet points: "Equity research: price analysis, returns, volatility." This tells a finance professional nothing they care about. The value of the walkthroughs is showing that an analyst can describe a question in plain English and get a complete answer — the narrative, the surprise, the "I didn't know it could do that" moment. Feature lists do not create that. They look the same as every other tool's feature list.
+
+**Why it happens:**
+The natural instinct is to inventory what exists, not to tell a story about what it enables. Documenting the 6 roles as a checklist is faster than writing scenario narratives.
+
+**How to avoid:**
+Each walkthrough entry should have three elements:
+1. The situation in one sentence: "You're an FP&A analyst preparing a board deck and need to explain the company's liquidity exposure."
+2. What you type into Claude: a verbatim example prompt.
+3. What you get back: a screenshot of the chart output and a 2-sentence description of the insight.
+
+This format shows the product working, not just existing. It answers the finance professional's real question: "Would this actually work for something I do?"
+
+**Warning signs:**
+- Walkthrough page is entirely text with no chart images
+- Role descriptions are noun phrases ("Equity research: returns analysis") rather than scenario sentences
+- No example prompts shown — the user cannot see what to type
+
+**Phase to address:**
+Phase 2 (walkthroughs page). Write copy from actual walkthrough session transcripts, not from the feature list in PROJECT.md.
 
 ---
 
@@ -202,14 +237,12 @@ Phase 1 (data fetch module). Apply timezone normalization as a mandatory post-pr
 
 | Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
 |----------|-------------------|----------------|-----------------|
-| Calling `yf.download()` directly in analysis functions | Simpler code, faster to write | Breaks everywhere when yfinance API changes; no caching | Never — always go through an adapter |
-| Hardcoding date ranges (e.g., `start="2020-01-01"`) | Deterministic results during development | Analyses become stale; no way to run "last 3 years" dynamically | Never in production skill code |
-| Skipping `train_test_split` for quick model demos | Faster iteration | Models appear to work but are overfit; cannot assess generalization | Never for any output shown to users |
-| Using `Close` instead of `Adj Close` | One less column to remember | Returns are wrong around splits/dividends | Never — the cost is correctness |
-| Generating code without error handling | Cleaner generated code | Any data gap or rate limit crashes the entire workflow | Never in user-facing skill output |
-| Omitting disclaimer from ML output | Less visual clutter | Legal and reputational liability for investment advice | Never — disclaimer is mandatory |
-| Fitting sklearn Pipeline on full dataset before split | Simpler code | Look-ahead bias invalidates all model results | Never |
-| No version pinning for yfinance | Easier dependency management | Silent breakage on next Yahoo Finance endpoint change | Only in local development, never in skill distribution |
+| Reuse raw `finance_output/` chart PNGs directly | No additional export step | 1–2MB images slow page load; illegible on mobile | Never for web use — always export web-optimized versions |
+| Root-absolute paths (`/css/style.css`) | Familiar, clean-looking | 404s on all assets when deployed to project pages URL | Never — always use relative paths or `<base>` tag |
+| Single HTML page with anchor-only "navigation" | Avoids multi-page path complexity | Hard to link directly to features or walkthroughs; poor SEO per topic | Only acceptable for a true MVP with <4 sections |
+| No `.nojekyll` file | One less file to create | Jekyll processes the Python project structure and may break builds | Never — add `.nojekyll` immediately |
+| Shared navigation as copy-pasted HTML per page | No JS/build tool required | Navigation changes require editing every page; divergence guaranteed over time | Acceptable if site is <5 pages and navigation is frozen |
+| Skipping `sitemap.xml` | Faster to ship | Site takes longer to index; may never surface in search results for target audience | Only acceptable in private/internal deploys — never for public launch |
 
 ---
 
@@ -217,13 +250,11 @@ Phase 1 (data fetch module). Apply timezone normalization as a mandatory post-pr
 
 | Integration | Common Mistake | Correct Approach |
 |-------------|----------------|------------------|
-| yfinance `download()` multi-ticker | Column MultiIndex becomes ambiguous when only 1 ticker is passed | Always check `if isinstance(df.columns, pd.MultiIndex)` and handle both cases |
-| yfinance `Ticker.history()` | `period="max"` silently truncates at Yahoo's data limit (varies by ticker) | Use explicit `start=` date and validate row count against expected trading days |
-| yfinance delisted tickers | Returns empty DataFrame with no error | Check `df.empty` immediately after fetch; surface "ticker not found or delisted" to user |
-| pandas `read_csv()` for user CSVs | Date columns loaded as strings, not datetime | Always specify `parse_dates=['date_column']` or parse explicitly after load |
-| sklearn `Pipeline` with `ColumnTransformer` | Feature names are lost; output is a numpy array | Use `set_output(transform='pandas')` (sklearn >= 1.2) to preserve column names |
-| matplotlib in Claude Code terminal | `plt.show()` blocks execution and may not render | Use `plt.savefig('output.png')` and tell the user the file path |
-| pandas `merge()` on date index | Timezone-aware vs naive mismatch causes all rows to fail to merge (empty result) | Normalize timezone before merge (see Pitfall 8) |
+| GitHub Pages + existing Python repo | Putting `docs/` at repo root but not configuring Pages to serve from it | In Settings → Pages, explicitly set source branch and `/docs` folder; verify the setting saves |
+| GitHub Actions deployment | Pushing workflow YAML before enabling Pages in Settings | Enable Pages and set source to "GitHub Actions" first; then push workflow |
+| chart images from `finance_output/` | Copying files with absolute paths hardcoded into `src=` attributes | Use paths relative to the `docs/` directory; copy or symlink web-optimized image versions into `docs/images/` |
+| Mobile hamburger nav + anchor links | Pure CSS toggle (`:checked` hack) doesn't close on anchor link click | Add 10-line JavaScript that listens for click on any nav link and removes the open class |
+| `og:image` meta tag | Using a relative path like `./images/social-card.png` | Open Graph image must be an absolute URL: `https://username.github.io/repo-name/images/social-card.png` |
 
 ---
 
@@ -231,11 +262,10 @@ Phase 1 (data fetch module). Apply timezone normalization as a mandatory post-pr
 
 | Trap | Symptoms | Prevention | When It Breaks |
 |------|----------|------------|----------------|
-| Fetching full history for every analysis run | 10–30 second load times per request | Cache fetched data to disk with a TTL; re-fetch only if data is stale | Every run — immediately |
-| Downloading 50+ tickers in a loop synchronously | Minutes-long execution, rate limit hits | Batch with `yf.download(tickers_list)` (vectorized); add progress output | >10 tickers |
-| Running `GridSearchCV` with large hyperparameter grids | Skill hangs for minutes with no output | Limit grid size in skill defaults; use `RandomizedSearchCV` with `n_iter` cap | Any grid with >100 combinations |
-| Generating charts without clearing `plt.figure()` | Memory accumulates; later charts contain artifacts from earlier ones | Call `plt.clf()` and `plt.close()` after every `savefig()` | After 3–5 charts in one session |
-| Loading user CSV with `pd.read_csv()` and no dtype specification | Mixed-type columns inferred incorrectly; processing slows on large files | Specify `dtype` for known columns; use `chunksize` for files >10MB | Files >50k rows |
+| Unoptimized matplotlib PNGs in page | 3–8 second load on mobile; Lighthouse flags images | Export web-optimized 800px PNGs at 96 DPI; target <150KB per image | Immediately — even 1 large image tanks mobile Lighthouse score |
+| Multiple large chart images on one page without lazy loading | Visitors who never scroll download all images | Add `loading="lazy"` to all `<img>` tags below the fold | Any page with >3 images |
+| Inline CSS duplicated across pages | Fast to write initially | Any style change requires editing every page | After any design iteration |
+| No `<link rel="preload">` for hero image | Hero section appears blank briefly on first load | Preload the above-the-fold hero image in `<head>` | Always visible on slow connections |
 
 ---
 
@@ -243,10 +273,9 @@ Phase 1 (data fetch module). Apply timezone normalization as a mandatory post-pr
 
 | Mistake | Risk | Prevention |
 |---------|------|------------|
-| Executing user-provided CSV column names directly in generated code without sanitization | Code injection if a column is named `__import__('os').system('rm -rf /')` | Sanitize all user-supplied identifiers before interpolating into generated code strings; validate column names against `[A-Za-z0-9_\- ]+` pattern |
-| Logging user-provided ticker symbols or file paths to disk without sanitization | Path traversal or log injection | Sanitize ticker input (uppercase, strip whitespace, validate against `[A-Z0-9\.\-]{1,10}`); never interpolate raw user input into file paths |
-| Hardcoding API keys for premium data sources in skill templates | Key leakage if the skill file is shared | Use environment variables exclusively; add a check at skill startup that rejects hardcoded fallbacks |
-| Generated code that writes to arbitrary file paths from user input | User could specify `~/Documents/sensitive_file.csv` as output path | Sandbox output paths to a designated working directory; reject paths containing `..` or starting with `/` |
+| Accidentally committing `.planning/` internal docs to `docs/` | Roadmap, research notes, and planning context exposed publicly | Add `.planning/` to `.gitignore`; verify only intended content is in `docs/` before first push |
+| Using a third-party analytics script (GA, Hotjar) without disclosure | GDPR/CCPA exposure for EU/CA visitors; adds tracking without consent | If analytics are added later, disclose in a privacy notice; for MVP, omit analytics entirely — GitHub Insights is sufficient |
+| Hotlinking external images or fonts without fallback | Third-party URL changes or goes down, breaking site visuals | Self-host web fonts in `docs/fonts/`; export all images to `docs/images/` |
 
 ---
 
@@ -254,29 +283,27 @@ Phase 1 (data fetch module). Apply timezone normalization as a mandatory post-pr
 
 | Pitfall | User Impact | Better Approach |
 |---------|-------------|-----------------|
-| Outputting a raw Python traceback when data fetch fails | Finance professional sees `ConnectionError: ('Connection aborted.', RemoteDisconnected(...))` — meaningless and alarming | Catch all exceptions in the skill wrapper; output "Could not retrieve data for AAPL. Yahoo Finance may be temporarily unavailable. Try again in a few minutes." |
-| Displaying a dense DataFrame printout (100 rows, 20 columns) as the primary output | User is overwhelmed; cannot extract insight | Lead with a 3–5 sentence plain-English summary; put the full DataFrame in a collapsed section or save to CSV |
-| Outputting only code with no interpretation | Non-technical user gets Python code they cannot read | Every analysis output must include a "What this means" section in plain English before any code or tables |
-| Long-running tasks with no progress feedback | User sees nothing for 30+ seconds; assumes the skill crashed | Print progress markers (`Fetching data for AAPL...`, `Training model...`, `Done.`) at each major step |
-| Asking the user to specify parameters a finance expert shouldn't need to know | "What look-back window and confidence interval should I use?" alienates non-technical users | Apply sensible defaults silently (252-day rolling window, 95% confidence interval); only expose these as optional overrides |
-| Generating charts saved to a path the user cannot find | User never sees the chart | Always print the full absolute path to saved files: "Chart saved to: /path/to/chart.png" |
-| Vague ML output with no accuracy context | User doesn't know if 72% accuracy is good or useless for their use case | Always show: model accuracy, benchmark (e.g., majority class baseline), and a one-line interpretation ("This model correctly classifies investors 72% of the time, compared to 53% for a random baseline") |
-| Skill that only works for exact phrasings | Non-technical users rephrase naturally and get errors or wrong analysis | Design prompt parsing to be liberal: accept "show me Apple stock" and "get AAPL data" as equivalent intents |
+| Hero section leads with product name, not outcome | Finance professional reads "Finance AI Skill" and does not know if this is relevant to them | Lead with the outcome: "Get professional-grade financial analysis in plain English — no Python required" |
+| Installation page has developer-only instructions | Claude.ai users (lower friction path) are not shown their easier route | Separate installation tracks: "Using Claude.ai?" vs. "Using Claude Code?" with the lower-friction path listed first |
+| Walkthroughs page has no images | Page reads like documentation, not a showcase | Every role walkthrough must show at least one chart output from that scenario |
+| Call-to-action buttons say "Learn More" | Generic CTA does not communicate what happens next | Use specific CTAs: "Try the Demo" or "Install in Claude Code" or "Add to Claude.ai" |
+| No social proof or credibility signal | Finance professionals are risk-averse; unknown tools don't get installed | Add context: "Built on the pyfi.com curriculum" and "11 tools covering market analysis and ML workflows" |
+| Mobile viewport not configured | Site renders at desktop width on mobile; all text is tiny | Add `<meta name="viewport" content="width=device-width, initial-scale=1">` to every page |
 
 ---
 
 ## "Looks Done But Isn't" Checklist
 
-- [ ] **Data fetch:** Appears to return data — verify `Adj Close` is being used, not `Close`, for any return calculation.
-- [ ] **ML model:** Model trains and predicts — verify `train_test_split` happened BEFORE any preprocessing step.
-- [ ] **Backtest / historical analysis:** Shows results — verify disclaimer about survivorship bias is present in output.
-- [ ] **Multi-ticker analysis:** Correlation matrix renders — verify timezone normalization was applied before merge.
-- [ ] **Classification model:** Accuracy metric shown — verify it is compared to majority-class baseline, not presented in isolation.
-- [ ] **Output formatting:** Analysis text displayed — verify every output includes the investment advice disclaimer.
-- [ ] **User CSV ingestion:** File loaded successfully — verify date columns were parsed as datetime, not strings.
-- [ ] **Chart generation:** `plt.savefig()` called — verify `plt.clf()` and `plt.close()` are called immediately after.
-- [ ] **Error handling:** Skill runs in the happy path — verify it handles empty DataFrames, rate limit errors, and delisted tickers gracefully.
-- [ ] **Version pinning:** Works in development — verify `yfinance` version is pinned in `requirements.txt` or equivalent.
+- [ ] **Deployment:** Site appears to deploy — verify the live URL (`username.github.io/repo-name/`) loads styled correctly with no 404s in DevTools.
+- [ ] **Mobile:** Pages look fine on desktop — verify on a real mobile device (or DevTools 375px) that text is readable, images fit, and navigation works.
+- [ ] **Navigation:** Links work from the landing page — verify every nav link works from every page (features → walkthroughs, walkthroughs → getting started, etc.).
+- [ ] **Images:** Charts render on the page — verify each chart image is <500KB and readable at mobile widths.
+- [ ] **SEO:** Pages have titles — verify every page has a unique `<title>`, `<meta description>`, and `og:image` with an absolute URL.
+- [ ] **Copy:** Features are listed — verify every feature description leads with the finance professional outcome, not the technical mechanism.
+- [ ] **Getting Started:** Install steps are present — verify a non-technical person can follow each step without prior terminal experience.
+- [ ] **Jekyll:** Site builds — verify `.nojekyll` file is present in `docs/` folder.
+- [ ] **Walkthroughs:** Roles are listed — verify each role has an example prompt, at least one chart image, and a scenario framing sentence.
+- [ ] **CTAs:** Buttons exist — verify every call-to-action button has a specific, action-oriented label and leads to a working destination.
 
 ---
 
@@ -284,13 +311,13 @@ Phase 1 (data fetch module). Apply timezone normalization as a mandatory post-pr
 
 | Pitfall | Recovery Cost | Recovery Steps |
 |---------|---------------|----------------|
-| Adjusted vs. unadjusted price confusion discovered in production | MEDIUM | Identify all code paths using `Close`; swap to `Adj Close`; regenerate any saved analyses; notify users that historical results may have changed |
-| Look-ahead bias discovered in trained model | HIGH | Model results are invalid; must re-split data, re-train from scratch, re-validate all reported metrics; any published accuracy numbers must be retracted |
-| yfinance API breaking change | MEDIUM | All calls go through the adapter layer (if built correctly); update adapter only; re-test against new API shape |
-| Legal complaint about investment advice language | HIGH | Immediate: add/strengthen disclaimers; review all output templates; consider legal review before re-publishing; potentially remove specific recommendation language entirely |
-| Survivorship bias baked into analysis outputs | MEDIUM | Add disclaimer to all historical basket analysis; document the limitation prominently; cannot fully recover without historical index composition data |
-| User CSV date parsing failure discovered late | LOW | Fix the `read_csv()` call in the CSV ingestion module; test with edge-case date formats |
-| Timezone misalignment discovered after user reports wrong correlations | MEDIUM | Add normalization to the data fetcher; all previously generated multi-ticker analyses that span markets are suspect and should be regenerated |
+| Broken asset paths discovered after deployment | MEDIUM | Fix base path convention; update all `href`/`src` attributes across all pages; redeploy |
+| Jekyll build failure from Python project structure | LOW | Add `.nojekyll` to `docs/`; push; verify build succeeds |
+| Pages not enabled before workflow push | LOW | Enable Pages in Settings → Pages → set source to GitHub Actions; re-run the failed workflow |
+| Messaging written for developers, discovered in user test | MEDIUM | Rewrite feature descriptions and hero copy; all other structure can remain |
+| Large images discovered via Lighthouse audit | MEDIUM | Export web-optimized versions of showcase charts; replace files in `docs/images/`; redeploy |
+| Missing Open Graph meta tags discovered when sharing | LOW | Add OG tags to HTML head template; propagate to all pages; create social card image |
+| Mobile navigation broken discovered after launch | LOW–MEDIUM | Add JS close-on-click handler; test all nav links on mobile; redeploy |
 
 ---
 
@@ -298,33 +325,35 @@ Phase 1 (data fetch module). Apply timezone normalization as a mandatory post-pr
 
 | Pitfall | Prevention Phase | Verification |
 |---------|------------------|--------------|
-| Adjusted vs. unadjusted prices | Phase 1 — data fetch foundation | Unit test: fetch AAPL around a known split date; verify returns do not show artificial spike |
-| Look-ahead bias in ML | Phase 2 — ML workflow implementation | Code review: confirm `train_test_split` precedes all `fit()` calls in every pipeline |
-| Non-stationarity of financial time series | Phase 2 — ML workflow implementation | Add ADF test diagnostic; review features list for raw price levels |
-| Survivorship bias | Phase 1 — output formatting layer | Verify disclaimer appears in all basket/index analysis outputs |
-| yfinance rate limiting / silent data gaps | Phase 1 — data fetch foundation | Integration test: mock empty DataFrame response; verify user-facing error message appears |
-| yfinance API instability | Phase 1 — infrastructure setup | Create adapter module; pin version in requirements; confirm single point of change |
-| ML output as investment advice | Phase 1 — output template design | Verify disclaimer appears in every output; search generated text for imperative language |
-| Date/timezone handling | Phase 1 — data fetch foundation | Test with one US ticker and one non-US ticker merged; verify row alignment |
-| Prompt ambiguity for non-technical users | Phase 1 — skill command design | User test with a non-Python finance professional; measure how often they get wrong or empty output |
-| Chart file path opacity | Phase 1 — output formatting layer | Verify every `savefig()` call is followed by a print of the absolute path |
-| No progress feedback on long tasks | Phase 1 — skill execution layer | Time a 50-ticker fetch; verify progress markers appear before timeout |
-| Raw tracebacks exposed to users | Phase 1 — error handling layer | Force a network error in test; verify only the friendly message appears |
+| Broken asset paths (root-absolute vs. relative) | Phase 1 — site scaffolding | Deploy first page; open DevTools Network tab; confirm zero 404s |
+| Jekyll conflicts with Python project | Phase 1 — repository setup | Confirm `.nojekyll` in `docs/`; confirm build log shows no Jekyll processing |
+| GitHub Pages not enabled before workflow | Phase 1 — deployment setup | Settings → Pages shows correct source before any YAML is pushed |
+| Developer-centric messaging | Phase 1 — landing page copy | Read every description aloud to a non-technical person; no jargon without translation |
+| Unoptimized chart images | Phase 2 — visual showcase | Run Lighthouse on the features page; Performance score must be >80 |
+| Mobile navigation breakage | Phase 1 — navigation template | Test every nav link on 375px viewport from every page |
+| Weak getting started copy | Phase 3 — getting started page | Follow the instructions as if you have never used a terminal; all steps must be completable |
+| Missing SEO meta tags | Phase 1 — site scaffolding | Validate with a social preview tool (e.g., opengraph.xyz) before launch |
+| Feature list instead of walkthrough stories | Phase 2 — walkthroughs page | Each role entry must have scenario sentence, example prompt, and at least one chart image |
+| Missing viewport meta tag | Phase 1 — HTML head template | DevTools mobile emulation: page must not require horizontal scrolling at 375px |
 
 ---
 
 ## Sources
 
-- yfinance GitHub issue tracker and changelog (versions 0.1.x → 0.2.x breaking changes): https://github.com/ranaroussi/yfinance
-- "Advances in Financial Machine Learning" (Lopez de Prado, 2018) — canonical reference for look-ahead bias, purging, and embargo methodology in finance ML
-- SEC guidance on investment adviser definition (Advisers Act of 1940, Section 202(a)(11)) — relevant to "investment advice" language
-- sklearn Pipeline documentation on fit/transform ordering: https://scikit-learn.org/stable/modules/compose.html
-- pandas timezone documentation: https://pandas.pydata.org/docs/user_guide/timeseries.html#time-zone-handling
-- "Python for Finance" (Yves Hilpisch, O'Reilly) — chapters on financial time series non-stationarity
-- Survivorship bias in backtesting: documented extensively in academic literature (e.g., Brown, Goetzmann, Ibbotson 1992); practical implications described in Hilpisch and Prado
-- Claude Code slash command skill design: based on Claude Code documentation and skill architecture patterns (training data, MEDIUM confidence — limited production examples publicly available as of August 2025)
+- GitHub Docs — Configuring a publishing source for GitHub Pages: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+- GitHub Docs — Using custom workflows with GitHub Pages: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
+- Maxim Orlov — "Deploying to Github Pages? Don't Forget to Fix Your Links": https://maximorlov.com/deploying-to-github-pages-dont-forget-to-fix-your-links/
+- Pluralsight — "Fixing Broken Relative Links on GitHub Pages": https://www.pluralsight.com/guides/fixing-broken-relative-links-on-github-pages
+- Jekyll issue #332 — baseurl / base-url relative link failures on Project Pages: https://github.com/jekyll/jekyll/issues/332
+- Landingi — "Finance Landing Pages: Definition, How to Create & 8 Examples": https://landingi.com/blog/landing-pages-in-finance/
+- Growth Fueling — "Landing Page Mistakes That Kill Conversions in 2025": https://growthfueling.com/landing-page-mistakes-that-kill-conversions-in-2025/
+- JekyllPad — "Mastering SEO for GitHub Pages": https://www.jekyllpad.com/blog/mastering-github-pages-seo-7
+- daily.dev — "2025 Developer Tool Trends: What Marketers Need to Know": https://business.daily.dev/resources/2025-developer-tool-trends-what-marketers-need-to-know/
+- GitHub Community Discussion — "GitHub Pages for a repo with multiple subfolders": https://github.com/orgs/community/discussions/58276
+- Astrowind Issue #165 — "Mobile Menu issue when using anchor links in Nav": https://github.com/arthelokyo/astrowind/issues/165
+- Safnaj (Medium) — "Image Compression for the Web using GitHub Actions": https://safnaj.medium.com/image-compression-for-the-web-using-github-actions-f1156d281cda
 
 ---
 
-*Pitfalls research for: Finance AI Claude Code Skill (yfinance + scikit-learn)*
-*Researched: 2026-03-17*
+*Pitfalls research for: GitHub Pages showcase site — Finance AI Skill v1.3*
+*Researched: 2026-03-18*

@@ -1,17 +1,17 @@
 # Project Research Summary
 
-**Project:** Finance AI Skill for Claude Code (pyfi.com curriculum-aligned)
-**Domain:** Claude Code slash command with Python finance code generation and execution
-**Researched:** 2026-03-17
-**Confidence:** HIGH (Claude Code architecture); MEDIUM (features, Python library versions)
+**Project:** Finance AI Skill — v1.3 GitHub Pages Showcase Site
+**Domain:** Static GitHub Pages showcase site for a production Python/MCP developer tool targeting finance professionals
+**Researched:** 2026-03-18
+**Confidence:** HIGH
 
 ## Executive Summary
 
-This project is a Claude Code native slash command (`/finance`) that accepts natural language finance requests, generates Python analysis scripts, executes them via the Bash tool against the user's local Python environment, and returns plain-English interpretations of results. It is not a web app, not a Jupyter notebook, and not a plugin with its own runtime — the user's machine is the execution environment. Research across all four domains converges on a clear implementation model: a thin command file handles invocation mechanics, a separate SKILL.md holds domain expertise and intent routing, generated Python scripts follow a write-to-disk-then-execute pattern, and all output flows through a consistent `.finance-output/` directory. This separation of concerns is architecturally mandated by the Claude Code plugin system and should not be collapsed.
+The v1.3 milestone adds a multi-page static showcase site to an already-shipped Python/FastMCP project. The site does not extend or modify the existing MCP skill — it is a pure marketing and conversion layer whose only job is to get finance professionals from "curious" to "installed." Research confirms the correct approach is plain HTML in a `docs/` folder published via GitHub Pages, with no static site generator and no JavaScript framework. Jekyll and Minimal Mistakes were evaluated but the plain HTML approach is recommended: the 4-page scope does not justify the Ruby toolchain overhead, and the no-build-step path deploys in under 60 seconds with zero build failure risk. If the site grows beyond 8 pages in a future milestone, Jekyll 4.4 + Minimal Mistakes (evaluated at HIGH confidence) is the documented upgrade path.
 
-The recommended stack is unambiguous: yfinance 0.2.40+ for market data, pandas 2.2+ for data manipulation, scikit-learn 1.4+ with Pipeline for ML workflows, and matplotlib/seaborn for headless chart output. The scope aligns directly with the pyfi.com curriculum — ML 01 EDA, ML 03 regression, ML 05-06 classification — meaning the feature set is constrained and well-defined rather than open-ended. The competitive gap this skill fills is unique: no existing tool combines natural language interface, ML modeling on user-provided CSV data, code transparency, and native Claude Code integration at no additional cost.
+The primary audience — equity researchers, hedge fund analysts, IB associates, FP&A managers, PE associates, and accountants — is credibility-sensitive but not technically fluent. Research from CFA Institute (2025), FINRA Foundation (2024), and Deloitte (2026) confirms finance professionals penalize AI tools that are opaque, oversell their scope, or do not acknowledge their limitations. The site must lead with outcomes ("finance analysis in plain English — no Python required"), show real chart outputs rather than stock photos or empty promises, and provide explicit disclaimer transparency. These trust signals are differentiators, not boilerplate. The existing `finance_output/charts/` directory contains 60+ real chart PNGs — curating 6-8 of them for the site is a content task, not a technical one.
 
-The dominant risks are not implementation complexity but correctness and legal. Using unadjusted price data (`Close` instead of `Adj Close`) silently poisons all return calculations. Look-ahead bias from fitting sklearn transformers before the train/test split invalidates ML results entirely. And outputs that read as investment recommendations rather than educational analysis create regulatory exposure. All three of these must be addressed in Phase 1 infrastructure — they cannot be retrofitted. Build the data-fetch adapter, output formatting conventions, and disclaimer templates before writing a single analysis workflow.
+The dominant risk is messaging, not implementation. A site written from the builder's perspective (MCP servers, FastMCP, stdio transports) will achieve near-zero conversion with the finance professional audience. The second most dangerous risk is deployment mechanics: GitHub Pages project sites serve at a `/repo-name/` URL prefix, and root-absolute asset paths cause every page to load unstyled and every image to 404. Both risks are fully addressable if scaffolding standards and copy conventions are established in Phase 1 before content pages are written.
 
 ---
 
@@ -19,156 +19,132 @@ The dominant risks are not implementation complexity but correctness and legal. 
 
 ### Recommended Stack
 
-The Claude Code skill architecture uses a two-file model per capability: a `.claude/commands/name.md` command file (user-facing entry point) and a `.claude/skills/name/SKILL.md` skill file (domain knowledge). Python execution is handled entirely through `Bash(python3:*)` — Claude generates a Python script, writes it to `.finance-output/last_run.py` with the Write tool, and executes it via Bash. There is no sandboxed runtime; the user's local Python environment is the runtime, which means dependency management is the user's responsibility with setup instructions provided by the skill.
+The site should be built as plain HTML/CSS in a `docs/` folder at the repo root, published via GitHub Pages using "Deploy from branch / /docs folder" in repository Settings. No GitHub Actions workflow is needed for this configuration — GitHub Pages reads the `docs/` folder automatically on every push to main and deploys within 60 seconds. A `docs/.nojekyll` file disables Jekyll processing to prevent conflicts with the Python project's directory structure. All four pages live at the same directory level inside `docs/`, eliminating cross-level relative path complexity.
+
+Chart images are static PNGs from the existing `finance_output/charts/` directory, curated to 6-8 representative examples and web-optimized to under 150KB each before being placed in `docs/assets/images/`. No JavaScript charting library is warranted. If the site grows to 8+ pages or nav complexity increases, Eleventy (JavaScript-native) or Jekyll 4.4 + Minimal Mistakes (Ruby) are the evaluated upgrade paths — but neither is warranted at 4 pages.
 
 **Core technologies:**
-- Python 3.10+: Runtime language — required by scikit-learn 1.4+ and yfinance 0.2.x
-- pandas 2.2+: DataFrames, time series, CSV I/O — course-standard; yfinance 0.2.x returns pandas 2.x-compatible data
-- NumPy 1.26+: Array math — foundation beneath pandas and scikit-learn; 1.26 gives broadest compat
-- scikit-learn 1.4+: Regression, classification, Pipeline API — covers 100% of course ML scope (ML 03, ML 05-06)
-- yfinance 0.2.40+: Market data — free, no API key, course-confirmed; pin to 0.2.x to avoid silent breakage
-- matplotlib 3.8+ / seaborn 0.13+: Charts — headless `Agg` backend only; always `savefig()`, never `show()`
-- statsmodels 0.14+: OLS tables with p-values — supplement to sklearn for statistical inference output
-- tabulate 0.9+: Markdown/ASCII table formatting — improves terminal readability of DataFrame summaries
-
-**What NOT to use:** polars (breaks yfinance), plotly v1 (produces HTML not PNG), yfinance < 0.2.0, pandas < 2.0, any deep learning framework (overkill for course scope), PyTorch/TensorFlow.
+- Plain HTML/CSS in `docs/`: all 4 pages — no build step, immediate GitHub Pages compatibility, lowest operational risk
+- `docs/.nojekyll`: empty file — disables Jekyll and prevents Python project structure from causing silent build failures
+- GitHub Pages (branch source, `/docs` folder): deployment — zero CI overhead, automatic on push, live in under 60 seconds
+- Curated and web-optimized PNGs from `finance_output/charts/`: visual proof — real outputs already generated, not mock-ups
+- Jekyll 4.4.1 + Minimal Mistakes 4.28.0 (evaluated, deferred): upgrade path if site grows beyond 8 pages; requires Ruby 3.3.4 + GitHub Actions workflow
 
 ### Expected Features
 
-The feature research draws a sharp line between what finance professionals assume any tool has (table stakes), what makes this skill distinctive (differentiators), and what must be deliberately excluded from v1 (anti-features). The entire v1 feature set maps to the pyfi.com curriculum notebooks — this is both a constraint and an asset.
+The site has a clear 4-page structure: Home (landing), Features (11 MCP tools), Walkthroughs (6 role scenarios), Getting Started (two install paths). Chart asset curation is the prerequisite dependency — the hero, features, and walkthroughs sections all require a curated set of web-optimized images from the existing `finance_output/charts/` directory. This is a content task and should be the first deliverable in Phase 1.
 
-**Must have (table stakes):**
-- Stock price data fetch by ticker via yfinance — first thing any user tries
-- Price charts (line, return distribution histogram) — visual output is non-negotiable
-- Returns calculation (daily, cumulative) and annualized volatility — every analyst needs these
-- Sharpe ratio and basic risk metrics vs. benchmark — single most-asked portfolio question
-- CSV/Excel file ingestion with format tolerance — required root dependency for both ML workflows
-- Data exploration summary (EDA) — data quality gate before any ML; matches ML 01 curriculum
-- Outlier detection and flagging — directly taught in ML 01
-- Graceful error handling with finance-specific messages — cryptic errors kill adoption with non-programmers
-- Plain-English interpretation on every output — the core differentiator vs. raw Python
+**Must have (table stakes — P1):**
+- Hero: clear value proposition ("no Python required") + primary CTA above the fold — finance professionals decide in 5 seconds
+- Real chart outputs as visual proof — stock photos or placeholder images destroy credibility with this audience
+- Persistent navigation across all 4 pages — multi-page site is non-functional without it
+- Walkthroughs page: 6 role-based scenario cards (situation sentence + example prompt + chart image) — roles, not feature lists
+- Features page: 11 MCP tools with plain-language outcome descriptions and real command examples
+- Getting Started: two distinct paths (Claude Code via stdio; claude.ai via HTTP + ngrok) with copy-pasteable commands
+- Mobile-responsive layout — 40%+ of professional browsing is mobile; base CSS handles this
+- SEO meta tags (title, description, Open Graph) on every page — social shares on LinkedIn are a primary finance professional discovery channel
 
-**Should have (competitive differentiators):**
-- Liquidity predictor (regression ML, ML 03) — real risk desk problem; first ML workflow
-- Investor/client classifier (classification ML, ML 05-06) — replaces manual profiling spreadsheets
-- Multi-ticker comparison with normalized price index — analysts never look at one stock in isolation
-- Correlation matrix heatmap — standard portfolio construction tool
-- Cross-validation score interpretation — explains model validity to non-ML users
-- Persona-aware phrasing (Analyst vs. PM/Trader) — Phase 2 split commands
+**Should have (competitive — P2):**
+- Persona contrast demonstration (analyst vs PM framing on same data) on Features page — unique differentiator
+- Disclaimer transparency callout — builds trust with compliance-aware finance professionals
+- Curriculum attribution ("built on pyfi.com curriculum") — academic legitimacy reduces "black box" concern
+- Social card image (1200x630 OG image) — blank LinkedIn previews lose finance professional clicks
 
 **Defer (v2+):**
-- Real-time/streaming prices — yfinance does not support it; requires entirely different infrastructure
-- Bloomberg/Alpha Vantage/Refinitiv data sources — API keys, paid tiers, authentication complexity
-- Portfolio optimization (mean-variance/Black-Litterman) — mathematically brittle; high correctness risk
-- Backtesting framework — separate product; look-ahead bias risk is high if built incorrectly
-- DCF / fundamental valuation — requires different data source; formula assumptions vary by sector
-- Web dashboard (Streamlit/Dash) — separate product surface entirely
-- PDF/Word report export — formatting complexity without core value change
+- Interactive embedded demo — requires backend; GitHub Pages is static; canned demos destroy credibility
+- Blog/changelog section — ongoing content maintenance burden with no immediate conversion value
+- Dark mode toggle — not a pain point for finance professional primary audience; adds JS complexity
+- Full API documentation on site — belongs in the GitHub README; overwhelming for this audience
 
 ### Architecture Approach
 
-The architecture follows a strict separation: the slash command is a thin router (invocation mechanics, tool allowances, dynamic context injection), and the SKILL.md is the brain (intent classification, code generation guidance, output conventions). Python scripts are always written to `.finance-output/last_run.py` before execution — never run inline in Bash. Environment state (available CSV files, installed packages, Python path) is injected into the prompt via `!`command`` syntax before Claude generates any code, ensuring generated code matches the actual environment. All chart output uses the matplotlib `Agg` backend and writes PNG files to `.finance-output/charts/`.
+The site is completely isolated from the Python/MCP codebase. The `docs/` folder contains all site files and communicates with the Python project only through a one-time manual image curation step. No runtime coupling exists: the site does not call the MCP server, does not run Python, and has no Python dependencies. GitHub Pages reads the `docs/` folder on every push to main and serves it as a static CDN with no build step required.
 
 **Major components:**
-1. Slash command file (`.claude/commands/finance.md`) — accepts `$ARGUMENTS`, defines `allowed-tools`, injects environment context, delegates to skill
-2. Core SKILL.md (`.claude/skills/finance/SKILL.md`) — intent classification (stock analysis / liquidity model / investor classifier), code generation guidance, output format rules
-3. Reference files (`references/task-types.md`, `references/libraries.md`, `references/output-format.md`) — detailed lookup tables loaded via `@path` to keep SKILL.md under ~300 lines
-4. Code templates (`templates/stock-analysis.py.md`, `templates/liquidity-model.py.md`, `templates/investor-classifier.py.md`) — reduce hallucination in library API calls
-5. Output layer (`.finance-output/last_run.py`, `.finance-output/charts/*.png`) — consistent locations for inspection and debugging
-6. Persona overlays (`finance-analyst/SKILL.md`, `finance-pm/SKILL.md`) — thin framing layers added in Phase 2+, built only after the generalist command is proven
+1. `docs/` folder — GitHub Pages root; all HTML, CSS, JS, and curated images; fully isolated from Python source
+2. `docs/assets/images/` — 6-8 curated, renamed, web-optimized PNGs copied from `finance_output/charts/`; stable descriptive filenames (e.g., `compare-tech-stocks.png`, not date-stamped originals)
+3. `docs/assets/css/style.css` — shared styles; referenced via relative path from all 4 pages at the same directory level
+4. `docs/.nojekyll` — empty file that disables Jekyll processing; prevents Python project files from causing build failures
+5. GitHub Pages Settings (configure once) — set to branch `main`, folder `/docs`; no workflow YAML needed
 
 ### Critical Pitfalls
 
-Eight critical pitfalls were identified, all with HIGH recovery cost if discovered late. The top five that must be addressed in Phase 1:
+1. **Root-absolute asset paths cause 404s after deployment** — GitHub Pages project sites serve at `https://username.github.io/repo-name/`; paths starting with `/` resolve to the wrong URL. Use strictly relative paths everywhere. Establish this convention in Phase 1 before writing any content pages; fixing it retroactively requires touching every `href` and `src` across all files.
 
-1. **Adjusted vs. unadjusted price confusion** — Always use `Adj Close`, never `Close`, for return calculations. Check for column presence after every fetch and raise an explicit error if missing. Bake this into the data-fetch adapter before any analysis code is written on top.
+2. **Jekyll processes Python project structure without `.nojekyll`** — GitHub Pages runs Jekyll by default on every repository. Without `docs/.nojekyll`, Jekyll may fail on Python source files or silently suppress files starting with `_`. Add `.nojekyll` as the very first committed file; do not skip this step.
 
-2. **Look-ahead bias in ML feature engineering** — Always split data first (`train_test_split`), then fit all transformers exclusively on training data. Never call `.fit_transform()` on the full dataset. Use `TimeSeriesSplit` for time-ordered financial data. This must be a design constraint from the first ML workflow line, not a retrofit.
+3. **Developer-centric messaging drives finance professional bounce** — using words like "MCP server," "FastMCP," "stdio transport," or "scikit-learn pipeline" in the hero or features sections will cause near-100% bounce from the target audience. Every feature description must lead with the finance outcome, not the technical mechanism. Validate by reading copy aloud to a non-technical person.
 
-3. **yfinance rate limiting and silent data gaps** — After every `yf.download()`, check `df.empty` and validate row count against expected trading days. Surface friendly errors to users, never raw exceptions. Cache successful fetches to avoid re-fetching during iterative analysis.
+4. **Unoptimized matplotlib PNGs tank mobile performance** — `finance_output/charts/` files are generated for terminal/notebook use at 800KB–2MB each. Export web-optimized versions at 800px wide, ~96 DPI, targeting under 150KB per image. Verify Lighthouse Performance score above 80 before marking any content phase complete.
 
-4. **ML output treated as investment advice** — Every output that includes a prediction or classification MUST include a hardcoded disclaimer that it is for educational purposes only and not investment advice. This is a legal requirement, not a nicety. Build it into the output template in Phase 1.
+5. **Walkthrough page written as a feature list, not scenarios** — listing role names and tool names ("Equity Research: returns, volatility") tells the finance professional nothing they care about. Each role entry must have: (1) a situation sentence, (2) a verbatim example prompt, (3) a chart output. Feature lists do not convert.
 
-5. **Date and timezone misalignment in multi-ticker merges** — Normalize all timestamps to UTC immediately after fetch. Use date-only index for daily data. Test with at least one non-US ticker. Misalignment silently produces wrong correlation calculations.
-
-Additionally: yfinance API instability requires a thin adapter layer (single point of change when Yahoo breaks their API), and non-stationarity of financial time series requires using returns (not raw prices) as ML features.
+6. **`og:image` meta tag must be an absolute URL** — Open Graph image paths must be absolute (`https://username.github.io/repo-name/assets/images/social-card.png`), not relative. Relative OG image paths produce blank social share previews on LinkedIn and Slack.
 
 ---
 
 ## Implications for Roadmap
 
-Based on the combined research, the architecture's own dependency graph dictates a natural phase structure. All four research files independently converge on the same ordering.
+Based on combined research, the site is best built in three phases. The architecture research explicitly recommends this order. Pitfall research confirms that Phases 14 and 15 cannot be done correctly without Phase 13 establishing path conventions, the `.nojekyll` file, and the curated image set as a complete prerequisite foundation.
 
-### Phase 1: Infrastructure and Data Foundation
+### Phase 13: Site Scaffolding and Deployment Setup
 
-**Rationale:** Everything else depends on this. Data correctness (adjusted prices, timezone normalization, empty DataFrame detection), output conventions (chart directory, last_run.py location, disclaimer templates), and the yfinance adapter layer must exist before any analysis workflow is built. Building analysis on top of shaky data infrastructure means every workflow inherits the bugs. The architecture research explicitly calls this out as a prerequisite. The pitfalls research identifies the highest-severity issues as Phase 1 concerns.
+**Rationale:** Every subsequent content page depends on path conventions, `.nojekyll` configuration, and GitHub Pages settings being correct before the first character of HTML content is written. The most expensive pitfalls (broken asset paths, Jekyll conflicts, inconsistent navigation) are nearly impossible to fix retroactively without touching every file. Verify deployment on a live placeholder page before proceeding to content.
 
-**Delivers:** A working `/finance` command skeleton with correct data fetching, output directory, requirements.txt, dependency checker, and output formatting conventions including the mandatory disclaimer template.
+**Delivers:** Working GitHub Pages deployment of a placeholder `index.html`; confirmed zero 404s in browser DevTools on the live URL; complete `docs/` folder structure (`assets/css/`, `assets/js/`, `assets/images/`); `docs/.nojekyll` in place; 6-8 curated chart PNGs copied and renamed to stable descriptive filenames in `docs/assets/images/`; shared `style.css` stub; HTML `<head>` template with viewport meta tag and SEO meta tag placeholders ready to populate per page.
 
-**Addresses:** Stock price data fetch, graceful error handling, chart output conventions, environment detection, CSV ingestion plumbing.
+**Addresses:** Navigation (table stakes — template established here), mobile viewport (table stakes — in shared head template), chart asset curation (prerequisite for all content pages), SEO meta tag structure (P2 — add structure now, fill per-page copy later).
 
-**Avoids:** Adjusted/unadjusted price confusion (baked in at foundation), timezone misalignment (normalized at fetch time), yfinance API instability (adapter layer created), investment advice language (disclaimer in output template), silent data gaps (validation wrapper built at foundation).
+**Avoids:** Root-absolute path 404s (Pitfall 1 — relative path convention set before any content), Jekyll conflicts (Pitfall 2 — `.nojekyll` first commit), missing viewport meta tag (UX pitfall — in shared template), SEO meta tags missing at launch (Pitfall 8 — structure established in template).
 
-**Research flag:** Standard patterns — skip `/gsd:research-phase`. Claude Code command format is HIGH confidence from local official docs. yfinance adapter pattern is well-documented.
+**Research flag:** Standard patterns. GitHub Docs source is authoritative, current, and unambiguous. No additional research needed.
 
-### Phase 2: Market Analysis Workflows
+---
 
-**Rationale:** With the data foundation solid, implement the stock analysis workflows that use live yfinance data. These are lower ML complexity and prove the write-then-execute pattern before adding the higher-complexity ML workflows. This phase also validates that the intent classification in SKILL.md correctly routes plain-language requests.
+### Phase 14: Content Pages (Landing, Features, Walkthroughs)
 
-**Delivers:** Working stock price charts, returns and volatility calculations, Sharpe/Sortino/Beta vs. benchmark, multi-ticker comparison with normalized price index, correlation matrix heatmap. Plain-English interpretation on all outputs.
+**Rationale:** These three pages are the conversion engine of the site and share the scaffolding established in Phase 13. Landing page is built first because it determines the visual design system (color palette, card components, typography scale, CTA button style) that Features and Walkthroughs inherit. Once the design system is established, Features and Walkthroughs can be written in parallel or sequentially without design drift.
 
-**Addresses:** All table-stakes features except CSV ingestion (Phase 1) and ML (Phase 3). Covers the "first thing any user tries" workflows.
+**Delivers:** `index.html` — hero with outcome-led value proposition, primary CTA, 1-2 real chart visuals, plain-English feature overview, attribution callout; `features.html` — 11 MCP tools grouped by category (market analysis / ML workflows) with plain-language outcome descriptions, real command examples inline, and a persona contrast callout; `walkthroughs.html` — 6 role cards each with a situation sentence, a verbatim example prompt, and a representative chart image.
 
-**Implements:** Stock analysis code template, price chart output conventions, SKILL.md intent routing for market analysis task type.
+**Addresses:** Hero value proposition (P1), real chart outputs as visual proof (P1), plain-language command examples (P1), role-based walkthrough sections (P1 differentiator), persona contrast demonstration (P2), disclaimer transparency callout (P2), curriculum attribution (P2).
 
-**Avoids:** `plt.show()` (use `Agg` backend and `savefig()` — baked in from Phase 1 conventions), raw tracebacks (error handler from Phase 1), survivorship bias disclaimer (output formatter from Phase 1).
+**Avoids:** Developer-centric messaging (Pitfall 3 — outcome-led copy from landing page through features), walkthrough page as feature list (Pitfall 9 — scenario format with situation sentence + prompt + chart), unoptimized chart images (Pitfall 4 — Lighthouse verification gate), hero leading with product name not outcome (UX pitfall).
 
-**Research flag:** Standard patterns — well-documented yfinance and matplotlib workflows. No additional research needed.
+**Research flag:** The finance professional messaging research (FINRA, CFA, Deloitte sources in FEATURES.md) should be referenced when writing hero and feature copy. No additional technical research needed. The quality gate for this phase is copy validation, not implementation complexity.
 
-### Phase 3: ML Workflows (Liquidity Predictor + Investor Classifier)
+---
 
-**Rationale:** Both ML workflows share the same data preprocessing pipeline and must be built after CSV ingestion and EDA (Phase 1) are proven. They are the highest-complexity features and the primary competitive differentiators. Building them last means the code generation layer is proven and the output formatting conventions are stable, reducing rework. The look-ahead bias pitfall is most dangerous here and must be a design constraint from the first line.
+### Phase 15: Getting Started Page and Final Polish
 
-**Delivers:** Liquidity predictor (linear/polynomial regression pipeline matching ML 03), investor classifier (stratified classification with cross-validation matching ML 05-06), plain-English coefficient interpretation, cross-validation reporting with baseline comparison, categorical variable handling with explanation.
+**Rationale:** Getting Started is the terminal conversion page — every CTA across all other pages points here. It should be written last because its content (exact install commands, final repo URL) is most accurate after the rest of the site is complete and the developer has verified both install paths work correctly. Final polish — consistent navigation verification, mobile testing on real 375px viewport, social card image creation, cross-page link audit — is done last to catch any drift that emerged during Phase 14 authoring.
 
-**Addresses:** Both high-value differentiator features. Completes the full pyfi.com curriculum scope.
+**Delivers:** `getting-started.html` — two distinct install paths (Claude Code stdio; claude.ai HTTP + ngrok), copy-pasteable commands with plain-English step descriptions, troubleshooting callout for yfinance rate limits and ngrok auth; social card image (1200x630 PNG) for Open Graph `og:image` across all pages; verified navigation from every page to every other page; Lighthouse Performance score above 80 on all pages; mobile navigation confirmed on 375px viewport.
 
-**Implements:** Liquidity model code template, investor classifier code template, sklearn Pipeline with train/test split ordering enforced in template, EDA report output format.
+**Addresses:** Dual install path (P1), Getting Started page (P1), social card image for LinkedIn (P2), mobile navigation verification (table stakes), final SEO validation.
 
-**Avoids:** Look-ahead bias (split first, fit after — enforced in template), non-stationarity (use returns as features, not raw prices — documented in SKILL.md), ML output as investment advice (disclaimer from Phase 1 template), `GridSearchCV` hang (cap grid size in skill defaults).
+**Avoids:** Getting Started written for developers only (Pitfall 6 — two explicit paths, plain-English step descriptions, troubleshooting pre-empted), mobile navigation breakage (Pitfall 5 — verified on 375px from every page), blank LinkedIn social share (Pitfall 8 — absolute URL `og:image` created and validated via opengraph.xyz before launch).
 
-**Research flag:** Needs `/gsd:research-phase` during planning. The sklearn Pipeline with `ColumnTransformer` and `set_output(transform='pandas')` has version-specific behavior in sklearn 1.4+. The TimeSeriesSplit vs. random split decision depends on whether the liquidity data is cross-sectional or time-indexed. Validate these decisions before implementation.
+**Research flag:** No additional research needed. Both install paths are fully documented from the existing project. The quality gate is a non-technical person readability test: if a senior portfolio manager who has never opened a terminal cannot follow every step without asking a question, the copy needs revision.
 
-### Phase 4: Persona Variants
-
-**Rationale:** Persona overlays are thin framing layers that add value only when the underlying task implementations are solid. Building them before Phases 1-3 are complete creates rework — any bug in code generation must be fixed in multiple places. The architecture research explicitly warns against this (Anti-Pattern 4). Phase 4 adds `/finance-analyst` and `/finance-pm` commands with persona-specific SKILL.md overlays.
-
-**Delivers:** Analyst-framed outputs (sector context, regression coefficient tables, equity analysis framing), PM/trader-framed outputs (drawdown emphasis, Sortino over Sharpe, portfolio risk framing), separate command files enabling clear user intent signaling.
-
-**Addresses:** Persona-aware phrasing (v1.x differentiator), Sortino ratio and max drawdown (PM persona), analyst-style statistical output (statsmodels OLS tables).
-
-**Implements:** `finance-analyst/SKILL.md`, `finance-pm/SKILL.md` as overlays referencing base skill conventions, `/finance-analyst` and `/finance-pm` command files.
-
-**Avoids:** Monolithic skill growth (persona logic stays in overlay files, not base SKILL.md), premature complexity (only added after generalist command is validated).
-
-**Research flag:** Standard patterns — persona overlay is a thin file addition with no new library dependencies. Skip `/gsd:research-phase`.
+---
 
 ### Phase Ordering Rationale
 
-- **Infrastructure first** because all analysis workflows share the data-fetch adapter, output directory conventions, and error handling patterns. Correctness bugs at this layer propagate everywhere.
-- **Market analysis before ML** because market analysis validates the write-then-execute pattern and intent routing before adding the complexity of sklearn pipelines and CSV ingestion.
-- **Both ML workflows in one phase** because they share the same CSV ingestion, EDA, and preprocessing infrastructure. Building them together avoids duplicating that foundation.
-- **Personas last** because they are framing overlays with no new backend logic. They multiply the value of working task implementations rather than adding new capabilities.
+- **Phase 13 before all content:** Path conventions and GitHub Pages verification must be in place before any page references CSS, images, or links to other pages. Fixing path conventions after 4 pages exist requires touching every `href` and `src`.
+- **Landing page before Features and Walkthroughs in Phase 14:** The visual design system originates in `index.html`. Features and Walkthroughs should inherit from it, not define their own patterns in parallel and then require a reconciliation pass.
+- **Image curation in Phase 13, not Phase 14:** Curated chart assets are a dependency of every content page (hero image, features illustrations, walkthrough cards). Deferring curation to Phase 14 would block content authoring.
+- **Getting Started last:** Its content (install commands, troubleshooting notes, final repo URL) is most accurate after the rest of the site is built. It is also the highest-risk page for developer-centric writing — writing it last allows applying messaging lessons from Phase 14.
 
 ### Research Flags
 
-Needs `/gsd:research-phase` during planning:
-- **Phase 3 (ML Workflows):** sklearn Pipeline with `ColumnTransformer` and `set_output(transform='pandas')` has version-specific behavior. TimeSeriesSplit vs. random split decision is data-dependent. Cross-validation strategy for small finance datasets needs validation.
+Phases likely needing deeper research during planning:
+- **None identified.** All three phases use fully documented patterns (GitHub Pages official docs, plain HTML, established finance professional trust signals from named primary sources). The technical implementation is straightforward; the quality risk is in copy and image optimization — both of which have clear, verifiable quality gates.
 
-Standard patterns (skip `/gsd:research-phase`):
-- **Phase 1:** Claude Code command format is HIGH confidence from local official docs. yfinance adapter wrapping pattern is well-established.
-- **Phase 2:** yfinance + matplotlib stock analysis workflows are extremely well-documented in training data and community resources.
-- **Phase 4:** Persona overlays are thin SKILL.md additions with no new technical complexity.
+Phases with standard patterns (skip research-phase):
+- **Phase 13 (scaffolding):** GitHub Pages `docs/` folder publishing is official, unambiguous, and verified at pages.github.com/versions on 2026-03-18.
+- **Phase 14 (content pages):** HTML authoring with web-optimized images and plain-language copy; no novel technical patterns; Lighthouse is the objective quality gate.
+- **Phase 15 (Getting Started + polish):** Two-path install documentation is a known pattern; mobile verification and OG tag validation have established tooling (DevTools, opengraph.xyz).
 
 ---
 
@@ -176,49 +152,44 @@ Standard patterns (skip `/gsd:research-phase`):
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Claude Code architecture verified from installed local official plugin docs. Python library versions from August 2025 training data — verify with `pip install --upgrade` on first deploy. |
-| Features | MEDIUM | Web search unavailable during research; competitor feature analysis (OpenBB, Bloomberg Copilot) based on training data (cutoff August 2025). pyfi.com curriculum scope taken from PROJECT.md — accurate if that doc is current. |
-| Architecture | HIGH | All key architectural claims sourced from installed plugin reference files on this machine, not training data. Command format, Bash execution, skill invocation, `$ARGUMENTS`, `!`cmd`` syntax all verified from authoritative local sources. |
-| Pitfalls | HIGH (finance/ML) / MEDIUM (UX) | Finance and ML pitfalls (adjusted prices, look-ahead bias, non-stationarity, survivorship bias) are extremely well-documented in literature and training data. Claude Code skill UX pitfall patterns have limited production examples — MEDIUM confidence. |
+| Stack | HIGH | All stack decisions sourced from official GitHub Docs and Jekyll release notes; version compatibility verified against pages.github.com/versions on 2026-03-18; plain HTML decision is unambiguous for 4-page scope |
+| Features | MEDIUM-HIGH | Table stakes and page structure from developer tool homepage research (HIGH); finance professional trust signal recommendations from CFA Institute, FINRA Foundation, Deloitte (HIGH); conversion rate implications for specific copy choices (MEDIUM — no A/B test data) |
+| Architecture | HIGH | Sourced entirely from GitHub official documentation; `docs/` folder pattern, `.nojekyll` behavior, relative path requirement, and image serving constraints are all confirmed from authoritative sources |
+| Pitfalls | HIGH (technical) / MEDIUM (messaging) | Asset path and Jekyll pitfalls sourced from GitHub Docs and confirmed real-world issue reports (HIGH); finance professional messaging pitfalls synthesized from industry trust research — general patterns are solid, but specific conversion copy is unvalidated until real users interact with the site |
 
-**Overall confidence:** HIGH for build decisions; MEDIUM for feature prioritization (validate with real users after v1 launch).
+**Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **Bash tool timeout for long Python scripts:** Research flagged uncertainty about whether the Bash tool has a timeout that would affect ML model training on large datasets (potentially 30-60 seconds). Validate with a synthetic long-running script before building the ML workflows. If there is a timeout, add progress-printing to keep the connection alive.
-- **yfinance column name stability in 0.2.40+:** The `Adj Close` vs. `adj_close` naming changed between 0.1.x and 0.2.x. The adapter layer must validate column names at runtime and raise a clear error rather than assuming the schema. Verify the exact column name from a live 0.2.40 install during Phase 1 implementation.
-- **pandas-datareader maintenance status:** Listed as a fallback data source if yfinance becomes unreliable. Last known stable version was 0.10.x. Verify current maintenance status before documenting as a supported alternative.
-- **Cross-sectional vs. time-series structure of liquidity data:** The pitfalls research recommends `TimeSeriesSplit` for time-ordered data. The liquidity predictor workflow may use cross-sectional fund data (not time series), in which case random split is correct. This depends on the actual dataset structure and must be determined before Phase 3 implementation.
+- **Finance professional conversion rates for specific copy choices:** No direct A/B test data exists for this specific tool and audience combination. The non-technical person readability test is the practical validation gate for Phase 14 and 15 copy. Plan for a copy iteration after the site is shared with real finance professionals.
+- **claude.ai HTTP transport install friction:** The ngrok-based install path is documented and known to work, but actual friction for a non-developer finance professional is unvalidated. The Getting Started page should pre-empt the two known failure points (Python not installed, ngrok auth), but expect to discover additional friction points when real users attempt the install.
+- **Best social card image for LinkedIn shares:** The 1200x630 OG image should feature the most visually compelling chart output. The multi-stock comparison chart (`compare_AAPL_GOOGL_MSFT_NVDA_2025-03-18.png`) is the recommended starting point, but validate that it reads clearly at social card thumbnail size before finalizing.
 
 ---
 
 ## Sources
 
 ### Primary (HIGH confidence)
-
-- `/Users/aarjay/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/command-development/references/frontmatter-reference.md` — Command frontmatter field definitions
-- `/Users/aarjay/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/command-development/examples/simple-commands.md` — Command patterns with Bash execution, `!`cmd`` syntax
-- `/Users/aarjay/.claude/plugins/marketplaces/claude-plugins-official/plugins/claude-code-setup/skills/claude-automation-recommender/references/skills-reference.md` — Skill file format and invocation control
-- `/Users/aarjay/.claude/plugins/marketplaces/claude-plugins-official/plugins/example-plugin/skills/example-skill/SKILL.md` — Skill vs. command distinction, SKILL.md schema
-- `/Users/aarjay/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/command-development/references/advanced-workflows.md` — Multi-step workflow patterns, state management
-- `/Users/aarjay/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/command-development/references/plugin-features-reference.md` — `CLAUDE_PLUGIN_ROOT`, namespaced commands
+- GitHub Docs — Configuring a publishing source for GitHub Pages: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+- GitHub Docs — Using custom workflows with GitHub Pages: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
+- pages.github.com/versions — Native Jekyll 3.10.0, Ruby 3.3.4, plugin versions confirmed on 2026-03-18
+- Jekyll 4.4.0 Release Notes: https://jekyllrb.com/news/2025/01/27/jekyll-4-4-0-released/
+- mmistakes/minimal-mistakes GitHub — v4.28.0, remote theme compatibility: https://github.com/mmistakes/minimal-mistakes
+- CFA Institute 2025 — "Explainable AI in Finance": https://rpc.cfainstitute.org/research/reports/2025/explainable-ai-in-finance
+- FINRA Foundation 2024 — AI vs Financial Professional trust study: https://www.finra.org/media-center/newsreleases/2024
+- Deloitte 2026 — "Trust Emerges as Main Barrier to Agentic AI Adoption in Finance": https://tipalti.com/press/ai-in-finance-trust-gap-report/
 
 ### Secondary (MEDIUM confidence)
-
-- Training knowledge (August 2025 cutoff) — Python library versions, yfinance 0.2.x architecture, pandas 2.x changes, scikit-learn Pipeline API
-- pyfi.com curriculum scope — described in `.planning/PROJECT.md`; assumed accurate
-- OpenBB Terminal v2+ feature set — open source docs at openbb.co (training data)
-- Bloomberg Copilot feature announcements (Bloomberg.com, 2024-2025) (training data)
-- yfinance GitHub issue tracker and changelog (training data; verify against live repo)
-- sklearn Pipeline documentation — https://scikit-learn.org/stable/modules/compose.html
+- dasroot.net — Hugo vs Jekyll vs 11ty Comparison 2026: https://dasroot.net/posts/2026/03/hugo-vs-jekyll-vs-11ty-static-site-generator-comparison-2026/
+- Maxim Orlov — "Deploying to Github Pages? Don't Forget to Fix Your Links": https://maximorlov.com/deploying-to-github-pages-dont-forget-to-fix-your-links/
+- everydeveloper.com — "How 30 Dev Tool Homepages Put Developers First": https://everydeveloper.com/developer-tool-homepages/
+- Landingi — "Finance Landing Pages: Definition, How to Create & 8 Examples": https://landingi.com/blog/landing-pages-in-finance/
+- Python Graph Gallery (gallery-first page pattern reference): https://github.com/holtzy/The-Python-Graph-Gallery
+- Growth Fueling — "Landing Page Mistakes That Kill Conversions in 2025": https://growthfueling.com/landing-page-mistakes-that-kill-conversions-in-2025/
 
 ### Tertiary (LOW confidence)
-
-- pandas-datareader current maintenance status — unverified; treat as potentially unmaintained
-- Bash tool timeout behavior in Claude Code — flagged as unknown; needs empirical validation
-- Claude Code UX pitfall patterns — limited production examples in training data as of August 2025
+- SaaS hero copy patterns: https://landingrabbit.com/blog/saas-website-hero-text — general SaaS patterns applied to finance professional context; needs validation with real users
 
 ---
-
-*Research completed: 2026-03-17*
+*Research completed: 2026-03-18*
 *Ready for roadmap: yes*
