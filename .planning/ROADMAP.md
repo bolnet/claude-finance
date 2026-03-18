@@ -4,7 +4,8 @@
 
 - ✅ **v1.0 Finance AI Skill MVP** — Phases 1–4 (shipped 2026-03-18)
 - ✅ **v1.1 Interactive Demo** — Phases 5–8 (shipped 2026-03-18)
-- 🚧 **v1.2 Role Walkthroughs** — Phases 9–12 (in progress)
+- ✅ **v1.2 Role Walkthroughs** — Phases 9–12 (shipped 2026-03-18)
+- 🔄 **v1.3 GitHub Pages Site** — Phases 13–15 (active)
 
 ## Phases
 
@@ -32,73 +33,62 @@ Full phase details: `.planning/milestones/v1.1-ROADMAP.md`
 
 </details>
 
-### v1.2 Role Walkthroughs (In Progress)
+<details>
+<summary>✅ v1.2 Role Walkthroughs (Phases 9–12) — SHIPPED 2026-03-18</summary>
 
-**Milestone Goal:** Build 5 remaining role-based walkthrough slash commands, each a deep multi-phase scenario simulating real finance workflows using the existing 11 MCP tools.
+- [x] **Phase 9: Market-Analysis Walkthroughs** — Hedge Fund and Investment Banking walkthroughs using volatility, correlation, and comparison tools (2/2 plans, completed 2026-03-18)
+- [x] **Phase 10: Data-Profiling Walkthroughs** — FP&A and Accounting walkthroughs using CSV ingestion, data profiling, and liquidity predictor (2/2 plans, completed 2026-03-18)
+- [x] **Phase 11: ML-Classifier Walkthrough** — Private Equity walkthrough using investor classifier for due diligence scoring (1/1 plans, completed 2026-03-18)
+- [x] **Phase 12: Walkthrough Test Suite** — Dedicated test files for all 5 walkthroughs validating structure, phases, and MCP tool coverage (1/1 plans, completed 2026-03-18)
 
-- [x] **Phase 9: Market-Analysis Walkthroughs** — Hedge Fund and Investment Banking walkthroughs using volatility, correlation, and comparison tools (completed 2026-03-18)
-- [x] **Phase 10: Data-Profiling Walkthroughs** — FP&A and Accounting walkthroughs using CSV ingestion, data profiling, and liquidity predictor (completed 2026-03-18)
-- [x] **Phase 11: ML-Classifier Walkthrough** — Private Equity walkthrough using investor classifier for due diligence scoring (completed 2026-03-18)
-- [x] **Phase 12: Walkthrough Test Suite** — Dedicated test files for all 5 walkthroughs validating structure, phases, and MCP tool coverage (completed 2026-03-18)
+Full phase details: `.planning/milestones/v1.2-ROADMAP.md`
+
+</details>
+
+### v1.3 GitHub Pages Site (Active)
+
+**Milestone Goal:** Build a beautiful, multi-page GitHub Pages site that showcases the Finance AI Skill to finance professionals — landing page with a strong hook, features, role walkthroughs, demo visuals, and getting started guide.
+
+- [ ] **Phase 13: Site Scaffolding and Visual Assets** — docs/ folder structure, .nojekyll, shared HTML/CSS template, mobile viewport, 6-8 curated chart PNGs web-optimized and staged in docs/assets/images/
+- [ ] **Phase 14: Content Pages** — Landing page (hero, chart visuals, role entry points, stats bar), Features page (11 MCP tools by category), Walkthroughs page (6 role cards with scenario + chart)
+- [ ] **Phase 15: Getting Started and Polish** — Getting Started page (two install paths), social card OG image, cross-page navigation audit, Lighthouse verification
 
 ## Phase Details
 
-### Phase 9: Market-Analysis Walkthroughs
-**Goal**: Finance professionals in hedge fund and investment banking roles can run scenario-driven walkthroughs that simulate real trading desk and deal analysis workflows using market analysis tools
-**Depends on**: Phase 8 (v1.1 shipped; existing 11 MCP tools available)
-**Requirements**: HF-01, HF-02, HF-03, HF-04, IB-01, IB-02, IB-03
+### Phase 13: Site Scaffolding and Visual Assets
+**Goal**: A working GitHub Pages deployment exists with the correct folder structure, path conventions, and curated chart assets — so every content page can be authored without revisiting infrastructure decisions
+**Depends on**: Nothing (first v1.3 phase)
+**Requirements**: INFRA-01, INFRA-02, INFRA-03, VIS-01, VIS-02, VIS-03
 **Success Criteria** (what must be TRUE):
-  1. User can run `/walkthrough-hedge-fund` and receive a multi-phase scenario covering volatility regime detection, cross-sector diversification, and correlation-based pair identification
-  2. User can run `/walkthrough-investment-banking` and receive a comparable company analysis scenario covering 5-ticker comps with relative valuation framing and relative performance for deal pitch materials
-  3. Both walkthroughs auto-run their MCP tool sequences without requiring additional user input per step
-  4. Each walkthrough output includes plain-English interpretation with role-appropriate framing (trading desk language vs. deal pitch language)
-**Plans:** 2/2 plans complete
+  1. Visiting the live GitHub Pages URL in a browser loads a styled placeholder index.html with zero 404 errors in DevTools
+  2. All asset paths in HTML and CSS are relative (no leading `/`), confirmed by inspecting the deployed page
+  3. A finance professional on a phone (375px viewport) can read the placeholder page without horizontal scrolling
+  4. 6-8 chart PNGs are present in `docs/assets/images/` with stable descriptive filenames (e.g., `compare-tech-stocks.png`), each under 150KB
+  5. All pages share a single HTML head/nav/footer template — no copy-paste duplication of boilerplate across files
+**Plans**: TBD
 
-Plans:
-- [x] 09-01-PLAN.md — Hedge Fund walkthrough: SKILL.md routing, walkthrough-hedge-fund.md scenario file, volatility/correlation tool sequence
-- [x] 09-02-PLAN.md — Investment Banking walkthrough: walkthrough-investment-banking.md scenario file, 5-ticker comps tool sequence
-
-### Phase 10: Data-Profiling Walkthroughs
-**Goal**: Finance professionals in FP&A and accounting roles can run scenario-driven walkthroughs that simulate real ERP data profiling, forecasting prep, and transaction anomaly detection workflows using CSV ingestion and ML tools
-**Depends on**: Phase 9
-**Requirements**: FPA-01, FPA-02, FPA-03, ACCT-01, ACCT-02, ACCT-03
+### Phase 14: Content Pages
+**Goal**: Finance professionals can visit the landing page, understand the skill's value in plain English, see real chart outputs as proof, explore all 11 tools by category, and read the 6 role walkthroughs with scenario context
+**Depends on**: Phase 13
+**Requirements**: LAND-01, LAND-02, LAND-03, LAND-04, FEAT-01, FEAT-02, WALK-01, WALK-02
 **Success Criteria** (what must be TRUE):
-  1. User can run `/walkthrough-fpa` and receive a scenario covering CSV data profiling with target column identification and ERP export cleanup leading into liquidity predictor forecasting prep
-  2. User can run `/walkthrough-accounting` and receive a scenario covering transaction data profiling via CSV ingestion and anomaly detection prep with ERP consolidation patterns
-  3. Both walkthroughs use the bundled sample CSV (no user data required) and complete without manual intervention
-  4. Output shows data profiling results and ML forecasting interpretation in role-appropriate language (budget variance framing vs. controller/audit framing)
-**Plans:** 2/2 plans complete
+  1. Landing page hero section states the value proposition in outcome-led language ("finance analysis in plain English — no Python required") above the fold on desktop and mobile
+  2. Landing page shows at least one real chart output image as visual proof of capability
+  3. Landing page includes role-based entry points (e.g., "I'm a hedge fund analyst") that link to the relevant walkthrough card
+  4. Features page groups all 11 MCP tools by category (market analysis vs ML workflows) with plain-language outcome descriptions — no developer jargon in descriptions
+  5. Walkthroughs page presents all 6 role cards, each containing a situation sentence, a verbatim example prompt, and a representative chart image
+**Plans**: TBD
 
-Plans:
-- [x] 10-01-PLAN.md — FP&A walkthrough: walkthrough-fpa.md scenario file, CSV profiling + liquidity predictor tool sequence
-- [x] 10-02-PLAN.md — Accounting walkthrough: walkthrough-accounting.md scenario file, CSV ingestion + anomaly framing tool sequence
-
-### Phase 11: ML-Classifier Walkthrough
-**Goal**: Finance professionals in private equity and venture capital roles can run a scenario-driven walkthrough that simulates real due diligence scoring and portfolio monitoring using the investor classifier
-**Depends on**: Phase 10
-**Requirements**: PE-01, PE-02, PE-03
+### Phase 15: Getting Started and Polish
+**Goal**: Finance professionals can follow a complete, step-by-step installation path for either Claude Code or claude.ai, every page links correctly to every other page, and the site renders correctly on mobile and produces a rich social card when shared on LinkedIn
+**Depends on**: Phase 14
+**Requirements**: START-01, START-02, INFRA-04
 **Success Criteria** (what must be TRUE):
-  1. User can run `/walkthrough-private-equity` and receive a multi-phase due diligence scenario that uses the investor classifier to score prospects
-  2. Walkthrough covers multi-prospect comparison (side-by-side scoring) and portfolio company monitoring output
-  3. Output interprets classifier results in PE/VC framing (investment thesis language, portfolio risk language) rather than generic ML output
-**Plans:** 1/1 plans complete
-
-Plans:
-- [ ] 11-01-PLAN.md — Private Equity walkthrough: walkthrough-private-equity.md scenario file, investor classifier due diligence sequence
-
-### Phase 12: Walkthrough Test Suite
-**Goal**: All 5 walkthrough slash commands have dedicated test files that validate structure, phase completeness, and MCP tool coverage — giving the team confidence that walkthroughs are structurally sound and will execute correctly
-**Depends on**: Phase 11
-**Requirements**: TEST-01
-**Success Criteria** (what must be TRUE):
-  1. Each of the 5 walkthroughs has its own test file (e.g., `test_walkthrough_hedge_fund.py`) that passes in the CI test suite
-  2. Tests validate that each walkthrough file references the expected MCP tools for its scenario
-  3. Tests validate that each walkthrough has the required phase structure (multi-phase scenario sections present)
-  4. `pytest` passes with 0 failures across all 5 walkthrough test files
-**Plans:** 1/1 plans complete
-
-Plans:
-- [ ] 12-01-PLAN.md — Test files for all 5 walkthroughs: structure validation, tool coverage assertions, pytest integration
+  1. Getting Started page presents two clearly separated install paths (Claude Code via stdio; claude.ai via HTTP + ngrok), each with copy-pasteable commands and plain-English step descriptions
+  2. Every navigation link on every page resolves to the correct destination — no broken links on any of the 4 pages
+  3. Sharing the site URL on LinkedIn (verified via opengraph.xyz) produces a rich preview with title, description, and chart image — not a blank card
+  4. Lighthouse Performance score is 80 or above on all 4 pages
+**Plans**: TBD
 
 ## Progress
 
@@ -114,8 +104,11 @@ Plans:
 | 8. Persona Demos | v1.1 | 2/2 | Complete | 2026-03-18 |
 | 9. Market-Analysis Walkthroughs | v1.2 | 2/2 | Complete | 2026-03-18 |
 | 10. Data-Profiling Walkthroughs | v1.2 | 2/2 | Complete | 2026-03-18 |
-| 11. ML-Classifier Walkthrough | 1/1 | Complete    | 2026-03-18 | - |
-| 12. Walkthrough Test Suite | 1/1 | Complete    | 2026-03-18 | - |
+| 11. ML-Classifier Walkthrough | v1.2 | 1/1 | Complete | 2026-03-18 |
+| 12. Walkthrough Test Suite | v1.2 | 1/1 | Complete | 2026-03-18 |
+| 13. Site Scaffolding and Visual Assets | v1.3 | 0/? | Not started | - |
+| 14. Content Pages | v1.3 | 0/? | Not started | - |
+| 15. Getting Started and Polish | v1.3 | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-03-18 — Phase 11 plan created*
+*Last updated: 2026-03-18 — v1.3 roadmap created*

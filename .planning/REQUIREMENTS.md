@@ -65,29 +65,29 @@ Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | — | Pending |
-| INFRA-02 | — | Pending |
-| INFRA-03 | — | Pending |
-| INFRA-04 | — | Pending |
-| LAND-01 | — | Pending |
-| LAND-02 | — | Pending |
-| LAND-03 | — | Pending |
-| LAND-04 | — | Pending |
-| FEAT-01 | — | Pending |
-| FEAT-02 | — | Pending |
-| WALK-01 | — | Pending |
-| WALK-02 | — | Pending |
-| START-01 | — | Pending |
-| START-02 | — | Pending |
-| VIS-01 | — | Pending |
-| VIS-02 | — | Pending |
-| VIS-03 | — | Pending |
+| INFRA-01 | Phase 13 | Pending |
+| INFRA-02 | Phase 13 | Pending |
+| INFRA-03 | Phase 13 | Pending |
+| INFRA-04 | Phase 15 | Pending |
+| LAND-01 | Phase 14 | Pending |
+| LAND-02 | Phase 14 | Pending |
+| LAND-03 | Phase 14 | Pending |
+| LAND-04 | Phase 14 | Pending |
+| FEAT-01 | Phase 14 | Pending |
+| FEAT-02 | Phase 14 | Pending |
+| WALK-01 | Phase 14 | Pending |
+| WALK-02 | Phase 14 | Pending |
+| START-01 | Phase 15 | Pending |
+| START-02 | Phase 15 | Pending |
+| VIS-01 | Phase 13 | Pending |
+| VIS-02 | Phase 13 | Pending |
+| VIS-03 | Phase 13 | Pending |
 
 **Coverage:**
 - v1.3 requirements: 17 total
-- Mapped to phases: 0
-- Unmapped: 17
+- Mapped to phases: 17
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-18*
-*Last updated: 2026-03-18 after initial definition*
+*Last updated: 2026-03-18 — traceability mapped after roadmap creation*
