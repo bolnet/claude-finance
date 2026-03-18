@@ -2,9 +2,11 @@
 
 ## What This Is
 
-A Claude Code native skill that lets finance professionals describe what they need in plain English and get back clean financial analysis — no Python coding required, no Excel needed. Built around the pyfi.com Python & Machine Learning for Finance course curriculum, the skill translates natural language requests into executed Python finance workflows (data fetching, cleaning, modeling, insights).
+A Claude Code native skill (and claude.ai plugin) that lets finance professionals describe what they need in plain English and receive executed Python finance analysis — no Python coding required. Built around the pyfi.com Python & Machine Learning for Finance course curriculum.
 
-Three persona-specific versions will ship in phases: Financial Analysts, Portfolio Managers / Traders, and a unified generalist version.
+The skill is an MCP server with 11 tools covering market analysis (price charts, returns, volatility, risk metrics, comparison, correlation) and ML workflows (CSV ingestion, liquidity risk regression, investor segment classification). Two persona variants ship: equity analyst (`/finance-analyst`) and portfolio manager (`/finance-pm`).
+
+**v1.0 shipped.** All 38 v1 requirements delivered across 4 phases.
 
 ## Core Value
 
@@ -14,61 +16,67 @@ Finance professionals get professional-grade analysis by describing what they wa
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ `/finance` slash command with intent classification and dynamic context injection — v1.0
+- ✓ Stock analysis workflows (price data, returns, volatility, correlations) via yfinance — v1.0
+- ✓ Data cleaning pipeline matching ML 01 curriculum (IQR outliers, missing value fill, EDA charts) — v1.0
+- ✓ Liquidity predictor using regression ML (sklearn Pipeline, train/test split before fit, RMSE/R²) — v1.0
+- ✓ Investor classifier using classification ML (GridSearchCV, StratifiedKFold, feature importance) — v1.0
+- ✓ User-provided CSV file support with auto-structure detection — v1.0
+- ✓ Output includes PNG charts, summary tables, and plain-English interpretation with disclaimer — v1.0
+- ✓ Equity analyst persona (`/finance-analyst`) and portfolio manager persona (`/finance-pm`) — v1.0
+- ✓ claude.ai browser access via HTTP transport + ngrok startup script — v1.0
+- ✓ Plugin package for Claude marketplace submission — v1.0
 
 ### Active
 
-- [ ] `/finance` slash command skill that accepts natural language finance requests
-- [ ] Stock analysis workflows (price data, returns, volatility, correlations) using yfinance
-- [ ] Data cleaning & exploration pipeline matching ML 01 curriculum (outliers, categoricals, visualization)
-- [ ] Liquidity predictor using regression ML (ML 03 — linear/polynomial regression, pipelines)
-- [ ] Investor classifier using classification ML (ML 05-06 — stratified sampling, cross-validation, hyperparameter tuning)
-- [ ] Support for user-provided CSV/Excel files (matching course dataset formats)
-- [ ] Output includes charts (matplotlib/seaborn), summary tables, and plain-English interpretation
-- [ ] Three separate persona variants: Analyst, Portfolio Manager/Trader, Generalist
+- [ ] Replace `[owner]` placeholder in `finance-mcp-plugin/.claude-plugin/plugin.json` before marketplace submission
+- [ ] Add Phase 2+3 MCP tool names to `/finance` command `allowed-tools` (SKILL.md inconsistency with direct MCP dispatch)
+- [ ] Alpha Vantage integration for fundamental data (earnings, P/E, revenue) — DATA-01
+- [ ] FRED integration for macroeconomic indicators — DATA-02
+- [ ] Persona detection via conversation context (no explicit command) — PERS-03
+- [ ] Algorithmic trading backtesting — ADVX-01
+- [ ] Portfolio optimization (efficient frontier, max Sharpe) — ADVX-02
 
 ### Out of Scope
 
-- Bloomberg / Refinitiv / Alpha Vantage integration — v1 uses yfinance + CSVs only (course scope)
-- Real-time streaming data — batch analysis only for v1
-- Web UI or dashboard — Claude Code terminal only for v1
-- Users writing Python code themselves — skill handles all code generation/execution
-- Algo trading backtesting — deferred to Phase 2 (not covered in available ML notebooks)
+- Bloomberg / Refinitiv integration — paid API, not in course scope
+- Real-time streaming data — batch analysis only
+- Trading execution / order placement — regulatory liability
+- Web UI / dashboard — Claude Code terminal + claude.ai only
+- DCF / fundamental valuation — not in course curriculum
+- Excel (.xlsx) support — CSV only for now (DATA-03 deferred)
 
 ## Context
 
-**Course content analyzed:**
-- **PF 01-05**: Python fundamentals, NumPy, Pandas (foundational tools the skill uses internally)
-- **ML 01**: Data cleaning & exploration — matplotlib/seaborn, outlier handling, categorical correction
-- **ML 03**: Liquidity Predictor — regression, model pipelines, train/test splits (uses `liquidity_data.csv`, `liquidity_client.csv`)
-- **ML 05-06**: Investor Classifier — feature engineering, dummy variables, stratified sampling, cross-validation, hyperparameter grids (uses `investor_data.csv`, `investor_data_2.csv`)
-- **Books**: Python for Finance, Algorithmic Trading Mastery, ML for Finance, Expanded Python Finance Book
+**v1.0 shipped 2026-03-18.** 4 phases, 16 plans, 2,767 LOC Python, 53 tests passing.
 
-**Core insight from user:**
-Finance professionals today use Excel for this work. This course teaches them Python as the upgrade. The skill removes even that barrier — they get the Python outputs without writing Python. The skill is the Python layer.
+**Tech stack:** Python 3.14, FastMCP 2.x, yfinance 0.2.54+, scikit-learn 1.8.0, pandas, matplotlib (Agg), seaborn, joblib
 
-**pyfi.com curriculum maps to these real finance problems:**
-1. Stock price analysis → Pandas + yfinance
-2. Liquidity risk modeling → Regression ML
-3. Client/investor profiling → Classification ML
+**Architecture:** Single FastMCP server instance shared across stdio (Claude Code) and streamable-HTTP (claude.ai) transports. All 11 tools registered in `server.py`. Adapter pattern isolates yfinance behind `adapter.py`. All output enforces plain-English-first + disclaimer via `output.py`.
+
+**Known tech debt from v1.0:** 10 items tracked in `.planning/milestones/v1.0-MILESTONE-AUDIT.md` — none are blockers. Most notable: VALIDATION.md files remain in draft state (Nyquist validation not run), and SUMMARY frontmatter `requirements-completed` fields missing for 7 plans.
 
 ## Constraints
 
-- **Tech stack**: Python (matches course stack: NumPy, Pandas, Matplotlib, Seaborn, Scikit-learn, yfinance)
-- **Runtime**: Claude Code's native Python execution (Bash tool)
-- **Data scope**: yfinance for live data + CSV for user-provided data (v1)
-- **Skill format**: Claude Code slash command (`.claude/skills/` or `~/.claude/skills/`)
-- **Persona scope**: v1 builds generalist first, then splits into analyst / PM-trader variants in subsequent phases
+- **Tech stack**: Python (matches pyfi.com course stack)
+- **Runtime**: Claude Code (Bash tool) + claude.ai (streamable-HTTP)
+- **Data scope**: yfinance for live market data + CSV for user-provided data
+- **Skill format**: Claude Code slash command + FastMCP server
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Slash command format (not conversational agent) | More actionable for daily use — finance pros want discrete tasks, not chat | — Pending |
-| Python execution via Claude Code Bash tool | Course teaches Python; skill should run same code under the hood | — Pending |
-| yfinance + CSV only for v1 | Matches course scope; keeps v1 shippable | — Pending |
-| Three phases by persona | Each finance persona has different workflows and mental models | — Pending |
-| Course curriculum as v1 scope boundary | Prevents scope creep; course provides validated real-world problems | — Pending |
+| Slash command format (not conversational agent) | More actionable for daily use | ✓ Good — intent classification in SKILL.md routes cleanly |
+| Python execution via Write-then-Bash | Course teaches Python; skill runs same code; no inline `-c` | ✓ Good — documented pattern, consistent across all tools |
+| yfinance + CSV only for v1 | Matches course scope; keeps v1 shippable | ✓ Good — shipped on time |
+| FastMCP server as shared engine | Single registration point; both transports reuse same instance | ✓ Good — server_http.py is 29 lines |
+| Close column (not Adj Close) | yfinance 0.2.54+ auto_adjust=True removes Adj Close | ✓ Good — adapter.py enforces, AST test confirms isolation |
+| matplotlib.use(Agg) in output.py module scope | Must be set before pyplot import; enforced on every tool import | ✓ Good — no plt.show() anywhere in codebase |
+| Train/test split before any .fit() call | Look-ahead bias is unrecoverable; enforced in code | ✓ Good — structural test passes |
+| Two-tool ML pattern (train+evaluate / predict+infer) | Clean separation of training and inference | ✓ Good — adopted for both liquidity and investor models |
+| Persona reuse of existing MCP tools | Zero new Python code per persona; differentiation is in framing | ✓ Good — both persona variants work at v1.0 |
+| Deferred Nyquist validation | VALIDATION.md files created but not completed | ⚠️ Revisit — all 4 phases in draft state |
 
 ---
-*Last updated: 2026-03-17 after initialization*
+*Last updated: 2026-03-18 after v1.0 milestone*
