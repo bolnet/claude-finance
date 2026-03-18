@@ -80,7 +80,7 @@ Plans:
 - [ ] 03-02-PLAN.md — liquidity_predictor + predict_liquidity tools (LQDX-04, LQDX-05, LQDX-06)
 - [ ] 03-03-PLAN.md — investor_classifier + classify_investor tools (INVX-01..INVX-06)
 - [ ] 03-04-PLAN.md — Integration wave: activate all test stubs, SKILL.md ML routing update
-- [ ] 03-05-PLAN.md — Phase 3 functional testing with real course CSV files (checkpoint)
+- [x] 03-05-PLAN.md — Phase 3 functional testing with real course CSV files (checkpoint) (completed 2026-03-18)
 
 ### Phase 4: Web Publishing & Personas
 **Goal**: Finance professionals can use the skill at claude.ai in their browser; analyst and PM/trader persona variants ship; skill is packaged for the Claude plugin marketplace
