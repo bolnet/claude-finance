@@ -17,6 +17,7 @@ from finance_mcp.tools.price_chart import analyze_stock
 from finance_mcp.tools.returns import get_returns
 from finance_mcp.tools.volatility import get_volatility
 from finance_mcp.tools.risk_metrics import get_risk_metrics
+from finance_mcp.tools.comparison import compare_tickers
 
 mcp = FastMCP("Finance MCP Server")
 
@@ -24,6 +25,7 @@ mcp.add_tool(analyze_stock)
 mcp.add_tool(get_returns)
 mcp.add_tool(get_volatility)
 mcp.add_tool(get_risk_metrics)
+mcp.add_tool(compare_tickers)
 
 
 @mcp.tool
