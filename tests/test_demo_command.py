@@ -125,11 +125,11 @@ def test_demo_body_has_welcome_section():
 # ---------------------------------------------------------------------------
 
 
-def test_demo_body_has_11_steps():
-    """Body must contain all 11 numbered steps (Step 1 through Step 11)."""
+def test_demo_body_has_20_steps():
+    """Body must contain all 20 numbered steps (Step 1 through Step 20)."""
     _, body = read_demo_file()
     missing_steps = []
-    for n in range(1, 12):
+    for n in range(1, 21):
         # Match "Step N:" or "## Step N" patterns
         pattern = rf"(?i)step\s+{n}\b"
         if not re.search(pattern, body):
@@ -196,4 +196,56 @@ def test_demo_frontmatter_no_argument_hint():
     frontmatter, _ = read_demo_file()
     assert "argument-hint:" not in frontmatter, (
         "demo.md must not have 'argument-hint:' — it is a self-running walkthrough with no arguments"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Test 10: Real-world scenarios section present
+# ---------------------------------------------------------------------------
+
+
+def test_demo_body_has_real_world_scenarios_section():
+    """Body must contain a Real-World Scenarios section with role-based examples."""
+    _, body = read_demo_file()
+    body_lower = body.lower()
+    assert "real-world" in body_lower or "real world" in body_lower, (
+        "Body must contain a 'Real-World' scenarios section"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Test 11: Finance roles referenced in scenario steps
+# ---------------------------------------------------------------------------
+
+
+REQUIRED_ROLES = [
+    "equity research",
+    "hedge fund",
+    "fp&a",
+    "private equity",
+    "investment banking",
+]
+
+
+def test_demo_body_references_finance_roles():
+    """Body must reference at least 5 finance roles in the scenario steps."""
+    _, body = read_demo_file()
+    body_lower = body.lower()
+    missing = [role for role in REQUIRED_ROLES if role not in body_lower]
+    assert not missing, (
+        f"The following finance roles are missing from scenario steps: {missing}"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Test 12: Role-tool mapping table present
+# ---------------------------------------------------------------------------
+
+
+def test_demo_body_has_role_tool_mapping():
+    """Body must contain a role-tool mapping table."""
+    _, body = read_demo_file()
+    body_lower = body.lower()
+    assert "role" in body_lower and "primary tools" in body_lower, (
+        "Body must contain a role-tool mapping table with 'Role' and 'Primary Tools' columns"
     )
