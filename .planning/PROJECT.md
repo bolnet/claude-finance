@@ -4,19 +4,9 @@
 
 A Claude Code native skill (and claude.ai plugin) that lets finance professionals describe what they need in plain English and receive executed Python finance analysis — no Python coding required. Built around the pyfi.com Python & Machine Learning for Finance course curriculum.
 
-The skill is an MCP server with 11 tools covering market analysis (price charts, returns, volatility, risk metrics, comparison, correlation) and ML workflows (CSV ingestion, liquidity risk regression, investor segment classification). Two persona variants ship: equity analyst (`/finance-analyst`) and portfolio manager (`/finance-pm`).
+The skill is an MCP server with 11 tools covering market analysis (price charts, returns, volatility, risk metrics, comparison, correlation) and ML workflows (CSV ingestion, liquidity risk regression, investor segment classification). Two persona variants ship: equity analyst (`/finance-analyst`) and portfolio manager (`/finance-pm`). A guided `/demo` walkthrough demonstrates all capabilities step-by-step.
 
-**v1.0 shipped.** All 38 v1 requirements delivered across 4 phases.
-
-## Current Milestone: v1.1 Interactive Demo
-
-**Goal:** Let users experience every capability of the Finance AI Skill through a guided `/demo` slash command that runs all 11 MCP tools and both personas with real examples, pausing between each for explanation.
-
-**Target features:**
-- `/demo` slash command with step-by-step walkthrough of all tools
-- Live yfinance data for market analysis demos, bundled CSV for ML demos
-- Pause-and-explain flow between each tool demo
-- Persona variant showcase (analyst vs PM framing on same data)
+**v1.1 shipped.** v1.0 MVP (38 requirements) + v1.1 Interactive Demo (17 requirements) delivered across 8 phases.
 
 ## Core Value
 
@@ -36,6 +26,10 @@ Finance professionals get professional-grade analysis by describing what they wa
 - ✓ Equity analyst persona (`/finance-analyst`) and portfolio manager persona (`/finance-pm`) — v1.0
 - ✓ claude.ai browser access via HTTP transport + ngrok startup script — v1.0
 - ✓ Plugin package for Claude marketplace submission — v1.0
+- ✓ `/demo` slash command launches guided walkthrough of all 11 MCP tools — v1.1
+- ✓ Live yfinance data for market analysis demos with pause-and-explain flow — v1.1
+- ✓ Bundled sample CSV for ML workflow demos (no user data required) — v1.1
+- ✓ Persona contrast demo: analyst vs PM framing on same risk metrics data — v1.1
 
 ### Active
 
@@ -58,13 +52,13 @@ Finance professionals get professional-grade analysis by describing what they wa
 
 ## Context
 
-**v1.0 shipped 2026-03-18.** 4 phases, 16 plans, 2,767 LOC Python, 53 tests passing.
+**v1.1 shipped 2026-03-18.** 8 phases, 25 plans, 3,832 LOC Python, 105 tests passing.
 
 **Tech stack:** Python 3.14, FastMCP 2.x, yfinance 0.2.54+, scikit-learn 1.8.0, pandas, matplotlib (Agg), seaborn, joblib
 
 **Architecture:** Single FastMCP server instance shared across stdio (Claude Code) and streamable-HTTP (claude.ai) transports. All 11 tools registered in `server.py`. Adapter pattern isolates yfinance behind `adapter.py`. All output enforces plain-English-first + disclaimer via `output.py`.
 
-**Known tech debt from v1.0:** 10 items tracked in `.planning/milestones/v1.0-MILESTONE-AUDIT.md` — none are blockers. Most notable: VALIDATION.md files remain in draft state (Nyquist validation not run), and SUMMARY frontmatter `requirements-completed` fields missing for 7 plans.
+**Known tech debt:** 10 items from v1.0 tracked in `.planning/milestones/v1.0-MILESTONE-AUDIT.md` — none are blockers. Most notable: VALIDATION.md files remain in draft state (Nyquist validation not run).
 
 ## Constraints
 
@@ -85,8 +79,12 @@ Finance professionals get professional-grade analysis by describing what they wa
 | matplotlib.use(Agg) in output.py module scope | Must be set before pyplot import; enforced on every tool import | ✓ Good — no plt.show() anywhere in codebase |
 | Train/test split before any .fit() call | Look-ahead bias is unrecoverable; enforced in code | ✓ Good — structural test passes |
 | Two-tool ML pattern (train+evaluate / predict+infer) | Clean separation of training and inference | ✓ Good — adopted for both liquidity and investor models |
-| Persona reuse of existing MCP tools | Zero new Python code per persona; differentiation is in framing | ✓ Good — both persona variants work at v1.0 |
-| Deferred Nyquist validation | VALIDATION.md files created but not completed | ⚠️ Revisit — all 4 phases in draft state |
+| Persona reuse of existing MCP tools | Zero new Python code per persona; differentiation is in framing | ✓ Good — both persona variants work |
+| Deferred Nyquist validation | VALIDATION.md files created but not completed | ⚠️ Revisit — all 4 v1.0 phases in draft state |
+| /demo as self-running walkthrough (no arguments) | Simpler UX; all steps pre-sequenced | ✓ Good — 14 steps cover all 11 tools + both personas |
+| Persona framing via instructional prose in demo.md | Cannot invoke slash commands from slash commands | ✓ Good — Claude interprets framing correctly |
+| xfail as CI gate for network-dependent tests | Tests degrade gracefully when Yahoo Finance unreachable | ✓ Good — xpassed confirms connectivity |
+| liquidity_predictor restricted to 3 features | Full CSV columns caused column-mismatch at inference time | ✓ Good — fixed inference stability |
 
 ---
-*Last updated: 2026-03-18 after v1.1 milestone start*
+*Last updated: 2026-03-18 after v1.1 milestone completion*

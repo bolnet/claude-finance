@@ -56,14 +56,62 @@ Living retrospective — updated at each milestone completion.
 
 ---
 
+## Milestone: v1.1 — Interactive Demo
+
+**Shipped:** 2026-03-18
+**Phases:** 4 | **Plans:** 9 | **Commits:** 30 | **Timeline:** 1 day (2026-03-17 → 2026-03-18)
+
+### What Was Built
+
+- `/demo` slash command — 14-step guided walkthrough of all 11 MCP tools and both persona variants, with pause-and-explain flow between each step
+- Live integration test suite for 6 market analysis tools using real Yahoo Finance data (xfail CI gate pattern)
+- Bundled `demo/sample_portfolio.csv` (100-row synthetic data, numpy seed=42) for ML workflow demo steps
+- Persona contrast demo: Steps 12-14 show analyst framing (Sharpe first) vs PM framing (drawdown/beta first) on same get_risk_metrics output
+- Fixed liquidity_predictor column-mismatch bug — restricted training to 3-column feature set for stable inference
+
+### What Worked
+
+- **v1.0 architecture held up perfectly** — all 11 MCP tools were demo-ready with zero changes to tool implementations; the demo only needed correct parameter schemas in demo.md
+- **xfail as CI gate** — `pytest.mark.network` + `xfail` allowed live integration tests to exist in CI without flaking; tests xpass when Yahoo Finance is reachable, gracefully degrade when not
+- **Human verification via /demo** — running the actual slash command caught parameter mismatches (wrong date formats, string vs float types) that structural tests could not detect; adopted as acceptance gate for every phase
+- **Iterative parameter correction** — Phase 6 corrected market tool schemas, Phase 7 corrected ML tool parameters, Phase 8 added persona steps; each phase built cleanly on the previous one's corrections
+
+### What Was Inefficient
+
+- **SUMMARY frontmatter still not populated** — v1.1 summaries again have null `one_liner` fields; the `gsd-tools summary-extract` command returned null for all 9 summaries; same issue as v1.0 that was identified but not fixed
+- **Demo.md parameter schemas wrong on first write** — Phase 5 wrote demo.md with incorrect parameter names/formats for most tools; Phases 6 and 7 spent significant effort correcting these; should validate tool signatures before writing demo steps
+- **Column-mismatch bug in liquidity_predictor** — training on all CSV columns caused inference failure when predict_liquidity received a 3-column input; discovered only through integration testing, not caught by existing unit tests
+
+### Patterns Established
+
+- **xfail + pytest.mark.network** — standard pattern for tests that require live API access; CI-safe with informative xpass/xfail reporting
+- **Instructional prose for persona framing in slash commands** — demo.md simulates persona roles by telling Claude how to frame results, since slash commands cannot invoke other slash commands
+- **Synthetic CSV with seed for reproducibility** — `numpy.default_rng(42)` produces identical data across runs; schema validates against both ML model column requirements
+- **Reuse-data pattern** — Step 13 reuses Step 12 tool output instead of re-calling get_risk_metrics; avoids redundant API calls while demonstrating persona contrast
+
+### Key Lessons
+
+1. **Validate tool signatures before writing demo steps.** The biggest rework in v1.1 was correcting parameter schemas that didn't match actual MCP tool function signatures. A pre-write validation step would have saved Phases 6 and 7 significant correction effort.
+2. **Integration tests reveal column alignment bugs that unit tests miss.** The liquidity_predictor bug only surfaced when real CSV data with more columns than the training features was passed through the full pipeline. Unit tests with mocked data never exercised this path.
+3. **SUMMARY frontmatter population must be enforced during plan execution.** Two milestones in a row have this gap. The accomplishment extraction in milestone completion depends on `one_liner` fields that are consistently left empty.
+
+### Cost Observations
+
+- Model mix: claude-sonnet-4-6 throughout (all phases)
+- Yolo mode: all phases executed without confirmation gates
+- Notable: 9 plans completed same-day as v1.0, demonstrating that demo/test phases are faster than implementation phases (~3 min/plan avg vs ~5 min/plan for v1.0)
+
+---
+
 ## Cross-Milestone Trends
 
-| Metric | v1.0 |
-|--------|------|
-| Phases | 4 |
-| Plans | 16 |
-| LOC | ~2,767 Python |
-| Tests | 53 passed, 13 xpassed |
-| Timeline | 1 day |
-| Requirements | 38/38 |
-| Tech debt items | 10 (none blocking) |
+| Metric | v1.0 | v1.1 |
+|--------|------|------|
+| Phases | 4 | 4 |
+| Plans | 16 | 9 |
+| LOC | ~2,767 Python | ~3,832 Python (cumulative) |
+| Tests | 53 passed, 13 xpassed | 105 passing |
+| Timeline | 1 day | 1 day |
+| Requirements | 38/38 | 17/17 |
+| Tech debt items | 10 (none blocking) | 10 carried (none blocking) |
+| SUMMARY one_liner populated | 0/16 | 0/9 |
