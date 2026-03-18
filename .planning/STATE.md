@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Interactive Demo
 status: planning
-stopped_at: Completed 08-01-PLAN.md
-last_updated: "2026-03-18T16:23:00.813Z"
+stopped_at: Completed 08-02-PLAN.md
+last_updated: "2026-03-18T16:40:19.266Z"
 last_activity: 2026-03-18 — v1.1 roadmap created
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
   percent: 0
 ---
 
@@ -63,6 +63,7 @@ Phase 8: [ ] [ ]
 | Phase 07-ml-workflow-demos P02 | 5 | 1 tasks | 2 files |
 | Phase 07-ml-workflow-demos P03 | 5 | 2 tasks | 1 files |
 | Phase 08-persona-demos P01 | 5 | 2 tasks | 2 files |
+| Phase 08-persona-demos P02 | 2 | 2 tasks | 0 files |
 
 ## Accumulated Context
 
@@ -120,6 +121,7 @@ Recent decisions affecting current work:
 - [Phase 07-ml-workflow-demos]: demo.md Step 11 risk_tolerance changed from string moderate to float 0.5 to match classify_investor function signature
 - [Phase 08-persona-demos]: demo.md cannot invoke persona slash commands directly — persona framing simulated inline by instructing Claude with role-specific explanation rules
 - [Phase 08-persona-demos]: Persona contrast pattern: run get_risk_metrics once (analyst framing), re-explain same data (PM framing), print contrast table — three steps total
+- [Phase 08-persona-demos]: Human approval of /demo Steps 12-14 is the final acceptance gate for PERS-01/PERS-02/PERS-03 — automated tests prove structural correctness; live run proves Claude framing works
 
 ### Pending Todos
 
@@ -131,6 +133,6 @@ None — v1.0 complete. v1.1 roadmap ready.
 
 ## Session Continuity
 
-Last session: 2026-03-18T16:23:00.811Z
-Stopped at: Completed 08-01-PLAN.md
+Last session: 2026-03-18T16:40:19.263Z
+Stopped at: Completed 08-02-PLAN.md
 Resume file: None
