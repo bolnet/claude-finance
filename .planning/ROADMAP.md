@@ -49,7 +49,7 @@ Full phase details: `.planning/milestones/v1.2-ROADMAP.md`
 
 **Milestone Goal:** Build a beautiful, multi-page GitHub Pages site that showcases the Finance AI Skill to finance professionals — landing page with a strong hook, features, role walkthroughs, demo visuals, and getting started guide.
 
-- [ ] **Phase 13: Site Scaffolding and Visual Assets** — docs/ folder structure, .nojekyll, shared HTML/CSS template, mobile viewport, 6-8 curated chart PNGs web-optimized and staged in docs/assets/images/
+- [x] **Phase 13: Site Scaffolding and Visual Assets** — docs/ folder structure, .nojekyll, shared HTML/CSS template, mobile viewport, 6-8 curated chart PNGs web-optimized and staged in docs/assets/images/ (completed 2026-03-18)
 - [ ] **Phase 14: Content Pages** — Landing page (hero, chart visuals, role entry points, stats bar), Features page (11 MCP tools by category), Walkthroughs page (6 role cards with scenario + chart)
 - [ ] **Phase 15: Getting Started and Polish** — Getting Started page (two install paths), social card OG image, cross-page navigation audit, Lighthouse verification
 
@@ -65,7 +65,7 @@ Full phase details: `.planning/milestones/v1.2-ROADMAP.md`
   3. A finance professional on a phone (375px viewport) can read the placeholder page without horizontal scrolling
   4. 6-8 chart PNGs are present in `docs/assets/images/` with stable descriptive filenames (e.g., `compare-tech-stocks.png`), each under 150KB
   5. All pages share a single HTML head/nav/footer template — no copy-paste duplication of boilerplate across files
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 13-01-PLAN.md — Create docs/ folder structure, HTML template, CSS, JS, curate 8 chart images, favicon
@@ -110,7 +110,7 @@ Plans:
 | 10. Data-Profiling Walkthroughs | v1.2 | 2/2 | Complete | 2026-03-18 |
 | 11. ML-Classifier Walkthrough | v1.2 | 1/1 | Complete | 2026-03-18 |
 | 12. Walkthrough Test Suite | v1.2 | 1/1 | Complete | 2026-03-18 |
-| 13. Site Scaffolding and Visual Assets | 1/2 | In Progress|  | - |
+| 13. Site Scaffolding and Visual Assets | 2/2 | Complete   | 2026-03-18 | - |
 | 14. Content Pages | v1.3 | 0/? | Not started | - |
 | 15. Getting Started and Polish | v1.3 | 0/? | Not started | - |
 
