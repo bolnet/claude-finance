@@ -9,10 +9,10 @@ Requirements for the interactive demo milestone. Each maps to roadmap phases.
 
 ### Demo Command
 
-- [ ] **DEMO-01**: User can type `/demo` to start the interactive walkthrough
-- [ ] **DEMO-02**: Demo displays a welcome message explaining what the Finance AI Skill does
-- [ ] **DEMO-03**: Demo pauses after each tool's result with an explanation of what happened
-- [ ] **DEMO-04**: Demo shows a completion summary at the end with all tools demonstrated
+- [x] **DEMO-01**: User can type `/demo` to start the interactive walkthrough
+- [x] **DEMO-02**: Demo displays a welcome message explaining what the Finance AI Skill does
+- [x] **DEMO-03**: Demo pauses after each tool's result with an explanation of what happened
+- [x] **DEMO-04**: Demo shows a completion summary at the end with all tools demonstrated
 
 ### Market Analysis Demos
 
@@ -59,10 +59,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DEMO-01 | Phase 5 | Pending |
-| DEMO-02 | Phase 5 | Pending |
-| DEMO-03 | Phase 5 | Pending |
-| DEMO-04 | Phase 5 | Pending |
+| DEMO-01 | Phase 5 | Complete |
+| DEMO-02 | Phase 5 | Complete |
+| DEMO-03 | Phase 5 | Complete |
+| DEMO-04 | Phase 5 | Complete |
 | MRKT-01 | Phase 6 | Pending |
 | MRKT-02 | Phase 6 | Pending |
 | MRKT-03 | Phase 6 | Pending |
