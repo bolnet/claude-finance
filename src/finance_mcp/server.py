@@ -14,10 +14,14 @@ import importlib
 from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError
 from finance_mcp.tools.price_chart import analyze_stock
+from finance_mcp.tools.returns import get_returns
+from finance_mcp.tools.volatility import get_volatility
 
 mcp = FastMCP("Finance MCP Server")
 
 mcp.add_tool(analyze_stock)
+mcp.add_tool(get_returns)
+mcp.add_tool(get_volatility)
 
 
 @mcp.tool
