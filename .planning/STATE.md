@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 02-04-PLAN.md — Phase 2 complete, human verification approved
-last_updated: "2026-03-18T02:22:15.471Z"
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-18T03:31:03.559Z"
 last_activity: "2026-03-18 — 01-03 complete: /finance command verified, finance MCP server connected, all packages OK"
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 12
+  completed_plans: 8
   percent: 67
 ---
 
@@ -56,6 +56,7 @@ Progress: [███████░░░] 67%
 | Phase 02-market-analysis-tools P02 | 4 | 2 tasks | 5 files |
 | Phase 02-market-analysis-tools P03 | 5 min | 2 tasks | 4 files |
 | Phase 02-market-analysis-tools P04 | 5 | 2 tasks | 1 files |
+| Phase 03-ml-workflow-tools P01 | 3 min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,8 @@ Recent decisions affecting current work:
 - [Phase 02-market-analysis-tools]: get_risk_metrics fetches ^GSPC benchmark via same fetch_price_history adapter — reuses existing validation and DataFetchError handling
 - [Phase 02-market-analysis-tools]: Import seaborn inside correlation_map function body — ensures output.py has set Agg backend before seaborn loads
 - [Phase 02-market-analysis-tools]: Correlation computed on pct_change().dropna() not raw prices — return-based correlation avoids spurious correlations from shared price trends
+- [Phase 03-ml-workflow-tools]: pandas select_dtypes uses 'object'/'string' not 'str' for categorical column detection — 'str' dtype alias not recognized in select_dtypes across pandas versions
+- [Phase 03-ml-workflow-tools]: IQR outlier filter preserves NaN rows during outlier pass (isna() OR bounds) then fills with median — prevents valid rows being dropped due to missing values in the filtered column
 
 ### Pending Todos
 
@@ -95,6 +98,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T02:07:05.663Z
-Stopped at: Completed 02-04-PLAN.md — Phase 2 complete, human verification approved
+Last session: 2026-03-18T03:31:03.556Z
+Stopped at: Completed 03-01-PLAN.md
 Resume file: None
