@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Interactive Demo
 status: planning
-stopped_at: Completed 07-02-PLAN.md
-last_updated: "2026-03-18T15:56:37.944Z"
+stopped_at: Completed 07-03-PLAN.md
+last_updated: "2026-03-18T16:05:41.913Z"
 last_activity: 2026-03-18 — v1.1 roadmap created
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
   percent: 0
 ---
 
@@ -61,6 +61,7 @@ Phase 8: [ ] [ ]
 | Phase 06-market-analysis-demos P02 | 5 | 2 tasks | 0 files |
 | Phase 07-ml-workflow-demos P01 | 3 | 1 tasks | 2 files |
 | Phase 07-ml-workflow-demos P02 | 5 | 1 tasks | 2 files |
+| Phase 07-ml-workflow-demos P03 | 5 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -115,6 +116,7 @@ Recent decisions affecting current work:
 - [Phase 07-ml-workflow-demos]: numpy.default_rng(42) for reproducible synthetic CSV generation
 - [Phase 07-ml-workflow-demos]: liquidity_predictor restricted to [credit_score, debt_ratio, region] features — training on all 9 CSV columns caused column-mismatch at predict_liquidity inference time
 - [Phase 07-ml-workflow-demos]: Test 6 uses xfail(strict=False) to document demo.md risk_tolerance string vs float mismatch — xfailed means demo.md needs to change moderate to 0.5
+- [Phase 07-ml-workflow-demos]: demo.md Step 11 risk_tolerance changed from string moderate to float 0.5 to match classify_investor function signature
 
 ### Pending Todos
 
@@ -126,6 +128,6 @@ None — v1.0 complete. v1.1 roadmap ready.
 
 ## Session Continuity
 
-Last session: 2026-03-18T15:56:37.942Z
-Stopped at: Completed 07-02-PLAN.md
+Last session: 2026-03-18T16:05:41.911Z
+Stopped at: Completed 07-03-PLAN.md
 Resume file: None
