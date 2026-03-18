@@ -81,15 +81,27 @@ def liquidity_predictor(csv_path: str, target_column: str = "liquidity_risk") ->
     df_clean = _clean_dataframe(df, structure["numeric_cols"])
 
     # Step 6: Build feature/target arrays
-    X = df_clean.drop(columns=[target_column])
-    y = df_clean[target_column]
+    # Only use the 3 features that predict_liquidity supplies at inference time.
+    # Training on extra columns (age, income, segment, …) causes a column-mismatch
+    # error when predict_liquidity builds a 3-column DataFrame for prediction.
+    LIQUIDITY_FEATURES_NUM = ["credit_score", "debt_ratio"]
+    LIQUIDITY_FEATURES_CAT = ["region"]
 
-    # Step 7: Identify numeric and categorical feature columns (excluding target)
-    num_features = [
-        c for c in structure["numeric_cols"]
-        if c != target_column and c in X.columns
-    ]
-    cat_features = structure["cat_cols"]
+    available_num = [c for c in LIQUIDITY_FEATURES_NUM if c in df_clean.columns]
+    available_cat = [c for c in LIQUIDITY_FEATURES_CAT if c in df_clean.columns]
+
+    feature_cols = available_num + available_cat
+    if not feature_cols:
+        # Fallback: use all non-target columns (original behaviour)
+        X = df_clean.drop(columns=[target_column])
+        num_features = [c for c in structure["numeric_cols"] if c != target_column and c in X.columns]
+        cat_features = structure["cat_cols"]
+    else:
+        X = df_clean[feature_cols]
+        num_features = available_num
+        cat_features = available_cat
+
+    y = df_clean[target_column]
 
     # Step 8: MANDATORY SPLIT BEFORE FIT — train_test_split MUST come before pipe.fit()
     X_train, X_test, y_train, y_test = train_test_split(
