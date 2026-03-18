@@ -45,9 +45,9 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **LQDX-01**: User can provide a CSV file path and request liquidity risk prediction; skill detects CSV structure automatically
 - [x] **LQDX-02**: Skill performs data cleaning pipeline: outlier detection, categorical correction, missing value handling (matching ML 01 curriculum)
 - [x] **LQDX-03**: Skill runs exploratory data analysis and outputs summary statistics + distribution charts
-- [ ] **LQDX-04**: Skill trains linear regression pipeline with train/test split (no look-ahead bias: split before any `.fit()` call)
-- [ ] **LQDX-05**: Skill evaluates model: RMSE, R², residual plot — all with plain-English interpretation
-- [ ] **LQDX-06**: Skill accepts new client data and outputs liquidity prediction with confidence context
+- [x] **LQDX-04**: Skill trains linear regression pipeline with train/test split (no look-ahead bias: split before any `.fit()` call)
+- [x] **LQDX-05**: Skill evaluates model: RMSE, R², residual plot — all with plain-English interpretation
+- [x] **LQDX-06**: Skill accepts new client data and outputs liquidity prediction with confidence context
 
 ### Investor Classifier (ML 05-06 Curriculum)
 
@@ -135,9 +135,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LQDX-01 | Phase 3 | Complete |
 | LQDX-02 | Phase 3 | Complete |
 | LQDX-03 | Phase 3 | Complete |
-| LQDX-04 | Phase 3 | Pending |
-| LQDX-05 | Phase 3 | Pending |
-| LQDX-06 | Phase 3 | Pending |
+| LQDX-04 | Phase 3 | Complete |
+| LQDX-05 | Phase 3 | Complete |
+| LQDX-06 | Phase 3 | Complete |
 | INVX-01 | Phase 3 | Pending |
 | INVX-02 | Phase 3 | Pending |
 | INVX-03 | Phase 3 | Pending |

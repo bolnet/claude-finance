@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-03-18T03:31:03.559Z"
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-03-18T03:34:58.934Z"
 last_activity: "2026-03-18 — 01-03 complete: /finance command verified, finance MCP server connected, all packages OK"
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 12
-  completed_plans: 8
+  completed_plans: 9
   percent: 67
 ---
 
@@ -57,6 +57,7 @@ Progress: [███████░░░] 67%
 | Phase 02-market-analysis-tools P03 | 5 min | 2 tasks | 4 files |
 | Phase 02-market-analysis-tools P04 | 5 | 2 tasks | 1 files |
 | Phase 03-ml-workflow-tools P01 | 3 min | 2 tasks | 7 files |
+| Phase 03-ml-workflow-tools P02 | 2 min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,8 @@ Recent decisions affecting current work:
 - [Phase 02-market-analysis-tools]: Correlation computed on pct_change().dropna() not raw prices — return-based correlation avoids spurious correlations from shared price trends
 - [Phase 03-ml-workflow-tools]: pandas select_dtypes uses 'object'/'string' not 'str' for categorical column detection — 'str' dtype alias not recognized in select_dtypes across pandas versions
 - [Phase 03-ml-workflow-tools]: IQR outlier filter preserves NaN rows during outlier pass (isna() OR bounds) then fills with median — prevents valid rows being dropped due to missing values in the filtered column
+- [Phase 03-ml-workflow-tools]: liquidity_model.py named to match test stub import path (not liquidity_predictor.py as plan specified)
+- [Phase 03-ml-workflow-tools]: Two-tool ML pattern established: train/evaluate tool + predict/inference tool co-located in same module
 
 ### Pending Todos
 
@@ -98,6 +101,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T03:31:03.556Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-03-18T03:34:58.932Z
+Stopped at: Completed 03-02-PLAN.md
 Resume file: None
