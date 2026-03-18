@@ -19,9 +19,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### MCP Server (Core Engine)
 
-- [ ] **MCP-01**: Python MCP server exists at `src/finance_mcp/server.py` using FastMCP, registered in `.claude/mcp_servers.json` for Claude Code
-- [ ] **MCP-02**: MCP server exposes tools with clear descriptions that Claude (Code or claude.ai) can discover and invoke via natural language
-- [ ] **MCP-03**: MCP server runs via `stdio` transport locally (Claude Code) and is prepared for remote transport packaging (Phase 4)
+- [x] **MCP-01**: Python MCP server exists at `src/finance_mcp/server.py` using FastMCP, registered in `.mcp.json` for Claude Code
+- [x] **MCP-02**: MCP server exposes tools with clear descriptions that Claude (Code or claude.ai) can discover and invoke via natural language
+- [x] **MCP-03**: MCP server runs via `stdio` transport locally (Claude Code) and is prepared for remote transport packaging (Phase 4)
 
 ### Command & Skill Structure
 
@@ -118,9 +118,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFRA-05 | Phase 1 | Pending |
 | INFRA-06 | Phase 1 | Pending |
 | INFRA-07 | Phase 1 | Pending |
-| MCP-01 | Phase 1 | Pending |
-| MCP-02 | Phase 1 | Pending |
-| MCP-03 | Phase 1 | Pending |
+| MCP-01 | Phase 1 | Complete (01-01) |
+| MCP-02 | Phase 1 | Complete (01-01) |
+| MCP-03 | Phase 1 | Complete (01-01) |
 | CMD-01 | Phase 1 | Pending |
 | CMD-02 | Phase 1 | Pending |
 | CMD-03 | Phase 1 | Pending |

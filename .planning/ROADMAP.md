@@ -33,16 +33,16 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Requirements**: INFRA-01, INFRA-02, INFRA-03, INFRA-04, INFRA-05, INFRA-06, INFRA-07, CMD-01, CMD-02, CMD-03, CMD-04, MCP-01, MCP-02, MCP-03
 **Success Criteria** (what must be TRUE):
   1. Running `/finance` in Claude Code produces a response (not an error) and Claude can introspect the local Python environment before generating any code
-  2. The yfinance adapter fetches `Adj Close` data (never raw `Close`) and raises a user-readable error if the ticker is invalid, the date range is empty, or the DataFrame is empty
+  2. The yfinance adapter uses `Close` (auto_adjust=True default in 0.2.54+) and raises a user-readable error if the ticker is invalid, the date range is empty, or the DataFrame is empty
   3. All chart output is written as PNG files to `finance_output/charts/` using the `Agg` backend — no `plt.show()` calls anywhere
   4. Every output — regardless of workflow — leads with a plain-English interpretation and ends with the hardcoded investment advice disclaimer
   5. Generated Python scripts are written to disk as `.py` files (Write tool) and then executed via Bash — never run as inline `-c` strings
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: MCP server scaffold (Python FastMCP server, tool registration, stdio transport)
-- [ ] 01-02: yfinance adapter layer, data validation wrapper, and output directory setup
-- [ ] 01-03: Claude Code command file + SKILL.md + output formatting conventions (disclaimer, plain-English header, chart save pattern)
+- [x] 01-01-PLAN.md — Python project scaffold (pyproject.toml, FastMCP server, .mcp.json, Wave 0 test stubs)
+- [ ] 01-02-PLAN.md — yfinance adapter layer, validators, output conventions module, environment checker
+- [ ] 01-03-PLAN.md — Claude Code command file, SKILL.md intent classifier, human verification checkpoint
 
 ### Phase 2: Market Analysis Tools
 **Goal**: Users (in Claude Code or claude.ai) can request stock analysis in plain English and receive price charts, return metrics, risk statistics, multi-ticker comparisons, and correlation heatmaps — all with plain-English interpretation
@@ -102,7 +102,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Infrastructure & MCP Scaffold | 0/3 | Not started | - |
+| 1. Infrastructure & MCP Scaffold | 1/3 | In progress | - |
 | 2. Market Analysis Tools | 0/3 | Not started | - |
 | 3. ML Workflow Tools | 0/4 | Not started | - |
 | 4. Web Publishing & Personas | 0/3 | Not started | - |
