@@ -34,6 +34,7 @@ Classify every finance request into one of these intents before taking action:
 | `walkthrough-investment-banking` | "investment banking walkthrough", "deal pitch analysis", "comparable company analysis", "comps walkthrough" | Direct user to run `/walkthrough-investment-banking` command for an IB deal pitch scenario |
 | `walkthrough-accounting` | "accounting walkthrough", "controller scenario", "transaction profiling", "anomaly detection walkthrough", "quarterly close walkthrough", "audit data review" | Direct user to run `/walkthrough-accounting` command for a controller data profiling and anomaly detection scenario |
 | `walkthrough-fpa` | "fpa walkthrough", "budget variance analysis", "erp data profiling", "forecasting prep walkthrough", "fp&a scenario" | Direct user to run `/walkthrough-fpa` command for an FP&A data profiling and budget forecasting scenario |
+| `walkthrough-private-equity` | "private equity walkthrough", "pe due diligence", "deal scoring walkthrough", "portfolio monitoring scenario", "vc walkthrough", "prospect scoring" | Direct user to run `/walkthrough-private-equity` command for a PE/VC due diligence scoring and portfolio monitoring scenario |
 
 If the intent is ambiguous, ask one clarifying question. Do not generate code before clarifying.
 
@@ -52,6 +53,7 @@ Role-specific walkthroughs provide deep, multi-phase scenarios for finance profe
 | `/walkthrough-investment-banking` | IB analyst / M&A team | Comparable company analysis with 5-ticker comps and deal pitch exhibits |
 | `/walkthrough-accounting` | Controller / accounting | Transaction data profiling, segment-based anomaly detection, and ERP consolidation review |
 | `/walkthrough-fpa` | FP&A analyst | ERP data profiling, target column identification, and three-scenario budget forecasting |
+| `/walkthrough-private-equity` | PE/VC deal team | Due diligence prospect scoring, multi-prospect comparison, and portfolio company monitoring |
 
 If a user asks for a "hedge fund walkthrough", "trading desk analysis", "volatility regime walkthrough", or "pair trading scenario", direct them to type `/walkthrough-hedge-fund`.
 
@@ -60,6 +62,8 @@ If a user asks for an "investment banking walkthrough", "deal pitch analysis", "
 If a user asks for an "accounting walkthrough", "controller scenario", "transaction profiling", "anomaly detection walkthrough", "quarterly close", or "audit data review", direct them to type `/walkthrough-accounting`.
 
 If a user asks for an "fpa walkthrough", "budget variance analysis", "erp data profiling", "forecasting prep", or "fp&a scenario", direct them to type `/walkthrough-fpa`.
+
+If a user asks for a "private equity walkthrough", "pe due diligence", "deal scoring", "prospect scoring walkthrough", "vc walkthrough", or "portfolio monitoring scenario", direct them to type `/walkthrough-private-equity`.
 
 ---
 
