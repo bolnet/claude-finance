@@ -12,7 +12,9 @@ This walkthrough demonstrates all 11 tools of the Finance AI Skill across 3 cate
 - **Market Analysis** (6 tools): price charts, returns, volatility, risk metrics, ticker comparison, correlation heatmap
 - **ML Workflows** (3 tools): CSV ingestion, liquidity risk regression, investor classification
 
-Each step runs a real tool with real data and explains the results in plain English. The walkthrough takes approximately 5–10 minutes and requires no input from you — just sit back and watch.
+Plus **6 real-world scenarios** showing how equity research analysts, portfolio managers, hedge funds, IB analysts, FP&A teams, and PE firms use these tools in their daily work.
+
+Each step runs a real tool with real data and explains the results in plain English. The walkthrough takes approximately 10–15 minutes and requires no input from you — just sit back and watch.
 
 ---
 
@@ -250,6 +252,146 @@ The underlying data is identical — the persona determines which metrics matter
 
 ---
 
+## Real-World Finance Scenarios
+
+The next steps demonstrate how professionals in different finance roles use these same tools in their daily work. Each scenario combines multiple tools into a realistic workflow.
+
+---
+
+## Step 15: Equity Research — Coverage Initiation on NVDA
+
+> *An equity research analyst initiating coverage runs a full diagnostic on a new name before writing a single page of the research note.*
+
+Call the MCP tool `analyze_stock` with:
+- ticker: "NVDA"
+- start: [180 days before today, in YYYY-MM-DD format]
+
+Then call the MCP tool `get_risk_metrics` with:
+- ticker: "NVDA"
+- start: [1 year before today, in YYYY-MM-DD format]
+
+Then call the MCP tool `get_returns` with:
+- ticker: "NVDA"
+- start: [180 days before today, in YYYY-MM-DD format]
+
+After running all three:
+- Show the price trend, risk metrics (Sharpe, drawdown, beta), and cumulative return
+- Frame this as a coverage initiation: "An analyst starting coverage on NVDA would begin with these three data points..."
+- Compare NVDA's beta and Sharpe to AAPL's from Step 6 — note which stock has higher risk-adjusted returns and which amplifies market moves more
+- Explain: In equity research, every formula must be auditable and every number sourced. These three tools produce the foundational data that feeds into the analyst's quarterly earnings model and valuation framework.
+
+---
+
+## Step 16: Hedge Fund — Cross-Sector Diversification Check
+
+> *A hedge fund PM checks whether their book is actually diversified or just holds correlated bets disguised as different names. As Nomura's deputy chief digital officer stated: "Python already replaced Excel in banking."*
+
+Call the MCP tool `compare_tickers` with:
+- tickers: "AAPL,JPM,JNJ,XOM"
+- start: [90 days before today, in YYYY-MM-DD format]
+
+Then call the MCP tool `correlation_map` with:
+- tickers: "AAPL,JPM,JNJ,XOM"
+- start: [90 days before today, in YYYY-MM-DD format]
+
+After running both:
+- Show the normalized performance comparison and correlation matrix
+- Frame this as portfolio construction: "A hedge fund PM would read this correlation matrix to determine whether these four holdings provide real diversification..."
+- Highlight: which pairs have the lowest correlation (best diversification benefit) and which pairs move most closely together (concentration risk)
+- Explain: On a trading desk, this analysis runs on millions of rows in Python. The correlation_map tool does the same math on daily returns — computed on pct_change(), not raw prices, to avoid spurious correlations from shared price trends.
+
+---
+
+## Step 17: FP&A — Data Profiling Before Forecasting
+
+> *An FP&A analyst spends 45% of their time on data collection and validation (2024 FP&A Trends survey). The biggest time-sink: monthly copy-paste from ERP exports. This step shows the automated alternative.*
+
+Call the MCP tool `ingest_csv` with:
+- csv_path: "demo/sample_portfolio.csv"
+- target_column: "liquidity_risk"
+
+After running:
+- Show the column summary, cleaning actions, and EDA chart paths
+- Frame this as an FP&A data pipeline: "In an FP&A workflow, this replaces 3-4 hours of manual data profiling..."
+- Highlight: the automatic outlier removal (IQR method), the detection of 6 numeric vs 3 categorical columns, and the target column identification — all without configuration
+- Explain: FP&A teams using Power Query in Excel do similar cleanup, but Python handles inconsistent formats across multiple regional offices, different date formats, and varying column names — all in one pass. The ingest_csv tool is the first step before any regression or forecasting model.
+
+---
+
+## Step 18: Private Equity — Portfolio Company Risk Scoring
+
+> *A PE firm monitors 10-20 portfolio companies monthly. This step shows how the ML tools score a new deal prospect against the existing portfolio data.*
+
+Call the MCP tool `liquidity_predictor` with:
+- csv_path: "demo/sample_portfolio.csv"
+
+Then call the MCP tool `predict_liquidity` with three different client profiles to simulate portfolio company scoring:
+
+First, call `predict_liquidity` with:
+- credit_score: 580
+- debt_ratio: 0.65
+- region: "South"
+
+Then call `predict_liquidity` with:
+- credit_score: 750
+- debt_ratio: 0.20
+- region: "West"
+
+Then call `predict_liquidity` with:
+- credit_score: 650
+- debt_ratio: 0.50
+- region: "Midwest"
+
+After running all four:
+- Show R-squared and RMSE from the model, then all three predictions in a comparison table
+- Frame this as PE due diligence: "A PE firm evaluating three potential investments would score each against the trained model..."
+- Rank the three prospects from lowest to highest risk
+- Explain: In private equity, due diligence data rooms can contain hundreds of documents. Python extracts and normalizes the data; the ML model scores it. What took 2 analysts a full week can be completed overnight. The liquidity_predictor trains a fresh model each time, ensuring the scoring reflects the most current portfolio data.
+
+---
+
+## Step 19: Investment Banking — Comparable Company Analysis
+
+> *A first-year IB analyst spends 2,000+ hours annually in Excel building comps. This step shows the Python equivalent: normalized performance comparison and risk profiling across peer companies.*
+
+Call the MCP tool `compare_tickers` with:
+- tickers: "AAPL,MSFT,GOOGL,AMZN,META"
+- start: [180 days before today, in YYYY-MM-DD format]
+
+Then call the MCP tool `correlation_map` with:
+- tickers: "AAPL,MSFT,GOOGL,AMZN,META"
+- start: [180 days before today, in YYYY-MM-DD format]
+
+After running both:
+- Show the normalized returns ranking (best to worst performer) and the full 5x5 correlation matrix
+- Frame this as IB comps: "An investment banking analyst building a comparable company analysis would use this data to..."
+- Identify: which mega-cap tech name outperformed, which pairs are most correlated (potential substitutes in a deal), and which name stands apart (differentiated risk profile)
+- Explain: In traditional IB, CapIQ and Bloomberg Excel add-ins pull EV/EBITDA and P/E multiples for peer companies. The compare_tickers and correlation_map tools provide the price-performance and co-movement layer that complements those fundamental multiples — answering "how do these stocks actually trade relative to each other?"
+
+---
+
+## Step 20: Role-Tool Mapping — Who Uses What
+
+Do NOT call any tools. This is a pure explanation step.
+
+Print a mapping showing which tools each finance role would use most frequently:
+
+### Finance AI Skill by Role
+
+| Role | Primary Tools | Key Workflow |
+|------|--------------|--------------|
+| **Equity Research Analyst** | analyze_stock, get_returns, get_risk_metrics | Coverage initiation, quarterly model updates, peer comparison |
+| **Portfolio Manager** | get_risk_metrics, compare_tickers, correlation_map | Book risk review, diversification checks, position sizing |
+| **Hedge Fund / Trading Desk** | get_volatility, correlation_map, compare_tickers | Vol regime detection, pair trading signals, cross-asset correlation |
+| **Investment Banking Analyst** | compare_tickers, correlation_map | Comparable company analysis, relative performance for deal pitches |
+| **FP&A Analyst** | ingest_csv, liquidity_predictor | Data profiling, forecasting model inputs, variance analysis prep |
+| **Private Equity / VC** | ingest_csv, liquidity_predictor, predict_liquidity, investor_classifier | Due diligence scoring, portfolio company monitoring, LP segment analysis |
+| **Accountant / Controller** | ingest_csv | Transaction data profiling, anomaly detection prep, ERP export cleanup |
+
+The winning playbook is AND, not OR — Excel handles the final auditable model that clients open; the Finance AI Skill handles the analysis, scoring, and visualization that feeds into it.
+
+---
+
 ## Demo Complete — Summary of All 11 Tools and 2 Personas
 
 You have just seen the full Finance AI Skill in action. Here is a summary of every tool demonstrated:
@@ -289,6 +431,17 @@ You have just seen the full Finance AI Skill in action. Here is a summary of eve
 
 ---
 
-Demo complete. You can now use `/finance` for ad-hoc analysis, or `/finance-analyst` and `/finance-pm` for role-specific framing. Steps 12-13 above showed how each persona frames the same data differently.
+### Real-World Scenarios (6 roles)
+
+| Step | Role | Tools Used | Workflow |
+|------|------|-----------|----------|
+| 15 | Equity Research | analyze_stock, get_risk_metrics, get_returns | Coverage initiation on NVDA |
+| 16 | Hedge Fund / PM | compare_tickers, correlation_map | Cross-sector diversification check |
+| 17 | FP&A Analyst | ingest_csv | Data profiling before forecasting |
+| 18 | Private Equity | liquidity_predictor, predict_liquidity | Portfolio company risk scoring |
+| 19 | Investment Banking | compare_tickers, correlation_map | Comparable company analysis |
+| 20 | All Roles | — | Role-tool mapping reference |
+
+Demo complete. You can now use `/finance` for ad-hoc analysis, or `/finance-analyst` and `/finance-pm` for role-specific framing.
 
 > For educational/informational purposes only. Not financial advice. Past results do not guarantee future performance.
