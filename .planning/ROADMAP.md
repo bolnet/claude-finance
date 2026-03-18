@@ -54,12 +54,13 @@ Plans:
   3. User can request risk metrics for a ticker and receive Sharpe ratio, max drawdown, and beta vs. S&P 500 — each explained in plain English with benchmark context
   4. User can compare 2-5 tickers side-by-side on a normalized price performance chart, with the interpretation noting which performed best and by how much
   5. User can request a correlation heatmap for a set of tickers and receive a PNG heatmap with an explanation of which pairs are most and least correlated
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 02-01: MCP tool `analyze_stock` — price chart, intent routing for market analysis requests
-- [ ] 02-02: MCP tools `get_returns`, `get_volatility`, `get_risk_metrics` — returns, volatility, Sharpe, drawdown, beta
-- [ ] 02-03: MCP tools `compare_tickers`, `correlation_map` — multi-ticker comparison and heatmap
+- [ ] 02-01-PLAN.md — Test scaffold (15 stubs) + tools/__init__.py + analyze_stock tool (MKTX-01)
+- [ ] 02-02-PLAN.md — get_returns, get_volatility, get_risk_metrics tools (MKTX-02, MKTX-03, MKTX-04)
+- [ ] 02-03-PLAN.md — compare_tickers, correlation_map tools + MKTX-07 tests (MKTX-05, MKTX-06, MKTX-07)
+- [ ] 02-04-PLAN.md — Phase 2 functional testing — live end-to-end verification with real tickers
 
 ### Phase 3: ML Workflow Tools
 **Goal**: Users can point the tool at a CSV file and receive a trained, evaluated liquidity risk regression model or investor segment classifier — with plain-English interpretation and prediction interface for new data
@@ -79,6 +80,7 @@ Plans:
 - [ ] 03-02: MCP tool `liquidity_predictor` — regression pipeline, split-before-fit enforcement, evaluation outputs
 - [ ] 03-03: MCP tool `investor_classifier` — feature engineering, stratified split, cross-validation, hyperparameter search
 - [ ] 03-04: MCP tools `predict_liquidity`, `classify_investor` — prediction interfaces for new data
+- [ ] 03-05: Phase 3 functional testing — end-to-end verification of ML tools using course CSV files (liquidity_data.csv, investor_data.csv)
 
 ### Phase 4: Web Publishing & Personas
 **Goal**: Finance professionals can use the skill at claude.ai in their browser; analyst and PM/trader persona variants ship; skill is packaged for the Claude plugin marketplace
@@ -94,6 +96,7 @@ Plans:
 - [ ] 04-01: claude.ai MCP integration — remote transport, server packaging, connection guide for non-technical users
 - [ ] 04-02: Analyst persona variant (`.claude/commands/finance-analyst.md`) + PM/trader variant (`finance-pm.md`)
 - [ ] 04-03: Marketplace packaging — README, screenshots, install instructions, listing metadata
+- [ ] 04-04: Phase 4 functional testing — end-to-end verification of claude.ai integration, persona variants, and full user journey
 
 ## Progress
 
@@ -103,6 +106,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Infrastructure & MCP Scaffold | 3/3 | Complete   | 2026-03-18 |
-| 2. Market Analysis Tools | 0/3 | Not started | - |
-| 3. ML Workflow Tools | 0/4 | Not started | - |
-| 4. Web Publishing & Personas | 0/3 | Not started | - |
+| 2. Market Analysis Tools | 0/4 | Not started | - |
+| 3. ML Workflow Tools | 0/5 | Not started | - |
+| 4. Web Publishing & Personas | 0/4 | Not started | - |
