@@ -41,8 +41,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Python project scaffold (pyproject.toml, FastMCP server, .mcp.json, Wave 0 test stubs)
-- [ ] 01-02-PLAN.md — yfinance adapter layer, validators, output conventions module, environment checker
-- [ ] 01-03-PLAN.md — Claude Code command file, SKILL.md intent classifier, human verification checkpoint
+- [x] 01-02-PLAN.md — yfinance adapter layer, validators, output conventions module, environment checker
+- [x] 01-03-PLAN.md — Claude Code command file, SKILL.md intent classifier, human verification checkpoint
 
 ### Phase 2: Market Analysis Tools
 **Goal**: Users (in Claude Code or claude.ai) can request stock analysis in plain English and receive price charts, return metrics, risk statistics, multi-ticker comparisons, and correlation heatmaps — all with plain-English interpretation
