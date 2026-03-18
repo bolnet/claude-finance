@@ -1,17 +1,19 @@
 """
-ML workflow tool tests — Phase 3 plan 03-01.
+ML workflow tool tests — Phase 3 integration (03-04).
 
-Test stubs for all 14 ML requirements (LQDX + INVX).
-Stubs for 03-02/03-03 tools (liquidity_predictor, predict_liquidity,
-investor_classifier, classify_investor) skip at import time if the
-tool module does not yet exist.
+All 14 ML requirements (LQDX + INVX) are fully implemented.
+All test stubs from 03-01 are activated with real imports and assertions.
 
 Test execution order mirrors the implementation waves:
-  Wave 1 (this plan): ingest_csv stubs — test_csv_structure_detection,
-                      test_data_cleaning, test_eda_output,
-                      test_ml_output_format, test_missing_csv_error
-  Wave 2 (03-02):    liquidity model stubs
-  Wave 3 (03-03):    investor model stubs
+  Wave 1 (03-01): ingest_csv — test_csv_structure_detection,
+                  test_data_cleaning, test_eda_output,
+                  test_ml_output_format, test_missing_csv_error
+  Wave 2 (03-02): liquidity model — test_split_before_fit,
+                  test_regression_evaluation, test_predict_liquidity
+  Wave 3 (03-03): investor model — test_investor_csv_detection,
+                  test_feature_engineering, test_stratified_split,
+                  test_gridsearch_runs, test_classifier_evaluation,
+                  test_classify_investor
 """
 
 import os
@@ -32,20 +34,11 @@ INVESTOR_CSV = os.path.join(DATA_DIR, "investor_sample.csv")
 INVESTOR_CSV_2 = os.path.join(DATA_DIR, "investor_sample_2.csv")
 
 # ---------------------------------------------------------------------------
-# Optional imports for tools not yet implemented (03-02, 03-03)
+# Direct imports — both tool modules are fully implemented (03-02, 03-03)
 # ---------------------------------------------------------------------------
 
-try:
-    from finance_mcp.tools.liquidity_model import liquidity_predictor, predict_liquidity
-    _HAS_LIQUIDITY = True
-except ImportError:
-    _HAS_LIQUIDITY = False
-
-try:
-    from finance_mcp.tools.investor_model import investor_classifier, classify_investor
-    _HAS_INVESTOR = True
-except ImportError:
-    _HAS_INVESTOR = False
+from finance_mcp.tools.liquidity_model import liquidity_predictor, predict_liquidity
+from finance_mcp.tools.investor_model import investor_classifier, classify_investor
 
 # ---------------------------------------------------------------------------
 # Wave 1: ingest_csv tests (should pass after Task 2)
@@ -122,15 +115,12 @@ def test_ml_output_format():
 
 
 # ---------------------------------------------------------------------------
-# Wave 2: Liquidity model tests (03-02) — skip until module exists
+# Wave 2: Liquidity model tests (03-02) — fully activated in 03-04
 # ---------------------------------------------------------------------------
 
 
 def test_split_before_fit():
     """liquidity_predictor smoke test — RMSE is numeric, R2 is between -1 and 1."""
-    if not _HAS_LIQUIDITY:
-        pytest.skip("Tool not yet implemented: finance_mcp.tools.liquidity_model")
-
     result = liquidity_predictor(LIQUIDITY_CSV)
 
     assert isinstance(result, str), "liquidity_predictor must return a string"
@@ -150,9 +140,6 @@ def test_split_before_fit():
 
 def test_regression_evaluation():
     """liquidity_predictor output contains RMSE, R², and ends with DISCLAIMER."""
-    if not _HAS_LIQUIDITY:
-        pytest.skip("Tool not yet implemented: finance_mcp.tools.liquidity_model")
-
     from finance_mcp.output import DISCLAIMER
 
     result = liquidity_predictor(LIQUIDITY_CSV)
@@ -164,9 +151,6 @@ def test_regression_evaluation():
 
 def test_predict_liquidity():
     """predict_liquidity returns a string containing a numeric prediction."""
-    if not _HAS_LIQUIDITY:
-        pytest.skip("Tool not yet implemented: finance_mcp.tools.liquidity_model")
-
     import re
 
     result = predict_liquidity(credit_score=720, debt_ratio=0.35, region="North")
@@ -177,7 +161,7 @@ def test_predict_liquidity():
 
 
 # ---------------------------------------------------------------------------
-# Wave 3: Investor model tests (03-03) — skip until module exists
+# Wave 3: Investor model tests (03-03) — fully activated in 03-04
 # ---------------------------------------------------------------------------
 
 
@@ -210,9 +194,6 @@ def test_feature_engineering():
 
 def test_stratified_split():
     """Stratified split of investor_sample.csv preserves class proportions within 10%."""
-    if not _HAS_INVESTOR:
-        pytest.skip("Tool not yet implemented: finance_mcp.tools.investor_model")
-
     from sklearn.model_selection import train_test_split
 
     df = pd.read_csv(INVESTOR_CSV).dropna()
@@ -234,9 +215,6 @@ def test_stratified_split():
 
 def test_gridsearch_runs():
     """investor_classifier output contains 'best parameters'."""
-    if not _HAS_INVESTOR:
-        pytest.skip("Tool not yet implemented: finance_mcp.tools.investor_model")
-
     result = investor_classifier(INVESTOR_CSV)
 
     assert isinstance(result, str), "investor_classifier must return a string"
@@ -245,9 +223,6 @@ def test_gridsearch_runs():
 
 def test_classifier_evaluation():
     """investor_classifier output contains confusion matrix, precision, recall, and PNG path."""
-    if not _HAS_INVESTOR:
-        pytest.skip("Tool not yet implemented: finance_mcp.tools.investor_model")
-
     result = investor_classifier(INVESTOR_CSV)
 
     assert "confusion matrix" in result.lower(), "Output must contain confusion matrix"
@@ -258,9 +233,6 @@ def test_classifier_evaluation():
 
 def test_classify_investor():
     """classify_investor returns a segment label from the known class set."""
-    if not _HAS_INVESTOR:
-        pytest.skip("Tool not yet implemented: finance_mcp.tools.investor_model")
-
     result = classify_investor(age=35, income=75000, risk_tolerance=0.6, product_preference="stocks")
 
     assert isinstance(result, str), "classify_investor must return a string"
