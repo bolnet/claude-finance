@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-03-18T01:47:33.616Z"
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-03-18T01:52:32.102Z"
 last_activity: "2026-03-18 — 01-03 complete: /finance command verified, finance MCP server connected, all packages OK"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 7
-  completed_plans: 4
+  completed_plans: 5
   percent: 67
 ---
 
@@ -53,6 +53,7 @@ Progress: [███████░░░] 67%
 | Phase 01-infrastructure-mcp-scaffold P02 | 3 | 2 tasks | 6 files |
 | Phase 01-infrastructure-mcp-scaffold P03 | 2 | 2 tasks | 2 files |
 | Phase 02-market-analysis-tools P01 | 2 | 2 tasks | 4 files |
+| Phase 02-market-analysis-tools P02 | 4 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,9 @@ Recent decisions affecting current work:
 - [Phase 01-infrastructure-mcp-scaffold]: Write-then-execute is the ONLY allowed Python execution method — finance_output/last_run.py written via Write tool, then executed via Bash; no inline python3 -c strings
 - [Phase 02-market-analysis-tools]: Use mcp.add_tool() for Phase 2 tool registration — imported functions must be registered explicitly, not decorated
 - [Phase 02-market-analysis-tools]: Import finance_mcp.output first in all tools/ modules — ensures Agg backend set before pyplot
+- [Phase 02-market-analysis-tools]: _compute_risk_metrics exposed as public function — allows direct unit testing of Sharpe/drawdown/beta math without mocking fetch_price_history or the full tool I/O
+- [Phase 02-market-analysis-tools]: Sharpe ratio computed with rf=0; FRED integration deferred and noted in output text as future enhancement
+- [Phase 02-market-analysis-tools]: get_risk_metrics fetches ^GSPC benchmark via same fetch_price_history adapter — reuses existing validation and DataFetchError handling
 
 ### Pending Todos
 
@@ -87,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T01:47:33.614Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-03-18T01:52:32.099Z
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None
