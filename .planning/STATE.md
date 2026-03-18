@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 03-05-PLAN.md — Phase 3 fully complete, human verification approved
-last_updated: "2026-03-18T04:06:56.891Z"
+stopped_at: Completed 04-01-PLAN.md — HTTP transport entry point complete
+last_updated: "2026-03-18T04:26:33.450Z"
 last_activity: "2026-03-18 — 01-03 complete: /finance command verified, finance MCP server connected, all packages OK"
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 12
-  completed_plans: 12
+  total_plans: 16
+  completed_plans: 13
   percent: 67
 ---
 
@@ -61,6 +61,7 @@ Progress: [███████░░░] 67%
 | Phase 03-ml-workflow-tools P03 | 10 | 2 tasks | 2 files |
 | Phase 03-ml-workflow-tools P04 | 5 | 2 tasks | 2 files |
 | Phase 03-ml-workflow-tools P05 | 15 | 2 tasks | 11 files |
+| Phase 04-web-publishing-personas P01 | 3 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -97,6 +98,8 @@ Recent decisions affecting current work:
 - [Phase 03-ml-workflow-tools]: Direct imports (not try/except guards) are the correct post-integration pattern for test files
 - [Phase 03-ml-workflow-tools]: Human verification sign-off is the acceptance gate for ML tools — synthetic unit tests prove correctness, real CSV verification proves the tool handles unknown column schemas and real distributions
 - [Phase 03-ml-workflow-tools]: Chart visual inspection is a required acceptance criterion — feature importance bars with real column names confirm get_dummies column alignment works correctly on unseen data
+- [Phase 04-web-publishing-personas]: server_http.py imports mcp from server.py (same object) — all tools available with zero duplication; stdio server unchanged for Claude Code
+- [Phase 04-web-publishing-personas]: start() function abstraction enables unit testing HTTP server without spawning a real process — mocker.patch on finance_mcp.server.mcp.run
 
 ### Pending Todos
 
@@ -110,6 +113,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T03:57:40.608Z
-Stopped at: Completed 03-05-PLAN.md — Phase 3 fully complete, human verification approved
+Last session: 2026-03-18T04:26:33.447Z
+Stopped at: Completed 04-01-PLAN.md — HTTP transport entry point complete
 Resume file: None
