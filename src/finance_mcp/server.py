@@ -20,6 +20,7 @@ from finance_mcp.tools.risk_metrics import get_risk_metrics
 from finance_mcp.tools.comparison import compare_tickers
 from finance_mcp.tools.correlation import correlation_map
 from finance_mcp.tools.csv_ingest import ingest_csv
+from finance_mcp.tools.liquidity_model import liquidity_predictor, predict_liquidity
 
 mcp = FastMCP("Finance MCP Server")
 
@@ -30,6 +31,8 @@ mcp.add_tool(get_risk_metrics)
 mcp.add_tool(compare_tickers)
 mcp.add_tool(correlation_map)
 mcp.add_tool(ingest_csv)
+mcp.add_tool(liquidity_predictor)
+mcp.add_tool(predict_liquidity)
 
 
 @mcp.tool
