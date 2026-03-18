@@ -66,7 +66,7 @@ After running:
 
 Call the MCP tool `analyze_stock` with:
 - ticker: "AAPL"
-- period: "90d"
+- start: [90 days before today, in YYYY-MM-DD format]
 
 After running:
 - Show the output and chart path
@@ -78,7 +78,7 @@ After running:
 
 Call the MCP tool `get_returns` with:
 - ticker: "AAPL"
-- period: "90d"
+- start: [90 days before today, in YYYY-MM-DD format]
 
 After running:
 - Show the output and chart path
@@ -90,7 +90,7 @@ After running:
 
 Call the MCP tool `get_volatility` with:
 - ticker: "AAPL"
-- period: "90d"
+- start: [90 days before today, in YYYY-MM-DD format]
 
 After running:
 - Show the output and chart path
@@ -102,7 +102,7 @@ After running:
 
 Call the MCP tool `get_risk_metrics` with:
 - ticker: "AAPL"
-- period: "1y"
+- start: [1 year before today, in YYYY-MM-DD format]
 
 After running:
 - Show the Sharpe ratio, max drawdown, and beta values
@@ -113,8 +113,8 @@ After running:
 ## Step 7: Ticker Comparison — compare_tickers
 
 Call the MCP tool `compare_tickers` with:
-- tickers: ["AAPL", "MSFT"]
-- period: "90d"
+- tickers: "AAPL,MSFT"
+- start: [90 days before today, in YYYY-MM-DD format]
 
 After running:
 - Show the output and chart path
@@ -125,8 +125,8 @@ After running:
 ## Step 8: Correlation Heatmap — correlation_map
 
 Call the MCP tool `correlation_map` with:
-- tickers: ["AAPL", "MSFT", "GOOGL"]
-- period: "90d"
+- tickers: "AAPL,MSFT,GOOGL"
+- start: [90 days before today, in YYYY-MM-DD format]
 
 After running:
 - Show the correlation matrix and chart path
