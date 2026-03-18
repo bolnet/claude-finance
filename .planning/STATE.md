@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: GitHub Pages Site
-status: active
-stopped_at: null
-last_updated: "2026-03-18"
-last_activity: 2026-03-18 — v1.3 roadmap created (3 phases, 17 requirements mapped)
+status: "Roadmap defined, ready for /gsd:plan-phase 13"
+stopped_at: Completed 13-01-PLAN.md — Phase 13 Plan 01 complete
+last_updated: "2026-03-18T23:27:11.679Z"
+last_activity: 2026-03-18 — v1.3 roadmap created
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
 ---
 
 # Project State
@@ -24,16 +24,16 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 
 ## Current Position
 
-Phase: Phase 13 — Site Scaffolding and Visual Assets (not started)
-Plan: —
-Status: Roadmap defined, ready for /gsd:plan-phase 13
-Last activity: 2026-03-18 — v1.3 roadmap created
+Phase: Phase 13 — Site Scaffolding and Visual Assets (Plan 01 complete)
+Plan: 13-01 done; 13-02 (if any) or Phase 14 next
+Status: Active — Plan 01 complete, 1/1 plan executed
+Last activity: 2026-03-18 — 13-01 complete (docs/ folder + visual assets)
 
 ```
 v1.0: [████████████████████] 100% (16/16 plans) — SHIPPED
 v1.1: [████████████████████] 100% (9/9 plans) — SHIPPED
 v1.2: [████████████████████] 100% (6/6 plans) — SHIPPED
-v1.3: [░░░░░░░░░░░░░░░░░░░░] 0% — ROADMAP DEFINED
+v1.3: [██░░░░░░░░░░░░░░░░░░] ~7% (1/~13 plans) — IN PROGRESS
 ```
 
 ## Performance Metrics
@@ -58,6 +58,8 @@ v1.3 roadmap decisions:
 - .nojekyll must be the first committed file — prevents Jekyll from processing Python project structure
 - Image curation in Phase 13 (not Phase 14) — curated chart assets are a blocking dependency for hero, features, and walkthrough cards
 - Getting Started written last — install commands and troubleshooting notes are most accurate after the rest of the site is built and both paths have been manually verified
+- [Phase 13]: Used sips (macOS built-in) for image resize and Pillow for favicon — no external dependencies added to project
+- [Phase 13]: All 4 HTML pages at docs/ root with identical relative paths — sibling structure enables copy-paste template reuse in Phases 14-15
 
 ### Pending Todos
 
@@ -69,6 +71,6 @@ None. 60+ real chart PNGs already exist in finance_output/charts/. The existing 
 
 ## Session Continuity
 
-Last session: 2026-03-18
-Stopped at: v1.3 roadmap created — ready for plan-phase 13
+Last session: 2026-03-18T23:27:11.677Z
+Stopped at: Completed 13-01-PLAN.md — Phase 13 Plan 01 complete
 Resume file: None

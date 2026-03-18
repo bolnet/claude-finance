@@ -9,9 +9,9 @@ Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: Site deploys from `docs/` folder on main branch with `.nojekyll` file
-- [ ] **INFRA-02**: Shared HTML template (head, nav bar, footer) used by all pages
-- [ ] **INFRA-03**: All pages are mobile responsive with proper viewport meta
+- [x] **INFRA-01**: Site deploys from `docs/` folder on main branch with `.nojekyll` file
+- [x] **INFRA-02**: Shared HTML template (head, nav bar, footer) used by all pages
+- [x] **INFRA-03**: All pages are mobile responsive with proper viewport meta
 - [ ] **INFRA-04**: Social card (OG meta image) displays when site is shared on LinkedIn/Twitter
 
 ### Landing Page
@@ -38,9 +38,9 @@ Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 
 ### Visual Assets
 
-- [ ] **VIS-01**: 6-8 best charts curated from `finance_output/charts/`
-- [ ] **VIS-02**: All site images web-optimized (800px wide, <150KB each)
-- [ ] **VIS-03**: Favicon for browser tab
+- [x] **VIS-01**: 6-8 best charts curated from `finance_output/charts/`
+- [x] **VIS-02**: All site images web-optimized (800px wide, <150KB each)
+- [x] **VIS-03**: Favicon for browser tab
 
 ## Future Requirements
 
@@ -65,9 +65,9 @@ Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 13 | Pending |
-| INFRA-02 | Phase 13 | Pending |
-| INFRA-03 | Phase 13 | Pending |
+| INFRA-01 | Phase 13 | Complete |
+| INFRA-02 | Phase 13 | Complete |
+| INFRA-03 | Phase 13 | Complete |
 | INFRA-04 | Phase 15 | Pending |
 | LAND-01 | Phase 14 | Pending |
 | LAND-02 | Phase 14 | Pending |
@@ -79,9 +79,9 @@ Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 | WALK-02 | Phase 14 | Pending |
 | START-01 | Phase 15 | Pending |
 | START-02 | Phase 15 | Pending |
-| VIS-01 | Phase 13 | Pending |
-| VIS-02 | Phase 13 | Pending |
-| VIS-03 | Phase 13 | Pending |
+| VIS-01 | Phase 13 | Complete |
+| VIS-02 | Phase 13 | Complete |
+| VIS-03 | Phase 13 | Complete |
 
 **Coverage:**
 - v1.3 requirements: 17 total
