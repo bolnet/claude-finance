@@ -55,8 +55,8 @@ Full phase details: `.planning/milestones/v1.1-ROADMAP.md`
 **Plans:** 2/2 plans complete
 
 Plans:
-- [ ] 09-01-PLAN.md — Hedge Fund walkthrough: SKILL.md routing, walkthrough-hedge-fund.md scenario file, volatility/correlation tool sequence
-- [ ] 09-02-PLAN.md — Investment Banking walkthrough: walkthrough-investment-banking.md scenario file, 5-ticker comps tool sequence
+- [x] 09-01-PLAN.md — Hedge Fund walkthrough: SKILL.md routing, walkthrough-hedge-fund.md scenario file, volatility/correlation tool sequence
+- [x] 09-02-PLAN.md — Investment Banking walkthrough: walkthrough-investment-banking.md scenario file, 5-ticker comps tool sequence
 
 ### Phase 10: Data-Profiling Walkthroughs
 **Goal**: Finance professionals in FP&A and accounting roles can run scenario-driven walkthroughs that simulate real ERP data profiling, forecasting prep, and transaction anomaly detection workflows using CSV ingestion and ML tools
@@ -67,11 +67,11 @@ Plans:
   2. User can run `/walkthrough-accounting` and receive a scenario covering transaction data profiling via CSV ingestion and anomaly detection prep with ERP consolidation patterns
   3. Both walkthroughs use the bundled sample CSV (no user data required) and complete without manual intervention
   4. Output shows data profiling results and ML forecasting interpretation in role-appropriate language (budget variance framing vs. controller/audit framing)
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 10-01: FP&A walkthrough — walkthrough-fpa.md scenario file, CSV profiling + liquidity predictor tool sequence
-- [ ] 10-02: Accounting walkthrough — walkthrough-accounting.md scenario file, CSV ingestion + anomaly framing tool sequence
+- [ ] 10-01-PLAN.md — FP&A walkthrough: walkthrough-fpa.md scenario file, CSV profiling + liquidity predictor tool sequence
+- [ ] 10-02-PLAN.md — Accounting walkthrough: walkthrough-accounting.md scenario file, CSV ingestion + anomaly framing tool sequence
 
 ### Phase 11: ML-Classifier Walkthrough
 **Goal**: Finance professionals in private equity and venture capital roles can run a scenario-driven walkthrough that simulates real due diligence scoring and portfolio monitoring using the investor classifier
@@ -112,10 +112,10 @@ Plans:
 | 6. Market Analysis Demos | v1.1 | 2/2 | Complete | 2026-03-18 |
 | 7. ML Workflow Demos | v1.1 | 3/3 | Complete | 2026-03-18 |
 | 8. Persona Demos | v1.1 | 2/2 | Complete | 2026-03-18 |
-| 9. Market-Analysis Walkthroughs | 2/2 | Complete   | 2026-03-18 | - |
+| 9. Market-Analysis Walkthroughs | v1.2 | 2/2 | Complete | 2026-03-18 |
 | 10. Data-Profiling Walkthroughs | v1.2 | 0/2 | Not started | - |
 | 11. ML-Classifier Walkthrough | v1.2 | 0/1 | Not started | - |
 | 12. Walkthrough Test Suite | v1.2 | 0/1 | Not started | - |
 
 ---
-*Last updated: 2026-03-18 — Phase 9 plans created*
+*Last updated: 2026-03-18 — Phase 10 plans created*
