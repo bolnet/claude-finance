@@ -73,14 +73,14 @@ Plans:
   4. User can provide an investor CSV file path; the skill engineers features (dummy variables, redundant feature removal), uses stratified sampling for the split, and runs classification with cross-validation and hyperparameter search
   5. The investor classifier outputs a confusion matrix, classification report, and feature importance chart — all interpreted in plain English without ML jargon
   6. User can input a new investor's attributes and receive a segment classification with a plain-English explanation of which features drove the prediction
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 03-01: CSV ingestion, EDA pipeline, and data cleaning (shared MCP tool `ingest_csv`)
-- [ ] 03-02: MCP tool `liquidity_predictor` — regression pipeline, split-before-fit enforcement, evaluation outputs
-- [ ] 03-03: MCP tool `investor_classifier` — feature engineering, stratified split, cross-validation, hyperparameter search
-- [ ] 03-04: MCP tools `predict_liquidity`, `classify_investor` — prediction interfaces for new data
-- [ ] 03-05: Phase 3 functional testing — end-to-end verification of ML tools using course CSV files (liquidity_data.csv, investor_data.csv)
+- [ ] 03-01-PLAN.md — Test stubs, fixture CSVs, and ingest_csv MCP tool (LQDX-01, LQDX-02, LQDX-03)
+- [ ] 03-02-PLAN.md — liquidity_predictor + predict_liquidity tools (LQDX-04, LQDX-05, LQDX-06)
+- [ ] 03-03-PLAN.md — investor_classifier + classify_investor tools (INVX-01..INVX-06)
+- [ ] 03-04-PLAN.md — Integration wave: activate all test stubs, SKILL.md ML routing update
+- [ ] 03-05-PLAN.md — Phase 3 functional testing with real course CSV files (checkpoint)
 
 ### Phase 4: Web Publishing & Personas
 **Goal**: Finance professionals can use the skill at claude.ai in their browser; analyst and PM/trader persona variants ship; skill is packaged for the Claude plugin marketplace
