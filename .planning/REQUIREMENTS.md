@@ -9,13 +9,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: Skill detects Python environment and validates required packages (yfinance, pandas, numpy, matplotlib, seaborn, scikit-learn) on first run
-- [ ] **INFRA-02**: Skill installs missing packages or prints clear install instructions if environment cannot be modified
-- [ ] **INFRA-03**: yfinance data adapter layer isolates all Yahoo Finance API calls behind a single module (single point of change for API breakage)
-- [ ] **INFRA-04**: All chart outputs saved as PNG files to `finance_output/` directory (no `plt.show()`; uses `matplotlib.use('Agg')`)
-- [ ] **INFRA-05**: All outputs include hardcoded investment advice disclaimer ("For educational/informational purposes only. Not financial advice.")
-- [ ] **INFRA-06**: Data validation wrapper catches empty DataFrames, invalid tickers, bad date ranges, and returns user-friendly error messages
-- [ ] **INFRA-07**: All output leads with plain-English interpretation before any DataFrame, chart path, or model metric
+- [x] **INFRA-01**: Skill detects Python environment and validates required packages (yfinance, pandas, numpy, matplotlib, seaborn, scikit-learn) on first run
+- [x] **INFRA-02**: Skill installs missing packages or prints clear install instructions if environment cannot be modified
+- [x] **INFRA-03**: yfinance data adapter layer isolates all Yahoo Finance API calls behind a single module (single point of change for API breakage)
+- [x] **INFRA-04**: All chart outputs saved as PNG files to `finance_output/` directory (no `plt.show()`; uses `matplotlib.use('Agg')`)
+- [x] **INFRA-05**: All outputs include hardcoded investment advice disclaimer ("For educational/informational purposes only. Not financial advice.")
+- [x] **INFRA-06**: Data validation wrapper catches empty DataFrames, invalid tickers, bad date ranges, and returns user-friendly error messages
+- [x] **INFRA-07**: All output leads with plain-English interpretation before any DataFrame, chart path, or model metric
 
 ### MCP Server (Core Engine)
 
@@ -111,13 +111,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 1 | Pending |
-| INFRA-02 | Phase 1 | Pending |
-| INFRA-03 | Phase 1 | Pending |
-| INFRA-04 | Phase 1 | Pending |
-| INFRA-05 | Phase 1 | Pending |
-| INFRA-06 | Phase 1 | Pending |
-| INFRA-07 | Phase 1 | Pending |
+| INFRA-01 | Phase 1 | Complete |
+| INFRA-02 | Phase 1 | Complete |
+| INFRA-03 | Phase 1 | Complete |
+| INFRA-04 | Phase 1 | Complete |
+| INFRA-05 | Phase 1 | Complete |
+| INFRA-06 | Phase 1 | Complete |
+| INFRA-07 | Phase 1 | Complete |
 | MCP-01 | Phase 1 | Complete (01-01) |
 | MCP-02 | Phase 1 | Complete (01-01) |
 | MCP-03 | Phase 1 | Complete (01-01) |
