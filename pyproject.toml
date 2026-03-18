@@ -17,6 +17,9 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=7.0", "pytest-mock>=3.0"]
 
+[project.scripts]
+finance-mcp-http = "finance_mcp.server_http:start"
+
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"

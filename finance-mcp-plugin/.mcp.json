@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "finance": {
+      "command": "python",
+      "args": ["-m", "finance_mcp.server"],
+      "_note": "Requires: pip install finance-mcp (with yfinance, pandas, scikit-learn, etc). See README for full install instructions."
+    }
+  }
+}

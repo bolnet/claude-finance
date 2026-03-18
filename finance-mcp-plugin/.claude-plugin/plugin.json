@@ -1,0 +1,12 @@
+{
+  "name": "finance-mcp",
+  "version": "1.0.0",
+  "description": "Finance AI skill — stock analysis, market metrics, and ML workflows for finance professionals. Powered by yfinance, pandas, scikit-learn.",
+  "author": {
+    "name": "Finance MCP Project"
+  },
+  "homepage": "https://github.com/[owner]/machine_learning_skill",
+  "repository": "https://github.com/[owner]/machine_learning_skill",
+  "license": "MIT",
+  "keywords": ["finance", "stocks", "yfinance", "ml", "market-analysis", "portfolio", "mcp"]
+}
