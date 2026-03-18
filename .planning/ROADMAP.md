@@ -3,6 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Finance AI Skill MVP** — Phases 1–4 (shipped 2026-03-18)
+- 🚧 **v1.1 Interactive Demo** — Phases 5–8 (in progress)
 
 ## Phases
 
@@ -18,6 +19,73 @@ Full phase details: `.planning/milestones/v1.0-ROADMAP.md`
 
 </details>
 
+### 🚧 v1.1 Interactive Demo (In Progress)
+
+**Milestone Goal:** Users can experience every capability of the Finance AI Skill through a guided `/demo` slash command that runs all 11 MCP tools and both personas with real examples, pausing between each for explanation.
+
+## Phase Details
+
+### Phase 5: Demo Command & Flow
+**Goal**: Users can launch a guided interactive walkthrough that introduces the skill and navigates between steps with explanations
+**Depends on**: Phase 4 (v1.0 complete)
+**Requirements**: DEMO-01, DEMO-02, DEMO-03, DEMO-04
+**Success Criteria** (what must be TRUE):
+  1. User types `/demo` and the walkthrough starts immediately with a welcome message explaining what the Finance AI Skill does
+  2. After each tool demo step, the user sees a plain-English explanation of what just happened before the next step begins
+  3. At the end of the walkthrough, the user sees a completion summary listing all 11 tools demonstrated
+  4. The demo command is registered in `.claude/commands/` and discoverable via Claude Code slash command autocomplete
+**Plans**: TBD
+
+Plans:
+- [ ] 05-01: Demo command scaffold — SKILL.md entry, DEMO.md walkthrough script, welcome and completion sections
+- [ ] 05-02: Pause-and-explain mechanism — step framing, per-tool explanation text, summary assembly
+
+### Phase 6: Market Analysis Demos
+**Goal**: Users see all 6 market analysis MCP tools execute live with real ticker data and receive a plain-English explanation of each output
+**Depends on**: Phase 5
+**Requirements**: MRKT-01, MRKT-02, MRKT-03, MRKT-04, MRKT-05, MRKT-06
+**Success Criteria** (what must be TRUE):
+  1. User sees `analyze_stock` run on a live ticker (AAPL) and a price chart is produced with explanation
+  2. User sees `get_returns` output with daily and cumulative return values explained in plain English
+  3. User sees `get_volatility` output with annualized volatility explained in plain English
+  4. User sees `get_risk_metrics` output with Sharpe ratio, max drawdown, and beta explained in plain English
+  5. User sees `compare_tickers` run on AAPL vs MSFT and `correlation_map` produce a heatmap, each with explanation
+**Plans**: TBD
+
+Plans:
+- [ ] 06-01: Market analysis demo steps — six tool invocations with live ticker, explanation text per tool
+- [ ] 06-02: Demo verification — all 6 tools run end-to-end in demo flow without error
+
+### Phase 7: ML Workflow Demos
+**Goal**: Users see all 4 ML workflow MCP tools execute on bundled sample data and receive explanations of the cleaning, training, and inference outputs
+**Depends on**: Phase 6
+**Requirements**: MLWF-01, MLWF-02, MLWF-03, MLWF-04
+**Success Criteria** (what must be TRUE):
+  1. A bundled sample CSV file ships with the project and is referenced by the demo without requiring user-provided data
+  2. User sees `ingest_csv` run on the sample CSV and receives cleaning/EDA output with explanation
+  3. User sees `predict_liquidity` (train + predict cycle) produce regression results with RMSE/R² explained in plain English
+  4. User sees `classify_investor` (train + predict cycle) produce classification results with segment label and feature importance explained in plain English
+**Plans**: TBD
+
+Plans:
+- [ ] 07-01: Bundled sample CSV — create `demo/sample_portfolio.csv` with realistic synthetic data matching ML tool schemas
+- [ ] 07-02: ML demo steps — four tool invocations on sample CSV, explanation text per tool
+- [ ] 07-03: Demo verification — all 4 ML tools run end-to-end in demo flow without error
+
+### Phase 8: Persona Demos
+**Goal**: Users see the same analysis delivered through both the equity analyst and portfolio manager personas and understand how the framing differs
+**Depends on**: Phase 7
+**Requirements**: PERS-01, PERS-02, PERS-03
+**Success Criteria** (what must be TRUE):
+  1. User sees an analysis step delivered through `/finance-analyst` persona framing (Sharpe/drawdown emphasis, single-stock lens)
+  2. User sees the same analysis delivered through `/finance-pm` persona framing (portfolio holdings lens, drawdown/beta lead)
+  3. User sees an explicit side-by-side or sequential explanation of how the two personas interpret the same data differently
+**Plans**: TBD
+
+Plans:
+- [ ] 08-01: Persona demo steps — analyst and PM framing of shared analysis, contrast explanation
+- [ ] 08-02: Functional verification — full end-to-end demo run confirmed, human sign-off
+
 ## Progress
 
 | Phase | Milestone | Plans | Status | Completed |
@@ -26,6 +94,10 @@ Full phase details: `.planning/milestones/v1.0-ROADMAP.md`
 | 2. Market Analysis Tools | v1.0 | 4/4 | Complete | 2026-03-18 |
 | 3. ML Workflow Tools | v1.0 | 5/5 | Complete | 2026-03-18 |
 | 4. Web Publishing & Personas | v1.0 | 4/4 | Complete | 2026-03-18 |
+| 5. Demo Command & Flow | v1.1 | 0/2 | Not started | - |
+| 6. Market Analysis Demos | v1.1 | 0/2 | Not started | - |
+| 7. ML Workflow Demos | v1.1 | 0/3 | Not started | - |
+| 8. Persona Demos | v1.1 | 0/2 | Not started | - |
 
 ---
-*Next milestone: `/gsd:new-milestone` to define v1.1 scope*
+*Last updated: 2026-03-18 — v1.1 roadmap created (Phases 5–8)*

@@ -59,29 +59,29 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DEMO-01 | — | Pending |
-| DEMO-02 | — | Pending |
-| DEMO-03 | — | Pending |
-| DEMO-04 | — | Pending |
-| MRKT-01 | — | Pending |
-| MRKT-02 | — | Pending |
-| MRKT-03 | — | Pending |
-| MRKT-04 | — | Pending |
-| MRKT-05 | — | Pending |
-| MRKT-06 | — | Pending |
-| MLWF-01 | — | Pending |
-| MLWF-02 | — | Pending |
-| MLWF-03 | — | Pending |
-| MLWF-04 | — | Pending |
-| PERS-01 | — | Pending |
-| PERS-02 | — | Pending |
-| PERS-03 | — | Pending |
+| DEMO-01 | Phase 5 | Pending |
+| DEMO-02 | Phase 5 | Pending |
+| DEMO-03 | Phase 5 | Pending |
+| DEMO-04 | Phase 5 | Pending |
+| MRKT-01 | Phase 6 | Pending |
+| MRKT-02 | Phase 6 | Pending |
+| MRKT-03 | Phase 6 | Pending |
+| MRKT-04 | Phase 6 | Pending |
+| MRKT-05 | Phase 6 | Pending |
+| MRKT-06 | Phase 6 | Pending |
+| MLWF-01 | Phase 7 | Pending |
+| MLWF-02 | Phase 7 | Pending |
+| MLWF-03 | Phase 7 | Pending |
+| MLWF-04 | Phase 7 | Pending |
+| PERS-01 | Phase 8 | Pending |
+| PERS-02 | Phase 8 | Pending |
+| PERS-03 | Phase 8 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 17 total
-- Mapped to phases: 0
-- Unmapped: 17 ⚠️
+- Mapped to phases: 17
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-18*
-*Last updated: 2026-03-18 after initial definition*
+*Last updated: 2026-03-18 — traceability mapped to Phases 5–8*

@@ -5,11 +5,11 @@ milestone_name: Interactive Demo
 status: active
 stopped_at: null
 last_updated: "2026-03-18"
-last_activity: "2026-03-18 — Milestone v1.1 started"
+last_activity: "2026-03-18 — Roadmap created for v1.1 (Phases 5–8)"
 progress:
-  total_phases: 0
+  total_phases: 4
   completed_phases: 0
-  total_plans: 0
+  total_plans: 9
   completed_plans: 0
   percent: 0
 ---
@@ -21,48 +21,40 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Finance professionals get professional-grade analysis by describing what they want — the skill writes, runs, and interprets the code for them.
-**Current focus:** v1.1 Interactive Demo — /demo slash command
+**Current focus:** v1.1 Interactive Demo — /demo slash command walkthrough of all 11 MCP tools and both personas
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 5 — Demo Command & Flow (Not started)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-03-18 — Milestone v1.1 started
+Status: Roadmap defined, ready for Phase 5 planning
+Last activity: 2026-03-18 — v1.1 roadmap created
+
+```
+Progress: [                    ] 0% (0/9 plans)
+Phase 5: [ ] [ ]
+Phase 6: [ ] [ ]
+Phase 7: [ ] [ ] [ ]
+Phase 8: [ ] [ ]
+```
 
 ## Performance Metrics
 
-**Velocity:**
-- Total plans completed: 1
-- Average duration: 4 min
-- Total execution time: 0.07 hours
+**Velocity (v1.0 baseline):**
+- Total plans completed: 16
+- Average duration: ~5 min/plan
+- Total execution time: ~1.3 hours
 
-**By Phase:**
+**By Phase (v1.0):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-infrastructure-mcp-scaffold | 1/3 | 4 min | 4 min |
+| 01-infrastructure-mcp-scaffold | 3/3 | ~10 min | ~3 min |
+| 02-market-analysis-tools | 4/4 | ~16 min | ~4 min |
+| 03-ml-workflow-tools | 5/5 | ~35 min | ~7 min |
+| 04-web-publishing-personas | 4/4 | ~20 min | ~5 min |
 
-**Recent Trend:**
-- Last 5 plans: 01-01 (4 min)
-- Trend: -
-
-*Updated after each plan completion*
-| Phase 01-infrastructure-mcp-scaffold P02 | 3 | 2 tasks | 6 files |
-| Phase 01-infrastructure-mcp-scaffold P03 | 2 | 2 tasks | 2 files |
-| Phase 02-market-analysis-tools P01 | 2 | 2 tasks | 4 files |
-| Phase 02-market-analysis-tools P02 | 4 | 2 tasks | 5 files |
-| Phase 02-market-analysis-tools P03 | 5 min | 2 tasks | 4 files |
-| Phase 02-market-analysis-tools P04 | 5 | 2 tasks | 1 files |
-| Phase 03-ml-workflow-tools P01 | 3 min | 2 tasks | 7 files |
-| Phase 03-ml-workflow-tools P02 | 2 min | 2 tasks | 2 files |
-| Phase 03-ml-workflow-tools P03 | 10 | 2 tasks | 2 files |
-| Phase 03-ml-workflow-tools P04 | 5 | 2 tasks | 2 files |
-| Phase 03-ml-workflow-tools P05 | 15 | 2 tasks | 11 files |
-| Phase 04-web-publishing-personas P01 | 3 | 2 tasks | 2 files |
-| Phase 04-web-publishing-personas P02 | 4 | 2 tasks | 3 files |
-| Phase 04-web-publishing-personas P03 | 8 | 2 tasks | 9 files |
-| Phase 04-web-publishing-personas P04 | 5 | 2 tasks | 1 files |
+*v1.1 metrics will populate after plans complete*
 
 ## Accumulated Context
 
@@ -115,10 +107,10 @@ None yet.
 
 ### Blockers/Concerns
 
-None — v1.0 complete. All Phase 3 concerns resolved during execution.
+None — v1.0 complete. v1.1 roadmap ready.
 
 ## Session Continuity
 
-Last session: 2026-03-18T12:03:14.869Z
-Stopped at: Completed 04-04-PLAN.md — Phase 4 functional verification and human sign-off complete; v1.0 milestone finished
+Last session: 2026-03-18
+Stopped at: Roadmap created for v1.1 — Phases 5–8 defined, ready to plan Phase 5
 Resume file: None
