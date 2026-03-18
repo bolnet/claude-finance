@@ -131,15 +131,58 @@ def test_volatility_chart(tmp_path, monkeypatch):
 
 
 def test_sharpe_sign():
-    pytest.fail("stub — implement when tool is ready")
+    """Sharpe ratio is positive when mean daily return > 0."""
+    import pandas as pd
+    import numpy as np
+    from finance_mcp.tools.risk_metrics import _compute_risk_metrics
+
+    np.random.seed(1)
+    dates = pd.date_range("2024-01-02", periods=30, freq="B")
+    # Positive drift series
+    returns = pd.Series(np.random.normal(0.001, 0.01, 30), index=dates)
+    bench = pd.Series(np.random.normal(0.0005, 0.01, 30), index=dates)
+
+    metrics = _compute_risk_metrics(returns, bench)
+    assert metrics["sharpe"] > 0, f"Expected positive Sharpe, got {metrics['sharpe']}"
 
 
 def test_max_drawdown_nonpositive():
-    pytest.fail("stub — implement when tool is ready")
+    """Max drawdown is always <= 0."""
+    import pandas as pd
+    import numpy as np
+    from finance_mcp.tools.risk_metrics import _compute_risk_metrics
+
+    np.random.seed(2)
+    dates = pd.date_range("2024-01-02", periods=50, freq="B")
+    returns = pd.Series(np.random.normal(0, 0.01, 50), index=dates)
+    bench = pd.Series(np.random.normal(0, 0.01, 50), index=dates)
+
+    metrics = _compute_risk_metrics(returns, bench)
+    assert metrics["max_drawdown"] <= 0, f"Max drawdown must be <= 0, got {metrics['max_drawdown']}"
 
 
 def test_beta_calculation():
-    pytest.fail("stub — implement when tool is ready")
+    """Beta matches the np.cov formula result for known inputs."""
+    import pandas as pd
+    import numpy as np
+    from finance_mcp.tools.risk_metrics import _compute_risk_metrics
+
+    np.random.seed(3)
+    dates = pd.date_range("2024-01-02", periods=60, freq="B")
+    bench = pd.Series(np.random.normal(0.0005, 0.01, 60), index=dates)
+    # Stock = 1.5 * benchmark + noise
+    returns = 1.5 * bench + pd.Series(np.random.normal(0, 0.002, 60), index=dates)
+
+    metrics = _compute_risk_metrics(returns, bench)
+
+    # Independently verify beta
+    aligned = pd.concat([returns, bench], axis=1).dropna()
+    cov = np.cov(aligned.iloc[:, 0], aligned.iloc[:, 1])
+    expected_beta = cov[0, 1] / cov[1, 1]
+
+    assert abs(metrics["beta"] - expected_beta) < 1e-10, (
+        f"Beta mismatch: got {metrics['beta']}, expected {expected_beta}"
+    )
 
 
 def test_normalized_prices_start_at_100():
