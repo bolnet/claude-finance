@@ -113,7 +113,7 @@ Plans:
 | 7. ML Workflow Demos | v1.1 | 3/3 | Complete | 2026-03-18 |
 | 8. Persona Demos | v1.1 | 2/2 | Complete | 2026-03-18 |
 | 9. Market-Analysis Walkthroughs | v1.2 | 2/2 | Complete | 2026-03-18 |
-| 10. Data-Profiling Walkthroughs | 2/2 | Complete   | 2026-03-18 | - |
+| 10. Data-Profiling Walkthroughs | 2/2 | Complete    | 2026-03-18 | - |
 | 11. ML-Classifier Walkthrough | v1.2 | 0/1 | Not started | - |
 | 12. Walkthrough Test Suite | v1.2 | 0/1 | Not started | - |
 

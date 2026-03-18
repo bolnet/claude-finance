@@ -22,9 +22,9 @@ Requirements for 5 remaining role-based walkthrough slash commands. Each follows
 
 ### FP&A Analyst
 
-- [ ] **FPA-01**: User can run `/walkthrough-fpa` for a data profiling and forecasting prep scenario
-- [ ] **FPA-02**: Walkthrough covers CSV data profiling pipeline with target column identification
-- [ ] **FPA-03**: Walkthrough covers ERP export cleanup and ML forecasting prep using liquidity predictor
+- [x] **FPA-01**: User can run `/walkthrough-fpa` for a data profiling and forecasting prep scenario
+- [x] **FPA-02**: Walkthrough covers CSV data profiling pipeline with target column identification
+- [x] **FPA-03**: Walkthrough covers ERP export cleanup and ML forecasting prep using liquidity predictor
 
 ### Private Equity / VC
 
@@ -66,9 +66,9 @@ None — all 5 remaining walkthroughs scoped for this milestone.
 | IB-01 | Phase 9 | Complete |
 | IB-02 | Phase 9 | Complete |
 | IB-03 | Phase 9 | Complete |
-| FPA-01 | Phase 10 | Pending |
-| FPA-02 | Phase 10 | Pending |
-| FPA-03 | Phase 10 | Pending |
+| FPA-01 | Phase 10 | Complete |
+| FPA-02 | Phase 10 | Complete |
+| FPA-03 | Phase 10 | Complete |
 | PE-01 | Phase 11 | Pending |
 | PE-02 | Phase 11 | Pending |
 | PE-03 | Phase 11 | Pending |

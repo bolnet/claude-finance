@@ -4,7 +4,7 @@ milestone: v1.2
 milestone_name: Role Walkthroughs
 status: planning
 stopped_at: Completed 10-01-PLAN.md (FP&A Walkthrough)
-last_updated: "2026-03-18T21:08:28.895Z"
+last_updated: "2026-03-18T21:11:09.359Z"
 last_activity: 2026-03-18 — v1.2 roadmap created
 progress:
   total_phases: 4
