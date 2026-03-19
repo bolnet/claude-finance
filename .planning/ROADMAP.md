@@ -120,7 +120,7 @@ Plans:
 | 12. Walkthrough Test Suite | v1.2 | 1/1 | Complete | 2026-03-18 |
 | 13. Site Scaffolding and Visual Assets | v1.3 | 2/2 | Complete | 2026-03-18 |
 | 14. Content Pages | v1.3 | 2/2 | Complete | 2026-03-19 |
-| 15. Getting Started and Polish | 2/2 | Complete   | 2026-03-19 | - |
+| 15. Getting Started and Polish | 2/2 | Complete    | 2026-03-19 | - |
 
 ---
 *Last updated: 2026-03-18 — Phase 15 planned (2 plans)*
