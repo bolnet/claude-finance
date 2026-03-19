@@ -80,8 +80,8 @@ Full phase details: `.planning/milestones/v1.3-ROADMAP.md`
 **Plans**: 2 plans
 
 Plans:
-- [ ] 16-01-PLAN.md — Plugin infrastructure: plugin.json, hooks/hooks.json, .mcp.json, directory structure (PLUG-01 through PLUG-04)
-- [ ] 16-02-PLAN.md — Deal flow skills: deal-sourcing, deal-screening, dd-checklist, dd-meeting-prep, ic-memo (SKILL-01 through SKILL-05) and their commands (CMD-01 through CMD-05)
+- [x] 16-01-PLAN.md — Plugin infrastructure: plugin.json, hooks/hooks.json, .mcp.json, directory structure (PLUG-01 through PLUG-04)
+- [x] 16-02-PLAN.md — Deal flow skills: deal-sourcing, deal-screening, dd-checklist, dd-meeting-prep, ic-memo (SKILL-01 through SKILL-05) and their commands (CMD-01 through CMD-05)
 
 ### Phase 17: Portfolio and Value Creation Skills
 **Goal**: PE professionals can invoke portfolio-stage commands (monitoring, returns, unit economics, value creation, AI readiness) that load fully-authored skills with clear frameworks and MCP tool integration where applicable
@@ -96,7 +96,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 17-01-PLAN.md — Portfolio and value creation skills: portfolio-monitoring, returns-analysis, unit-economics, value-creation-plan, ai-readiness (SKILL-06 through SKILL-10) and their commands (CMD-06 through CMD-10)
+- [ ] 17-01-PLAN.md — Portfolio and value creation skills: portfolio-monitoring, returns-analysis, unit-economics, value-creation-plan, ai-readiness (SKILL-06 through SKILL-10)
+- [ ] 17-02-PLAN.md — Portfolio commands and test suite: portfolio, returns, unit-economics, value-creation, ai-readiness commands (CMD-06 through CMD-10)
 
 ### Phase 18: Analytical Engine Skills
 **Goal**: PE professionals can invoke MCP-powered analytical commands (prospect scoring, liquidity risk, pipeline profiling, public comps, market risk) that run live ML models and market data tools — our unique advantage over Anthropic's vanilla plugin
@@ -132,9 +133,9 @@ Plans:
 | 13. Site Scaffolding and Visual Assets | v1.3 | 2/2 | Complete | 2026-03-18 |
 | 14. Content Pages | v1.3 | 2/2 | Complete | 2026-03-19 |
 | 15. Getting Started and Polish | v1.3 | 2/2 | Complete | 2026-03-19 |
-| 16. Plugin Infrastructure and Deal Flow Skills | 2/2 | Complete    | 2026-03-19 | - |
-| 17. Portfolio and Value Creation Skills | v1.4 | 0/1 | Not started | - |
+| 16. Plugin Infrastructure and Deal Flow Skills | v1.4 | 2/2 | Complete | 2026-03-19 |
+| 17. Portfolio and Value Creation Skills | v1.4 | 0/2 | Not started | - |
 | 18. Analytical Engine Skills | v1.4 | 0/1 | Not started | - |
 
 ---
-*Last updated: 2026-03-19 — v1.4 roadmap created (Phases 16–18)*
+*Last updated: 2026-03-19 — Phase 17 planned (2 plans)*
