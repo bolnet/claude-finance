@@ -81,46 +81,46 @@ Requirements for restructuring PE into Anthropic's plugin pattern with MCP-power
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PLUG-01 | — | Pending |
-| PLUG-02 | — | Pending |
-| PLUG-03 | — | Pending |
-| PLUG-04 | — | Pending |
-| SKILL-01 | — | Pending |
-| SKILL-02 | — | Pending |
-| SKILL-03 | — | Pending |
-| SKILL-04 | — | Pending |
-| SKILL-05 | — | Pending |
-| SKILL-06 | — | Pending |
-| SKILL-07 | — | Pending |
-| SKILL-08 | — | Pending |
-| SKILL-09 | — | Pending |
-| SKILL-10 | — | Pending |
-| SKILL-11 | — | Pending |
-| SKILL-12 | — | Pending |
-| SKILL-13 | — | Pending |
-| SKILL-14 | — | Pending |
-| SKILL-15 | — | Pending |
-| CMD-01 | — | Pending |
-| CMD-02 | — | Pending |
-| CMD-03 | — | Pending |
-| CMD-04 | — | Pending |
-| CMD-05 | — | Pending |
-| CMD-06 | — | Pending |
-| CMD-07 | — | Pending |
-| CMD-08 | — | Pending |
-| CMD-09 | — | Pending |
-| CMD-10 | — | Pending |
-| CMD-11 | — | Pending |
-| CMD-12 | — | Pending |
-| CMD-13 | — | Pending |
-| CMD-14 | — | Pending |
-| CMD-15 | — | Pending |
+| PLUG-01 | Phase 16 | Pending |
+| PLUG-02 | Phase 16 | Pending |
+| PLUG-03 | Phase 16 | Pending |
+| PLUG-04 | Phase 16 | Pending |
+| SKILL-01 | Phase 16 | Pending |
+| SKILL-02 | Phase 16 | Pending |
+| SKILL-03 | Phase 16 | Pending |
+| SKILL-04 | Phase 16 | Pending |
+| SKILL-05 | Phase 16 | Pending |
+| SKILL-06 | Phase 17 | Pending |
+| SKILL-07 | Phase 17 | Pending |
+| SKILL-08 | Phase 17 | Pending |
+| SKILL-09 | Phase 17 | Pending |
+| SKILL-10 | Phase 17 | Pending |
+| SKILL-11 | Phase 18 | Pending |
+| SKILL-12 | Phase 18 | Pending |
+| SKILL-13 | Phase 18 | Pending |
+| SKILL-14 | Phase 18 | Pending |
+| SKILL-15 | Phase 18 | Pending |
+| CMD-01 | Phase 16 | Pending |
+| CMD-02 | Phase 16 | Pending |
+| CMD-03 | Phase 16 | Pending |
+| CMD-04 | Phase 16 | Pending |
+| CMD-05 | Phase 16 | Pending |
+| CMD-06 | Phase 17 | Pending |
+| CMD-07 | Phase 17 | Pending |
+| CMD-08 | Phase 17 | Pending |
+| CMD-09 | Phase 17 | Pending |
+| CMD-10 | Phase 17 | Pending |
+| CMD-11 | Phase 18 | Pending |
+| CMD-12 | Phase 18 | Pending |
+| CMD-13 | Phase 18 | Pending |
+| CMD-14 | Phase 18 | Pending |
+| CMD-15 | Phase 18 | Pending |
 
 **Coverage:**
 - v1.4 requirements: 34 total
-- Mapped to phases: 0
-- Unmapped: 34 ⚠️
+- Mapped to phases: 34
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-19*
-*Last updated: 2026-03-19 after initial definition*
+*Last updated: 2026-03-19 — traceability complete after roadmap creation*

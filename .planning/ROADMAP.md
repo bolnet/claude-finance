@@ -5,7 +5,8 @@
 - ✅ **v1.0 Finance AI Skill MVP** — Phases 1–4 (shipped 2026-03-18)
 - ✅ **v1.1 Interactive Demo** — Phases 5–8 (shipped 2026-03-18)
 - ✅ **v1.2 Role Walkthroughs** — Phases 9–12 (shipped 2026-03-18)
-- 🔄 **v1.3 GitHub Pages Site** — Phases 13–15 (active)
+- ✅ **v1.3 GitHub Pages Site** — Phases 13–15 (shipped 2026-03-19)
+- 🔄 **v1.4 Private Equity Plugin (Anthropic Pattern)** — Phases 16–18 (active)
 
 ## Phases
 
@@ -45,62 +46,72 @@ Full phase details: `.planning/milestones/v1.2-ROADMAP.md`
 
 </details>
 
-### v1.3 GitHub Pages Site (Active)
+<details>
+<summary>✅ v1.3 GitHub Pages Site (Phases 13–15) — SHIPPED 2026-03-19</summary>
 
-**Milestone Goal:** Build a beautiful, multi-page GitHub Pages site that showcases the Finance AI Skill to finance professionals — landing page with a strong hook, features, role walkthroughs, demo visuals, and getting started guide.
+- [x] **Phase 13: Site Scaffolding and Visual Assets** — docs/ folder structure, .nojekyll, shared HTML/CSS template, mobile viewport, 6-8 curated chart PNGs web-optimized and staged in docs/assets/images/ (2/2 plans, completed 2026-03-18)
+- [x] **Phase 14: Content Pages** — Landing page (hero, chart visuals, role entry points, stats bar), Features page (11 MCP tools by category), Walkthroughs page (6 role cards with scenario + chart) (2/2 plans, completed 2026-03-19)
+- [x] **Phase 15: Getting Started and Polish** — Getting Started page (two install paths), social card OG image, cross-page navigation audit, Lighthouse verification (2/2 plans, completed 2026-03-19)
 
-- [x] **Phase 13: Site Scaffolding and Visual Assets** — docs/ folder structure, .nojekyll, shared HTML/CSS template, mobile viewport, 6-8 curated chart PNGs web-optimized and staged in docs/assets/images/ (completed 2026-03-18)
-- [x] **Phase 14: Content Pages** — Landing page (hero, chart visuals, role entry points, stats bar), Features page (11 MCP tools by category), Walkthroughs page (6 role cards with scenario + chart) (completed 2026-03-19)
-- [x] **Phase 15: Getting Started and Polish** — Getting Started page (two install paths), social card OG image, cross-page navigation audit, Lighthouse verification (completed 2026-03-19)
+Full phase details: `.planning/milestones/v1.3-ROADMAP.md`
+
+</details>
+
+### v1.4 Private Equity Plugin (Anthropic Pattern) (Active)
+
+**Milestone Goal:** Restructure the private equity offering to match Anthropic's financial-services-plugins pattern — complete plugin infrastructure, 15 dedicated PE skills (10 Anthropic-pattern + 5 analytical engine), and 15 lightweight commands — installable via `claude plugin install`.
+
+- [ ] **Phase 16: Plugin Infrastructure and Deal Flow Skills** - Plugin manifest, hooks, MCP wiring, directory structure + deal-sourcing, deal-screening, dd-checklist, dd-meeting-prep, ic-memo skills and their commands
+- [ ] **Phase 17: Portfolio and Value Creation Skills** - portfolio-monitoring, returns-analysis, unit-economics, value-creation-plan, ai-readiness skills and their commands
+- [ ] **Phase 18: Analytical Engine Skills** - prospect-scoring, liquidity-risk, pipeline-profiling, public-comp-analysis, market-risk-scan skills (MCP-powered) and their commands
 
 ## Phase Details
 
-### Phase 13: Site Scaffolding and Visual Assets
-**Goal**: A working GitHub Pages deployment exists with the correct folder structure, path conventions, and curated chart assets — so every content page can be authored without revisiting infrastructure decisions
-**Depends on**: Nothing (first v1.3 phase)
-**Requirements**: INFRA-01, INFRA-02, INFRA-03, VIS-01, VIS-02, VIS-03
+### Phase 16: Plugin Infrastructure and Deal Flow Skills
+**Goal**: The plugin is installable with a valid manifest and MCP wiring, and PE professionals can invoke deal-flow commands (sourcing, screening, diligence checklist, meeting prep, IC memo) that load fully-authored skills
+**Depends on**: Nothing (first v1.4 phase)
+**Requirements**: PLUG-01, PLUG-02, PLUG-03, PLUG-04, SKILL-01, SKILL-02, SKILL-03, SKILL-04, SKILL-05, CMD-01, CMD-02, CMD-03, CMD-04, CMD-05
 **Success Criteria** (what must be TRUE):
-  1. Visiting the live GitHub Pages URL in a browser loads a styled placeholder index.html with zero 404 errors in DevTools
-  2. All asset paths in HTML and CSS are relative (no leading `/`), confirmed by inspecting the deployed page
-  3. A finance professional on a phone (375px viewport) can read the placeholder page without horizontal scrolling
-  4. 6-8 chart PNGs are present in `docs/assets/images/` with stable descriptive filenames (e.g., `compare-tech-stocks.png`), each under 150KB
-  5. All pages share a single HTML head/nav/footer template — no copy-paste duplication of boilerplate across files
-**Plans:** 2/2 plans complete
+  1. Running `claude plugin install` against the finance-mcp-plugin directory completes without errors and the plugin appears in the installed list
+  2. `.claude-plugin/plugin.json` contains correct bolnet/Claude-Finance URLs, version, and author — no `[owner]` placeholder remaining
+  3. A PE professional can invoke `/project:source` and receive a deal-sourcing workflow that uses MCP `ingest_csv` to profile CRM data
+  4. A PE professional can invoke `/project:screen-deal` and receive a pass/fail screening framework with a one-page memo structure
+  5. A PE professional can invoke `/project:ic-memo` and receive a structured IC memo template that calls `classify_investor` for quantitative scoring
+**Plans**: TBD
 
 Plans:
-- [x] 13-01-PLAN.md — Create docs/ folder structure, HTML template, CSS, JS, curate 8 chart images, favicon
-- [x] 13-02-PLAN.md — Enable GitHub Pages deployment, verify live URL, visual verification
+- [ ] 16-01-PLAN.md — Plugin infrastructure: plugin.json, hooks/hooks.json, .mcp.json, directory structure (PLUG-01 through PLUG-04)
+- [ ] 16-02-PLAN.md — Deal flow skills: deal-sourcing, deal-screening, dd-checklist, dd-meeting-prep, ic-memo (SKILL-01 through SKILL-05) and their commands (CMD-01 through CMD-05)
 
-### Phase 14: Content Pages
-**Goal**: Finance professionals can visit the landing page, understand the skill's value in plain English, see real chart outputs as proof, explore all 11 tools by category, and read the 6 role walkthroughs with scenario context
-**Depends on**: Phase 13
-**Requirements**: LAND-01, LAND-02, LAND-03, LAND-04, FEAT-01, FEAT-02, WALK-01, WALK-02
+### Phase 17: Portfolio and Value Creation Skills
+**Goal**: PE professionals can invoke portfolio-stage commands (monitoring, returns, unit economics, value creation, AI readiness) that load fully-authored skills with clear frameworks and MCP tool integration where applicable
+**Depends on**: Phase 16
+**Requirements**: SKILL-06, SKILL-07, SKILL-08, SKILL-09, SKILL-10, CMD-06, CMD-07, CMD-08, CMD-09, CMD-10
 **Success Criteria** (what must be TRUE):
-  1. Landing page hero section states the value proposition in outcome-led language ("finance analysis in plain English — no Python required") above the fold on desktop and mobile
-  2. Landing page shows at least one real chart output image as visual proof of capability
-  3. Landing page includes role-based entry points (e.g., "I'm a hedge fund analyst") that link to the relevant walkthrough card
-  4. Features page groups all 11 MCP tools by category (market analysis vs ML workflows) with plain-language outcome descriptions — no developer jargon in descriptions
-  5. Walkthroughs page presents all 6 role cards, each containing a situation sentence, a verbatim example prompt, and a representative chart image
-**Plans:** 2/2 plans complete
+  1. A PE professional can invoke `/project:portfolio` and receive a KPI tracking dashboard framework that calls `classify_investor` for classification drift and `get_risk_metrics` for market benchmarks
+  2. A PE professional can invoke `/project:returns` and receive IRR/MOIC sensitivity tables backed by live `get_returns` and `get_risk_metrics` MCP data for public comps
+  3. A PE professional can invoke `/project:unit-economics` and receive an ARR cohort and LTV/CAC analysis framework that uses `ingest_csv` for cohort data profiling
+  4. A PE professional can invoke `/project:value-creation` and receive an EBITDA bridge with a 100-day plan and KPI target structure
+  5. A PE professional can invoke `/project:ai-readiness` and receive a per-company go/wait gate with quick wins ranked by EBITDA impact
+**Plans**: TBD
 
 Plans:
-- [x] 14-01-PLAN.md — Landing page content + all Phase 14 CSS component classes (completed 2026-03-19)
-- [x] 14-02-PLAN.md — Features page (11 tools by category) + Walkthroughs page (6 role cards)
+- [ ] 17-01-PLAN.md — Portfolio and value creation skills: portfolio-monitoring, returns-analysis, unit-economics, value-creation-plan, ai-readiness (SKILL-06 through SKILL-10) and their commands (CMD-06 through CMD-10)
 
-### Phase 15: Getting Started and Polish
-**Goal**: Finance professionals can follow a complete, step-by-step installation path for either Claude Code or claude.ai, every page links correctly to every other page, and the site renders correctly on mobile and produces a rich social card when shared on LinkedIn
-**Depends on**: Phase 14
-**Requirements**: START-01, START-02, INFRA-04
+### Phase 18: Analytical Engine Skills
+**Goal**: PE professionals can invoke MCP-powered analytical commands (prospect scoring, liquidity risk, pipeline profiling, public comps, market risk) that run live ML models and market data tools — our unique advantage over Anthropic's vanilla plugin
+**Depends on**: Phase 17
+**Requirements**: SKILL-11, SKILL-12, SKILL-13, SKILL-14, SKILL-15, CMD-11, CMD-12, CMD-13, CMD-14, CMD-15
 **Success Criteria** (what must be TRUE):
-  1. Getting Started page presents two clearly separated install paths (Claude Code via stdio; claude.ai via HTTP + ngrok), each with copy-pasteable commands and plain-English step descriptions
-  2. Every navigation link on every page resolves to the correct destination — no broken links on any of the 4 pages
-  3. Sharing the site URL on LinkedIn (verified via opengraph.xyz) produces a rich preview with title, description, and chart image — not a blank card
-  4. Lighthouse Performance score is 80 or above on all 4 pages
-**Plans:** 2/2 plans complete
+  1. A PE professional can invoke `/project:score-prospect` and the skill trains an ML classifier on a CRM CSV export via `investor_classifier`, then scores individual prospects with confidence levels via `classify_investor`
+  2. A PE professional can invoke `/project:liquidity-risk` and the skill trains a regression model on portfolio data via `liquidity_predictor` and returns predicted liquidity risk scores via `predict_liquidity`
+  3. A PE professional can invoke `/project:profile-pipeline` and receive a full EDA report (completeness, distributions, outliers, data quality flags) on a CRM CSV export via `ingest_csv`
+  4. A PE professional can invoke `/project:public-comps` and receive a comparison chart and correlation heatmap for public market comps via `compare_tickers` and `correlation_map`
+  5. A PE professional can invoke `/project:market-risk` and receive Sharpe ratio, drawdown, and beta for public benchmarks via `get_volatility`, `get_risk_metrics`, and `analyze_stock`
+**Plans**: TBD
 
 Plans:
-- [ ] 15-01-PLAN.md — Getting Started page content (two install paths) + install step CSS classes
-- [ ] 15-02-PLAN.md — Social card OG image, OG meta tags on all pages, cross-page navigation audit
+- [ ] 18-01-PLAN.md — Analytical engine skills: prospect-scoring, liquidity-risk, pipeline-profiling, public-comp-analysis, market-risk-scan (SKILL-11 through SKILL-15) and their commands (CMD-11 through CMD-15)
 
 ## Progress
 
@@ -120,7 +131,10 @@ Plans:
 | 12. Walkthrough Test Suite | v1.2 | 1/1 | Complete | 2026-03-18 |
 | 13. Site Scaffolding and Visual Assets | v1.3 | 2/2 | Complete | 2026-03-18 |
 | 14. Content Pages | v1.3 | 2/2 | Complete | 2026-03-19 |
-| 15. Getting Started and Polish | 2/2 | Complete    | 2026-03-19 | - |
+| 15. Getting Started and Polish | v1.3 | 2/2 | Complete | 2026-03-19 |
+| 16. Plugin Infrastructure and Deal Flow Skills | v1.4 | 0/2 | Not started | - |
+| 17. Portfolio and Value Creation Skills | v1.4 | 0/1 | Not started | - |
+| 18. Analytical Engine Skills | v1.4 | 0/1 | Not started | - |
 
 ---
-*Last updated: 2026-03-18 — Phase 15 planned (2 plans)*
+*Last updated: 2026-03-19 — v1.4 roadmap created (Phases 16–18)*
