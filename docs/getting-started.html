@@ -29,10 +29,139 @@
 </header>
 
 <main>
-  <section class="page-stub">
+
+  <section class="page-header">
     <h1>Get Started</h1>
-    <p>Coming soon — installation guide and setup instructions are being authored.</p>
+    <p>Start analyzing finance data in minutes — no Python expertise required.</p>
   </section>
+
+  <section class="install-path" id="claude-code">
+    <h2 class="path-heading">Path A: Claude Code (recommended)</h2>
+    <p class="path-audience">Best if you use Claude from the terminal or your code editor</p>
+
+    <div class="step">
+      <span class="step-num">1</span>
+      <div class="step-content">
+        <strong>Clone the repository</strong>
+        <p>Download the finance skill to your computer. This creates a folder called Claude-Finance.</p>
+        <pre class="code-block"><code>git clone https://github.com/bolnet/Claude-Finance.git
+cd Claude-Finance</code></pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">2</span>
+      <div class="step-content">
+        <strong>Install the finance tools</strong>
+        <p>This installs everything the finance server needs — chart libraries, data feeds, and machine-learning models.</p>
+        <pre class="code-block"><code>pip install -e .</code></pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">3</span>
+      <div class="step-content">
+        <strong>Open Claude Code</strong>
+        <p>Claude Code automatically finds the finance server when you start it from the project folder. No configuration file to edit.</p>
+        <pre class="code-block"><code>claude</code></pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">4</span>
+      <div class="step-content">
+        <strong>Verify it works</strong>
+        <p>Type the command below. You should see a confirmation that the finance skill is active.</p>
+        <pre class="code-block"><code>/finance</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="install-path" id="claude-ai">
+    <h2 class="path-heading">Path B: claude.ai (browser)</h2>
+    <p class="path-audience">Best if you use Claude in the browser at claude.ai</p>
+
+    <div class="step">
+      <span class="step-num">1</span>
+      <div class="step-content">
+        <strong>Clone and install</strong>
+        <p>Download the finance skill and install everything it needs.</p>
+        <pre class="code-block"><code>git clone https://github.com/bolnet/Claude-Finance.git
+cd Claude-Finance
+pip install -e .</code></pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">2</span>
+      <div class="step-content">
+        <strong>Start the finance server</strong>
+        <p>This starts a local web server that claude.ai can connect to. Leave this terminal window open — the server must stay running.</p>
+        <pre class="code-block"><code>python -m finance_mcp.server_http</code></pre>
+        <p>The server will listen on port 8000. You will see a message confirming it is running.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">3</span>
+      <div class="step-content">
+        <strong>Create a public tunnel with ngrok</strong>
+        <p>ngrok makes your local server reachable from the internet so claude.ai can connect. Open a new terminal window and run these commands in order.</p>
+        <pre class="code-block"><code>brew install ngrok
+ngrok config add-authtoken YOUR_TOKEN
+ngrok http 8000</code></pre>
+        <p>Sign up for a free account at <a href="https://ngrok.com" target="_blank" rel="noopener">ngrok.com</a> to get your token. ngrok will show a public URL like <code>https://abc123.ngrok-free.app</code> — copy it.</p>
+
+        <div class="callout-note">
+          <strong>Heads up:</strong> the ngrok URL changes every time you restart ngrok. You will need to update the URL in claude.ai Settings each time. To avoid this, claim a free static domain at <a href="https://dashboard.ngrok.com/domains" target="_blank" rel="noopener">dashboard.ngrok.com/domains</a> (one per account).
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">4</span>
+      <div class="step-content">
+        <strong>Add the server to claude.ai</strong>
+        <p>Go to claude.ai, open Settings, then Integrations, click Add Integration, and paste the ngrok URL you copied.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">5</span>
+      <div class="step-content">
+        <strong>Verify it works</strong>
+        <p>Start a new conversation and type the command below. You should see the finance skill respond.</p>
+        <pre class="code-block"><code>/finance</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="first-analysis">
+    <h2>Your First Analysis</h2>
+    <p>Once you see the finance skill is active, try this prompt:</p>
+    <pre class="code-block"><code>Show me a 6-month price comparison of Apple, Google, and Microsoft</code></pre>
+    <p>Claude will pull live market data, generate a chart, and explain the trends — all in plain English.</p>
+  </section>
+
+  <section class="content-section">
+    <h2>Troubleshooting</h2>
+
+    <div style="margin-bottom: 1.5rem;">
+      <strong>Charts fail with a network error</strong>
+      <p style="color: #555; margin-top: 0.25rem;">Yahoo Finance limits how fast you can pull data. Wait 30 seconds and try again.</p>
+    </div>
+
+    <div style="margin-bottom: 1.5rem;">
+      <strong>'python' not found</strong>
+      <p style="color: #555; margin-top: 0.25rem;">On macOS, try <code>python3</code> instead of <code>python</code> in every command above.</p>
+    </div>
+
+    <div style="margin-bottom: 1.5rem;">
+      <strong>ngrok shows 'authentication required'</strong>
+      <p style="color: #555; margin-top: 0.25rem;">Sign up for a free account at <a href="https://ngrok.com" target="_blank" rel="noopener">ngrok.com</a>, then run <code>ngrok config add-authtoken YOUR_TOKEN</code> with the token from your ngrok dashboard.</p>
+    </div>
+  </section>
+
 </main>
 
 <footer>
