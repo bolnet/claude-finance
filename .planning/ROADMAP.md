@@ -51,7 +51,7 @@ Full phase details: `.planning/milestones/v1.2-ROADMAP.md`
 
 - [x] **Phase 13: Site Scaffolding and Visual Assets** — docs/ folder structure, .nojekyll, shared HTML/CSS template, mobile viewport, 6-8 curated chart PNGs web-optimized and staged in docs/assets/images/ (completed 2026-03-18)
 - [x] **Phase 14: Content Pages** — Landing page (hero, chart visuals, role entry points, stats bar), Features page (11 MCP tools by category), Walkthroughs page (6 role cards with scenario + chart) (completed 2026-03-19)
-- [ ] **Phase 15: Getting Started and Polish** — Getting Started page (two install paths), social card OG image, cross-page navigation audit, Lighthouse verification
+- [x] **Phase 15: Getting Started and Polish** — Getting Started page (two install paths), social card OG image, cross-page navigation audit, Lighthouse verification (completed 2026-03-19)
 
 ## Phase Details
 
@@ -96,7 +96,7 @@ Plans:
   2. Every navigation link on every page resolves to the correct destination — no broken links on any of the 4 pages
   3. Sharing the site URL on LinkedIn (verified via opengraph.xyz) produces a rich preview with title, description, and chart image — not a blank card
   4. Lighthouse Performance score is 80 or above on all 4 pages
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 15-01-PLAN.md — Getting Started page content (two install paths) + install step CSS classes
@@ -120,7 +120,7 @@ Plans:
 | 12. Walkthrough Test Suite | v1.2 | 1/1 | Complete | 2026-03-18 |
 | 13. Site Scaffolding and Visual Assets | v1.3 | 2/2 | Complete | 2026-03-18 |
 | 14. Content Pages | v1.3 | 2/2 | Complete | 2026-03-19 |
-| 15. Getting Started and Polish | 1/2 | In Progress|  | - |
+| 15. Getting Started and Polish | 2/2 | Complete   | 2026-03-19 | - |
 
 ---
 *Last updated: 2026-03-18 — Phase 15 planned (2 plans)*

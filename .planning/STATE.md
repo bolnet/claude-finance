@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: GitHub Pages Site
 status: completed
-stopped_at: Completed 15-01-PLAN.md
-last_updated: "2026-03-19T03:12:59.812Z"
+stopped_at: Completed 15-02-PLAN.md (Tasks 1-2; checkpoint at Task 3)
+last_updated: "2026-03-19T03:17:17.153Z"
 last_activity: 2026-03-18 — 13-01 complete (docs/ folder + visual assets)
 progress:
   total_phases: 3
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -64,6 +64,7 @@ v1.3 roadmap decisions:
 - [Phase 14-content-pages]: All Phase 14 CSS classes added in Plan 01 so Plans 02 and 03 do zero CSS work
 - [Phase 14-content-pages]: Scenario text sourced verbatim from walkthrough command files
 - [Phase 15-getting-started-and-polish]: Two stacked install path sections (not JS tabs) chosen for getting-started.html — works without JavaScript and scrolls naturally for finance professionals
+- [Phase 15-getting-started-and-polish]: Social card generated via Pillow at 1200x630 on brand dark blue #0f3460 canvas; navigation audit found zero errors across all 4 pages
 
 ### Pending Todos
 
@@ -75,6 +76,6 @@ None. 60+ real chart PNGs already exist in finance_output/charts/. The existing 
 
 ## Session Continuity
 
-Last session: 2026-03-19T03:12:59.809Z
-Stopped at: Completed 15-01-PLAN.md
+Last session: 2026-03-19T03:17:17.151Z
+Stopped at: Completed 15-02-PLAN.md (Tasks 1-2; checkpoint at Task 3)
 Resume file: None

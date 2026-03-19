@@ -12,7 +12,7 @@ Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 - [x] **INFRA-01**: Site deploys from `docs/` folder on main branch with `.nojekyll` file
 - [x] **INFRA-02**: Shared HTML template (head, nav bar, footer) used by all pages
 - [x] **INFRA-03**: All pages are mobile responsive with proper viewport meta
-- [ ] **INFRA-04**: Social card (OG meta image) displays when site is shared on LinkedIn/Twitter
+- [x] **INFRA-04**: Social card (OG meta image) displays when site is shared on LinkedIn/Twitter
 
 ### Landing Page
 
@@ -68,7 +68,7 @@ Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 | INFRA-01 | Phase 13 | Complete |
 | INFRA-02 | Phase 13 | Complete |
 | INFRA-03 | Phase 13 | Complete |
-| INFRA-04 | Phase 15 | Pending |
+| INFRA-04 | Phase 15 | Complete |
 | LAND-01 | Phase 14 | Complete |
 | LAND-02 | Phase 14 | Complete |
 | LAND-03 | Phase 14 | Complete |
