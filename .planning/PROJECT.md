@@ -8,16 +8,17 @@ The skill is an MCP server with 11 tools covering market analysis (price charts,
 
 **v1.1 shipped.** v1.0 MVP (38 requirements) + v1.1 Interactive Demo (17 requirements) delivered across 8 phases.
 
-## Current Milestone: v1.3 GitHub Pages Site
+## Current Milestone: v1.4 Private Equity Plugin (Anthropic Pattern)
 
-**Goal:** Build a beautiful, multi-page GitHub Pages site that showcases the Finance AI Skill to finance professionals — landing page with a strong hook, features, role walkthroughs, demo visuals, and getting started guide.
+**Goal:** Restructure the private equity offering to match Anthropic's `financial-services-plugins` plugin pattern — 10 lightweight commands, 10 dedicated skills, hooks, and clean manifest — while preserving our MCP analytical advantage (live tools, ML models, chart generation).
 
 **Target features:**
-- Landing page with compelling value proposition and hook for finance professionals
-- Features page showcasing 11 MCP tools across market analysis and ML workflows
-- Walkthroughs page highlighting 6 role-based scenarios (equity research, hedge fund, IB, FP&A, PE, accounting)
-- Getting Started page with installation for Claude Code and claude.ai
-- Visual examples using actual chart outputs (price charts, correlation heatmaps, confusion matrices, etc.)
+- 10 dedicated PE skills matching Anthropic's coverage: deal-sourcing, deal-screening, dd-checklist, dd-meeting-prep, ic-memo, portfolio-monitoring, returns-analysis, unit-economics, value-creation-plan, ai-readiness
+- 10 lightweight commands (3-5 lines each) that load corresponding skills
+- Skills reference our MCP tools (ingest_csv, investor_classifier, classify_investor, get_risk_metrics, correlation_map, compare_tickers) where applicable
+- hooks/hooks.json (empty array)
+- Fixed plugin.json with bolnet/Claude-Finance URLs
+- Plugin installable via `claude plugin install` marketplace pattern
 
 ## Core Value
 
@@ -64,7 +65,7 @@ Finance professionals get professional-grade analysis by describing what they wa
 
 ## Context
 
-**v1.2 shipped 2026-03-18.** 12 phases, 31 plans, 3,832 LOC Python, 105 tests passing, 6 role walkthroughs.
+**v1.3 shipped 2026-03-19.** Single-page landing at bolnet.github.io/Claude-Finance. 15 phases across 4 milestones.
 
 **Tech stack:** Python 3.14, FastMCP 2.x, yfinance 0.2.54+, scikit-learn 1.8.0, pandas, matplotlib (Agg), seaborn, joblib
 
@@ -99,4 +100,4 @@ Finance professionals get professional-grade analysis by describing what they wa
 | liquidity_predictor restricted to 3 features | Full CSV columns caused column-mismatch at inference time | ✓ Good — fixed inference stability |
 
 ---
-*Last updated: 2026-03-18 after v1.3 milestone start*
+*Last updated: 2026-03-19 after v1.4 milestone start*
