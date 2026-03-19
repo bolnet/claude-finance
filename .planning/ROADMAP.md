@@ -63,7 +63,7 @@ Full phase details: `.planning/milestones/v1.3-ROADMAP.md`
 
 - [x] **Phase 16: Plugin Infrastructure and Deal Flow Skills** - Plugin manifest, hooks, MCP wiring, directory structure + deal-sourcing, deal-screening, dd-checklist, dd-meeting-prep, ic-memo skills and their commands (completed 2026-03-19)
 - [x] **Phase 17: Portfolio and Value Creation Skills** - portfolio-monitoring, returns-analysis, unit-economics, value-creation-plan, ai-readiness skills and their commands (completed 2026-03-19)
-- [ ] **Phase 18: Analytical Engine Skills** - prospect-scoring, liquidity-risk, pipeline-profiling, public-comp-analysis, market-risk-scan skills (MCP-powered) and their commands
+- [x] **Phase 18: Analytical Engine Skills** - prospect-scoring, liquidity-risk, pipeline-profiling, public-comp-analysis, market-risk-scan skills (MCP-powered) and their commands (completed 2026-03-19)
 
 ## Phase Details
 
@@ -136,7 +136,7 @@ Plans:
 | 15. Getting Started and Polish | v1.3 | 2/2 | Complete | 2026-03-19 |
 | 16. Plugin Infrastructure and Deal Flow Skills | v1.4 | 2/2 | Complete | 2026-03-19 |
 | 17. Portfolio and Value Creation Skills | v1.4 | 2/2 | Complete | 2026-03-19 |
-| 18. Analytical Engine Skills | 1/2 | In Progress|  | - |
+| 18. Analytical Engine Skills | 2/2 | Complete   | 2026-03-19 | - |
 
 ---
 *Last updated: 2026-03-19 — Phase 18 planned (2 plans)*

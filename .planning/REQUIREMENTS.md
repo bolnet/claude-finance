@@ -47,11 +47,11 @@ Requirements for restructuring PE into Anthropic's plugin pattern with MCP-power
 - [x] **CMD-08**: `unit-economics.md` command — loads unit-economics skill
 - [x] **CMD-09**: `value-creation.md` command — loads value-creation-plan skill
 - [x] **CMD-10**: `ai-readiness.md` command — loads ai-readiness skill
-- [ ] **CMD-11**: `score-prospect.md` command — loads prospect-scoring skill
-- [ ] **CMD-12**: `liquidity-risk.md` command — loads liquidity-risk skill
-- [ ] **CMD-13**: `profile-pipeline.md` command — loads pipeline-profiling skill
-- [ ] **CMD-14**: `public-comps.md` command — loads public-comp-analysis skill
-- [ ] **CMD-15**: `market-risk.md` command — loads market-risk-scan skill
+- [x] **CMD-11**: `score-prospect.md` command — loads prospect-scoring skill
+- [x] **CMD-12**: `liquidity-risk.md` command — loads liquidity-risk skill
+- [x] **CMD-13**: `profile-pipeline.md` command — loads pipeline-profiling skill
+- [x] **CMD-14**: `public-comps.md` command — loads public-comp-analysis skill
+- [x] **CMD-15**: `market-risk.md` command — loads market-risk-scan skill
 
 ## Future Requirements
 
@@ -110,11 +110,11 @@ Requirements for restructuring PE into Anthropic's plugin pattern with MCP-power
 | CMD-08 | Phase 17 | Complete |
 | CMD-09 | Phase 17 | Complete |
 | CMD-10 | Phase 17 | Complete |
-| CMD-11 | Phase 18 | Pending |
-| CMD-12 | Phase 18 | Pending |
-| CMD-13 | Phase 18 | Pending |
-| CMD-14 | Phase 18 | Pending |
-| CMD-15 | Phase 18 | Pending |
+| CMD-11 | Phase 18 | Complete |
+| CMD-12 | Phase 18 | Complete |
+| CMD-13 | Phase 18 | Complete |
+| CMD-14 | Phase 18 | Complete |
+| CMD-15 | Phase 18 | Complete |
 
 **Coverage:**
 - v1.4 requirements: 34 total
