@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: GitHub Pages Site
 status: completed
-stopped_at: Completed 14-02-PLAN.md
-last_updated: "2026-03-19T01:48:00.403Z"
+stopped_at: Completed 15-01-PLAN.md
+last_updated: "2026-03-19T03:12:59.812Z"
 last_activity: 2026-03-18 — 13-01 complete (docs/ folder + visual assets)
 progress:
   total_phases: 3
   completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 6
+  completed_plans: 5
 ---
 
 # Project State
@@ -63,6 +63,7 @@ v1.3 roadmap decisions:
 - [Phase 13-site-scaffolding-and-visual-assets]: GitHub Pages configured with source: main branch, /docs folder; live site verified with zero 404s before human sign-off
 - [Phase 14-content-pages]: All Phase 14 CSS classes added in Plan 01 so Plans 02 and 03 do zero CSS work
 - [Phase 14-content-pages]: Scenario text sourced verbatim from walkthrough command files
+- [Phase 15-getting-started-and-polish]: Two stacked install path sections (not JS tabs) chosen for getting-started.html — works without JavaScript and scrolls naturally for finance professionals
 
 ### Pending Todos
 
@@ -74,6 +75,6 @@ None. 60+ real chart PNGs already exist in finance_output/charts/. The existing 
 
 ## Session Continuity
 
-Last session: 2026-03-19T01:45:07.921Z
-Stopped at: Completed 14-02-PLAN.md
+Last session: 2026-03-19T03:12:59.809Z
+Stopped at: Completed 15-01-PLAN.md
 Resume file: None

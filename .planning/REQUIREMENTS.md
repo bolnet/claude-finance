@@ -33,8 +33,8 @@ Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 
 ### Getting Started Page
 
-- [ ] **START-01**: Claude Code installation path with copy-paste commands
-- [ ] **START-02**: claude.ai installation path with step-by-step instructions
+- [x] **START-01**: Claude Code installation path with copy-paste commands
+- [x] **START-02**: claude.ai installation path with step-by-step instructions
 
 ### Visual Assets
 
@@ -77,8 +77,8 @@ Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 | FEAT-02 | Phase 14 | Complete |
 | WALK-01 | Phase 14 | Complete |
 | WALK-02 | Phase 14 | Complete |
-| START-01 | Phase 15 | Pending |
-| START-02 | Phase 15 | Pending |
+| START-01 | Phase 15 | Complete |
+| START-02 | Phase 15 | Complete |
 | VIS-01 | Phase 13 | Complete |
 | VIS-02 | Phase 13 | Complete |
 | VIS-03 | Phase 13 | Complete |
