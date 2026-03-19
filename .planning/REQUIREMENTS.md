@@ -23,13 +23,13 @@ Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 
 ### Features Page
 
-- [ ] **FEAT-01**: 11 MCP tools displayed organized by category (market analysis vs ML workflows)
-- [ ] **FEAT-02**: Visual examples (chart screenshots) for each tool category
+- [x] **FEAT-01**: 11 MCP tools displayed organized by category (market analysis vs ML workflows)
+- [x] **FEAT-02**: Visual examples (chart screenshots) for each tool category
 
 ### Walkthroughs Page
 
-- [ ] **WALK-01**: 6 role cards with scenario descriptions and tool usage per role
-- [ ] **WALK-02**: Role-specific chart examples embedded per walkthrough card
+- [x] **WALK-01**: 6 role cards with scenario descriptions and tool usage per role
+- [x] **WALK-02**: Role-specific chart examples embedded per walkthrough card
 
 ### Getting Started Page
 
@@ -73,10 +73,10 @@ Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 | LAND-02 | Phase 14 | Complete |
 | LAND-03 | Phase 14 | Complete |
 | LAND-04 | Phase 14 | Complete |
-| FEAT-01 | Phase 14 | Pending |
-| FEAT-02 | Phase 14 | Pending |
-| WALK-01 | Phase 14 | Pending |
-| WALK-02 | Phase 14 | Pending |
+| FEAT-01 | Phase 14 | Complete |
+| FEAT-02 | Phase 14 | Complete |
+| WALK-01 | Phase 14 | Complete |
+| WALK-02 | Phase 14 | Complete |
 | START-01 | Phase 15 | Pending |
 | START-02 | Phase 15 | Pending |
 | VIS-01 | Phase 13 | Complete |

@@ -50,7 +50,7 @@ Full phase details: `.planning/milestones/v1.2-ROADMAP.md`
 **Milestone Goal:** Build a beautiful, multi-page GitHub Pages site that showcases the Finance AI Skill to finance professionals — landing page with a strong hook, features, role walkthroughs, demo visuals, and getting started guide.
 
 - [x] **Phase 13: Site Scaffolding and Visual Assets** — docs/ folder structure, .nojekyll, shared HTML/CSS template, mobile viewport, 6-8 curated chart PNGs web-optimized and staged in docs/assets/images/ (completed 2026-03-18)
-- [ ] **Phase 14: Content Pages** — Landing page (hero, chart visuals, role entry points, stats bar), Features page (11 MCP tools by category), Walkthroughs page (6 role cards with scenario + chart)
+- [x] **Phase 14: Content Pages** — Landing page (hero, chart visuals, role entry points, stats bar), Features page (11 MCP tools by category), Walkthroughs page (6 role cards with scenario + chart) (completed 2026-03-19)
 - [ ] **Phase 15: Getting Started and Polish** — Getting Started page (two install paths), social card OG image, cross-page navigation audit, Lighthouse verification
 
 ## Phase Details
@@ -81,7 +81,7 @@ Plans:
   3. Landing page includes role-based entry points (e.g., "I'm a hedge fund analyst") that link to the relevant walkthrough card
   4. Features page groups all 11 MCP tools by category (market analysis vs ML workflows) with plain-language outcome descriptions — no developer jargon in descriptions
   5. Walkthroughs page presents all 6 role cards, each containing a situation sentence, a verbatim example prompt, and a representative chart image
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 14-01-PLAN.md — Landing page content + all Phase 14 CSS component classes
@@ -115,7 +115,7 @@ Plans:
 | 11. ML-Classifier Walkthrough | v1.2 | 1/1 | Complete | 2026-03-18 |
 | 12. Walkthrough Test Suite | v1.2 | 1/1 | Complete | 2026-03-18 |
 | 13. Site Scaffolding and Visual Assets | v1.3 | 2/2 | Complete | 2026-03-18 |
-| 14. Content Pages | 1/2 | In Progress|  | - |
+| 14. Content Pages | 2/2 | Complete   | 2026-03-19 | - |
 | 15. Getting Started and Polish | v1.3 | 0/? | Not started | - |
 
 ---
