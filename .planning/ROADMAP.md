@@ -81,7 +81,7 @@ Plans:
   3. Landing page includes role-based entry points (e.g., "I'm a hedge fund analyst") that link to the relevant walkthrough card
   4. Features page groups all 11 MCP tools by category (market analysis vs ML workflows) with plain-language outcome descriptions — no developer jargon in descriptions
   5. Walkthroughs page presents all 6 role cards, each containing a situation sentence, a verbatim example prompt, and a representative chart image
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 14-01-PLAN.md — Landing page content + all Phase 14 CSS component classes
@@ -115,7 +115,7 @@ Plans:
 | 11. ML-Classifier Walkthrough | v1.2 | 1/1 | Complete | 2026-03-18 |
 | 12. Walkthrough Test Suite | v1.2 | 1/1 | Complete | 2026-03-18 |
 | 13. Site Scaffolding and Visual Assets | v1.3 | 2/2 | Complete | 2026-03-18 |
-| 14. Content Pages | v1.3 | 0/2 | Not started | - |
+| 14. Content Pages | 1/2 | In Progress|  | - |
 | 15. Getting Started and Polish | v1.3 | 0/? | Not started | - |
 
 ---

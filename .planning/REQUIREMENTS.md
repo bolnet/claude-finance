@@ -16,10 +16,10 @@ Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 
 ### Landing Page
 
-- [ ] **LAND-01**: Hero section with finance-outcome headline and CTA targeting finance professionals
-- [ ] **LAND-02**: Real chart output visuals embedded as proof of capability
-- [ ] **LAND-03**: Role-based entry points linking to specific walkthrough sections ("I'm a hedge fund analyst")
-- [ ] **LAND-04**: Stats bar displaying key credibility numbers (11 tools, 6 walkthroughs, etc.)
+- [x] **LAND-01**: Hero section with finance-outcome headline and CTA targeting finance professionals
+- [x] **LAND-02**: Real chart output visuals embedded as proof of capability
+- [x] **LAND-03**: Role-based entry points linking to specific walkthrough sections ("I'm a hedge fund analyst")
+- [x] **LAND-04**: Stats bar displaying key credibility numbers (11 tools, 6 walkthroughs, etc.)
 
 ### Features Page
 
@@ -69,10 +69,10 @@ Requirements for the GitHub Pages showcase site. Each maps to roadmap phases.
 | INFRA-02 | Phase 13 | Complete |
 | INFRA-03 | Phase 13 | Complete |
 | INFRA-04 | Phase 15 | Pending |
-| LAND-01 | Phase 14 | Pending |
-| LAND-02 | Phase 14 | Pending |
-| LAND-03 | Phase 14 | Pending |
-| LAND-04 | Phase 14 | Pending |
+| LAND-01 | Phase 14 | Complete |
+| LAND-02 | Phase 14 | Complete |
+| LAND-03 | Phase 14 | Complete |
+| LAND-04 | Phase 14 | Complete |
 | FEAT-01 | Phase 14 | Pending |
 | FEAT-02 | Phase 14 | Pending |
 | WALK-01 | Phase 14 | Pending |
