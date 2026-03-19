@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Private Equity Plugin
 status: planning
-stopped_at: Completed 16-01-PLAN.md (plugin infrastructure)
-last_updated: "2026-03-19T21:20:37.794Z"
+stopped_at: Completed 16-02-PLAN.md
+last_updated: "2026-03-19T21:27:52.513Z"
 last_activity: 2026-03-19 — v1.4 roadmap created (Phases 16–18)
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -57,6 +57,8 @@ Key v1.4 constraints:
 - Each skill: own folder with SKILL.md (200-400 lines)
 - Each command: 3-5 lines (frontmatter + "Load the skill-name skill and do X")
 - [Phase 16-01]: Plugin manifest version bumped to 1.4.0, URLs fixed to bolnet/Claude-Finance, PE keywords and description added
+- [Phase 16]: ic-memo SKILL.md trimmed from 461 to 394 lines by condensing tables to stay within 400-line cap
+- [Phase 16]: Commands use 4-line lightweight loader pattern consistent with existing finance-mcp-plugin commands
 
 ### Pending Todos
 
@@ -68,6 +70,6 @@ None. Anthropic's plugin pattern is well-documented via GitHub. Existing MCP too
 
 ## Session Continuity
 
-Last session: 2026-03-19T21:20:37.791Z
-Stopped at: Completed 16-01-PLAN.md (plugin infrastructure)
+Last session: 2026-03-19T21:27:40.188Z
+Stopped at: Completed 16-02-PLAN.md
 Resume file: None

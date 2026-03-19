@@ -61,7 +61,7 @@ Full phase details: `.planning/milestones/v1.3-ROADMAP.md`
 
 **Milestone Goal:** Restructure the private equity offering to match Anthropic's financial-services-plugins pattern — complete plugin infrastructure, 15 dedicated PE skills (10 Anthropic-pattern + 5 analytical engine), and 15 lightweight commands — installable via `claude plugin install`.
 
-- [ ] **Phase 16: Plugin Infrastructure and Deal Flow Skills** - Plugin manifest, hooks, MCP wiring, directory structure + deal-sourcing, deal-screening, dd-checklist, dd-meeting-prep, ic-memo skills and their commands
+- [x] **Phase 16: Plugin Infrastructure and Deal Flow Skills** - Plugin manifest, hooks, MCP wiring, directory structure + deal-sourcing, deal-screening, dd-checklist, dd-meeting-prep, ic-memo skills and their commands (completed 2026-03-19)
 - [ ] **Phase 17: Portfolio and Value Creation Skills** - portfolio-monitoring, returns-analysis, unit-economics, value-creation-plan, ai-readiness skills and their commands
 - [ ] **Phase 18: Analytical Engine Skills** - prospect-scoring, liquidity-risk, pipeline-profiling, public-comp-analysis, market-risk-scan skills (MCP-powered) and their commands
 
@@ -132,7 +132,7 @@ Plans:
 | 13. Site Scaffolding and Visual Assets | v1.3 | 2/2 | Complete | 2026-03-18 |
 | 14. Content Pages | v1.3 | 2/2 | Complete | 2026-03-19 |
 | 15. Getting Started and Polish | v1.3 | 2/2 | Complete | 2026-03-19 |
-| 16. Plugin Infrastructure and Deal Flow Skills | 1/2 | In Progress|  | - |
+| 16. Plugin Infrastructure and Deal Flow Skills | 2/2 | Complete   | 2026-03-19 | - |
 | 17. Portfolio and Value Creation Skills | v1.4 | 0/1 | Not started | - |
 | 18. Analytical Engine Skills | v1.4 | 0/1 | Not started | - |
 
