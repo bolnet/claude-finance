@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.4
-milestone_name: Private Equity Plugin (Anthropic Pattern)
-status: ready_to_plan
-stopped_at: null
-last_updated: "2026-03-19"
-last_activity: 2026-03-19 — v1.4 roadmap created (Phases 16–18), ready to plan Phase 16
+milestone_name: Private Equity Plugin
+status: planning
+stopped_at: Completed 16-01-PLAN.md (plugin infrastructure)
+last_updated: "2026-03-19T21:20:37.794Z"
+last_activity: 2026-03-19 — v1.4 roadmap created (Phases 16–18)
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 4
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
 ---
 
 # Project State
@@ -56,6 +56,7 @@ Key v1.4 constraints:
 - No new MCP tools — v1.4 uses existing 11 tools only
 - Each skill: own folder with SKILL.md (200-400 lines)
 - Each command: 3-5 lines (frontmatter + "Load the skill-name skill and do X")
+- [Phase 16-01]: Plugin manifest version bumped to 1.4.0, URLs fixed to bolnet/Claude-Finance, PE keywords and description added
 
 ### Pending Todos
 
@@ -67,6 +68,6 @@ None. Anthropic's plugin pattern is well-documented via GitHub. Existing MCP too
 
 ## Session Continuity
 
-Last session: 2026-03-19
-Stopped at: Roadmap created for v1.4. Phase 16 ready to plan.
+Last session: 2026-03-19T21:20:37.791Z
+Stopped at: Completed 16-01-PLAN.md (plugin infrastructure)
 Resume file: None

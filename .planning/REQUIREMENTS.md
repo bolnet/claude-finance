@@ -9,10 +9,10 @@ Requirements for restructuring PE into Anthropic's plugin pattern with MCP-power
 
 ### Plugin Infrastructure
 
-- [ ] **PLUG-01**: `plugin.json` manifest with name, version, description, author, correct bolnet/Claude-Finance URLs
-- [ ] **PLUG-02**: `hooks/hooks.json` file (empty array)
-- [ ] **PLUG-03**: `.mcp.json` referencing finance MCP server for all tool-powered skills
-- [ ] **PLUG-04**: Plugin directory follows Anthropic's structure: `.claude-plugin/`, `commands/`, `skills/`, `hooks/`
+- [x] **PLUG-01**: `plugin.json` manifest with name, version, description, author, correct bolnet/Claude-Finance URLs
+- [x] **PLUG-02**: `hooks/hooks.json` file (empty array)
+- [x] **PLUG-03**: `.mcp.json` referencing finance MCP server for all tool-powered skills
+- [x] **PLUG-04**: Plugin directory follows Anthropic's structure: `.claude-plugin/`, `commands/`, `skills/`, `hooks/`
 
 ### PE Skills — Anthropic Pattern (10 skills matching their coverage)
 
@@ -81,10 +81,10 @@ Requirements for restructuring PE into Anthropic's plugin pattern with MCP-power
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PLUG-01 | Phase 16 | Pending |
-| PLUG-02 | Phase 16 | Pending |
-| PLUG-03 | Phase 16 | Pending |
-| PLUG-04 | Phase 16 | Pending |
+| PLUG-01 | Phase 16 | Complete |
+| PLUG-02 | Phase 16 | Complete |
+| PLUG-03 | Phase 16 | Complete |
+| PLUG-04 | Phase 16 | Complete |
 | SKILL-01 | Phase 16 | Pending |
 | SKILL-02 | Phase 16 | Pending |
 | SKILL-03 | Phase 16 | Pending |
