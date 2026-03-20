@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Claude Finance - Institutional-Grade Analytics in Plain English</title>
-<meta name="description" content="Open-source AI skill for Claude Code. 11 analytical tools finance professionals can run without writing code. Built by a 15-year Wall Street engineer.">
+<meta name="description" content="Open-source AI skill for Claude Code. 11 MCP tools, 18 slash commands, 15 PE workflows. No code required.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -27,275 +27,131 @@
   --blue: #4d9cff;
   --purple: #a78bfa;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-
 body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  line-height: 1.6;
-  overflow-x: hidden;
+  font-family: 'DM Sans', sans-serif; background: var(--bg-primary);
+  color: var(--text-primary); line-height: 1.6; overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
-
 body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
+  content: ''; position: fixed; inset: 0;
   background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 999;
+  pointer-events: none; z-index: 999;
 }
-
 .grid-bg {
   position: fixed; inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 60px 60px;
-  z-index: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px; z-index: 0;
 }
-
 section { position: relative; z-index: 1; }
-
 .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(28px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes drift {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(-80px, 60px); }
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-@keyframes scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes drift { 0% { transform: translate(0, 0); } 100% { transform: translate(-80px, 60px); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-/* ── NAV ── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  padding: 1rem 2rem;
-  backdrop-filter: blur(16px);
-  background: rgba(10,10,11,0.8);
-  border-bottom: 1px solid var(--border-subtle);
-}
-nav .nav-inner {
-  max-width: 1200px; margin: 0 auto;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.nav-logo {
-  font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.9rem;
-  color: var(--text-primary); text-decoration: none;
-  display: flex; align-items: center; gap: 0.5rem;
-}
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem 2rem; backdrop-filter: blur(16px); background: rgba(10,10,11,0.8); border-bottom: 1px solid var(--border-subtle); }
+nav .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.nav-logo { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.9rem; color: var(--text-primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
 .nav-logo .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 2px; }
 .nav-links { display: flex; gap: 2rem; list-style: none; }
 .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
 .nav-links a:hover { color: var(--text-primary); }
-.nav-cta {
-  padding: 0.5rem 1.2rem !important; background: var(--accent); color: var(--bg-primary) !important;
-  border-radius: 6px; font-weight: 600;
-}
+.nav-cta { padding: 0.5rem 1.2rem !important; background: var(--accent); color: var(--bg-primary) !important; border-radius: 6px; font-weight: 600; }
 
-/* ── HERO ── */
-.hero {
-  min-height: 100vh; display: flex; align-items: center;
-  position: relative; overflow: hidden; padding-top: 5rem;
-}
-.hero-glow {
-  position: absolute; top: -200px; right: -200px; width: 700px; height: 700px;
-  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-  filter: blur(100px); animation: drift 12s ease-in-out infinite alternate;
-}
+/* HERO */
+.hero { min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; padding-top: 5rem; }
+.hero-glow { position: absolute; top: -200px; right: -200px; width: 700px; height: 700px; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); filter: blur(100px); animation: drift 12s ease-in-out infinite alternate; }
 .hero-content { max-width: 800px; }
-.badge {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 100px;
-  font-size: 0.8rem; font-family: 'JetBrains Mono', monospace;
-  color: var(--accent); margin-bottom: 2rem; background: var(--accent-dim);
-  opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
-}
-.badge::before {
-  content: ''; width: 6px; height: 6px; background: var(--accent);
-  border-radius: 50%; animation: pulse 2s infinite;
-}
-.hero h1 {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 400;
-  line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem;
-  opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
-}
+.badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 100px; font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-bottom: 2rem; background: var(--accent-dim); opacity: 0; animation: fadeUp 0.8s 0.2s forwards; }
+.badge::before { content: ''; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+.hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 400; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s 0.4s forwards; }
 .hero h1 em { font-style: italic; color: var(--accent); }
-.hero-sub {
-  font-size: 1.25rem; color: var(--text-secondary); max-width: 560px;
-  line-height: 1.7; margin-bottom: 2.5rem;
-  opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
-}
-.hero-actions {
-  display: flex; gap: 1rem; flex-wrap: wrap;
-  opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
-}
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 0.6rem;
-  padding: 0.9rem 2rem; background: var(--accent); color: var(--bg-primary);
-  font-weight: 600; font-size: 0.95rem; border-radius: 8px;
-  text-decoration: none; transition: all 0.3s ease; border: none; cursor: pointer;
-}
+.hero-sub { font-size: 1.25rem; color: var(--text-secondary); max-width: 560px; line-height: 1.7; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.8s 0.6s forwards; }
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.8s 0.8s forwards; }
+.btn-primary { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.9rem 2rem; background: var(--accent); color: var(--bg-primary); font-weight: 600; font-size: 0.95rem; border-radius: 8px; text-decoration: none; transition: all 0.3s ease; border: none; cursor: pointer; }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--accent-glow); }
-.btn-secondary {
-  display: inline-flex; align-items: center; gap: 0.6rem;
-  padding: 0.9rem 2rem; background: transparent; color: var(--text-primary);
-  font-weight: 500; font-size: 0.95rem; border-radius: 8px;
-  text-decoration: none; border: 1px solid var(--border); transition: all 0.3s ease;
-}
+.btn-secondary { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.9rem 2rem; background: transparent; color: var(--text-primary); font-weight: 500; font-size: 0.95rem; border-radius: 8px; text-decoration: none; border: 1px solid var(--border); transition: all 0.3s ease; }
 .btn-secondary:hover { border-color: var(--text-muted); background: var(--bg-card); }
 
-/* ── TICKER ── */
-.ticker-strip {
-  border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);
-  padding: 1rem 0; overflow: hidden; background: var(--bg-secondary);
-}
+/* STATS BAR */
+.stats-bar { border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); padding: 2.5rem 0; background: var(--bg-secondary); }
+.stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2rem; text-align: center; }
+.stat-big { font-family: 'Instrument Serif', serif; font-size: 2.5rem; color: var(--accent); line-height: 1; }
+.stat-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem; line-height: 1.3; }
+
+/* TICKER */
+.ticker-strip { border-bottom: 1px solid var(--border-subtle); padding: 1rem 0; overflow: hidden; background: var(--bg-primary); }
 .ticker-track { display: flex; gap: 3rem; animation: scroll 30s linear infinite; width: max-content; }
-.ticker-item {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
-  white-space: nowrap; color: var(--text-muted);
-  display: flex; align-items: center; gap: 0.5rem;
-}
+.ticker-item { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; white-space: nowrap; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; }
 .ticker-item .up { color: var(--accent); }
 .ticker-item .down { color: var(--red); }
 
-/* ── ORIGIN ── */
+/* SHARED */
+.section-header { text-align: center; margin-bottom: 4rem; }
+.section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1rem; display: block; }
+.section-header h2 { font-family: 'Instrument Serif', serif; font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 400; letter-spacing: -0.02em; margin-bottom: 1rem; }
+.section-header p { color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+/* ORIGIN */
 .origin { padding: 8rem 0; border-bottom: 1px solid var(--border-subtle); }
 .origin-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-.origin-label {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
-  text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1.5rem;
-}
-.origin h2 {
-  font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 2rem;
-}
+.origin-label { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1.5rem; }
+.origin h2 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 2rem; }
 .origin-text p { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.85; margin-bottom: 1.5rem; }
 .origin-text p strong { color: var(--text-primary); font-weight: 500; }
-.origin-text blockquote {
-  border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2rem 0;
-  font-family: 'Instrument Serif', serif; font-size: 1.4rem;
-  font-style: italic; color: var(--text-primary); line-height: 1.5;
-}
-.career-card {
-  padding: 1.5rem; border: 1px solid var(--border-subtle); border-radius: 10px;
-  margin-bottom: 1rem; background: var(--bg-card); transition: all 0.3s ease;
-}
+.origin-text blockquote { border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2rem 0; font-family: 'Instrument Serif', serif; font-size: 1.4rem; font-style: italic; color: var(--text-primary); line-height: 1.5; }
+.career-card { padding: 1.5rem; border: 1px solid var(--border-subtle); border-radius: 10px; margin-bottom: 1rem; background: var(--bg-card); transition: all 0.3s ease; }
 .career-card:hover { border-color: var(--border); transform: translateX(4px); }
-.career-years {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
-  color: var(--accent); margin-bottom: 0.5rem; letter-spacing: 0.05em;
-}
+.career-years { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent); margin-bottom: 0.5rem; letter-spacing: 0.05em; }
 .career-card h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
 .career-card .career-role { font-size: 0.85rem; color: var(--text-muted); }
-.career-stat { margin-top: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-.stat-box {
-  padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle);
-  border-radius: 10px; text-align: center;
-}
-.stat-num {
-  font-family: 'Instrument Serif', serif; font-size: 2.8rem;
-  color: var(--accent); line-height: 1; margin-bottom: 0.3rem;
-}
-.stat-label { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
 
-/* ── CONVERSATION ── */
-.conversation {
-  padding: 8rem 0; border-bottom: 1px solid var(--border-subtle); background: var(--bg-secondary);
-}
+/* CONVERSATION */
+.conversation { padding: 8rem 0; border-bottom: 1px solid var(--border-subtle); background: var(--bg-secondary); }
 .conv-center { max-width: 760px; margin: 0 auto; text-align: center; }
-.conv-center h2 {
-  font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 400; letter-spacing: -0.02em; margin-bottom: 2.5rem;
-}
+.conv-center h2 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -0.02em; margin-bottom: 2.5rem; }
 .conv-quotes { text-align: left; display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 3rem; }
 .conv-bubble { padding: 1.5rem 2rem; border-radius: 12px; position: relative; max-width: 85%; }
 .conv-bubble.them { background: var(--bg-card); border: 1px solid var(--border-subtle); align-self: flex-start; }
 .conv-bubble.you { background: var(--accent-dim); border: 1px solid rgba(0,212,170,0.2); align-self: flex-end; }
-.conv-who {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
-  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;
-}
+.conv-who { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 .conv-bubble.them .conv-who { color: var(--text-muted); }
 .conv-bubble.you .conv-who { color: var(--accent); }
 .conv-bubble p { font-size: 1.05rem; line-height: 1.6; color: var(--text-secondary); }
-.conv-bubble.them p em {
-  color: var(--text-primary); font-style: italic;
-  font-family: 'Instrument Serif', serif; font-size: 1.15rem;
-}
+.conv-bubble.them p em { color: var(--text-primary); font-style: italic; font-family: 'Instrument Serif', serif; font-size: 1.15rem; }
 
-/* ── PYTHON PROBLEM ── */
+/* PYTHON PROBLEM */
 .python-problem { padding: 8rem 0; border-bottom: 1px solid var(--border-subtle); }
 .python-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-.python-label {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
-  text-transform: uppercase; letter-spacing: 0.15em; color: var(--amber); margin-bottom: 1.5rem;
-}
-.python-problem h2 {
-  font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 2.8rem);
-  font-weight: 400; line-height: 1.15; margin-bottom: 1.5rem;
-}
+.python-label { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--amber); margin-bottom: 1.5rem; }
+.python-problem h2 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 400; line-height: 1.15; margin-bottom: 1.5rem; }
 .python-problem p { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.8; margin-bottom: 1rem; }
 .timeline { display: flex; flex-direction: column; position: relative; }
-.timeline::before {
-  content: ''; position: absolute; left: 14px; top: 0; bottom: 0; width: 1px;
-  background: linear-gradient(to bottom, var(--border), var(--red), var(--accent));
-}
+.timeline::before { content: ''; position: absolute; left: 14px; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--border), var(--red), var(--accent)); }
 .timeline-item { display: flex; gap: 1.5rem; padding: 1.5rem 0; position: relative; }
-.timeline-dot {
-  width: 29px; min-width: 29px; height: 29px; border-radius: 50%;
-  border: 2px solid var(--border); background: var(--bg-primary);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; z-index: 1;
-}
+.timeline-dot { width: 29px; min-width: 29px; height: 29px; border-radius: 50%; border: 2px solid var(--border); background: var(--bg-primary); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; z-index: 1; }
 .timeline-item:last-child .timeline-dot { border-color: var(--accent); background: var(--accent-dim); }
-.timeline-week {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
-  color: var(--text-muted); margin-bottom: 0.3rem;
-}
+.timeline-week { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.3rem; }
 .timeline-text { font-size: 0.95rem; color: var(--text-secondary); }
 
-/* ── SHARED SECTION STYLES ── */
-.section-header { text-align: center; margin-bottom: 4rem; }
-.section-label {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
-  text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent);
-  margin-bottom: 1rem; display: block;
-}
-.section-header h2 {
-  font-family: 'Instrument Serif', serif; font-size: clamp(2.2rem, 4vw, 3.2rem);
-  font-weight: 400; letter-spacing: -0.02em; margin-bottom: 1rem;
-}
-.section-header p { color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
-
-/* ── TOOLS ── */
+/* TOOLS */
 .tools { padding: 8rem 0; border-bottom: 1px solid var(--border-subtle); }
-.tools-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 1px; background: var(--border-subtle);
-  border: 1px solid var(--border-subtle); border-radius: 12px; overflow: hidden;
-}
+.tools-category { margin-bottom: 3rem; }
+.tools-category:last-child { margin-bottom: 0; }
+.cat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 1rem; padding-left: 0.5rem; }
+.cat-green { color: var(--accent); }
+.cat-blue { color: var(--blue); }
+.cat-purple { color: var(--purple); }
+.tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1px; background: var(--border-subtle); border: 1px solid var(--border-subtle); border-radius: 12px; overflow: hidden; }
 .tool-card { background: var(--bg-card); padding: 2rem; transition: background 0.3s ease; }
 .tool-card:hover { background: var(--bg-card-hover); }
-.tool-icon {
-  width: 40px; height: 40px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; margin-bottom: 1.2rem;
-}
-.tool-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.6rem; }
+.tool-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 1.2rem; }
+.tool-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+.tool-cmd { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.6rem; }
 .tool-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
 .icon-green { background: rgba(0,212,170,0.12); color: var(--accent); }
 .icon-blue { background: rgba(77,156,255,0.12); color: var(--blue); }
@@ -303,24 +159,39 @@ nav .nav-inner {
 .icon-amber { background: rgba(255,179,71,0.12); color: var(--amber); }
 .icon-purple { background: rgba(167,139,250,0.12); color: var(--purple); }
 
-/* ── DEMO ── */
+/* SLASH COMMANDS */
+.commands { padding: 8rem 0; border-bottom: 1px solid var(--border-subtle); background: var(--bg-secondary); }
+.cmd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.8rem; }
+.cmd-chip { padding: 0.8rem 1.2rem; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; transition: all 0.3s ease; }
+.cmd-chip:hover { border-color: var(--border); transform: translateY(-2px); }
+.cmd-name { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent); margin-bottom: 0.3rem; }
+.cmd-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
+.cmd-section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 1rem; margin-top: 2.5rem; }
+.cmd-section-label:first-of-type { margin-top: 0; }
+
+/* PERSONAS */
+.personas { padding: 8rem 0; border-bottom: 1px solid var(--border-subtle); }
+.persona-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.persona-card { padding: 2.5rem; border: 1px solid var(--border-subtle); border-radius: 12px; background: var(--bg-card); position: relative; overflow: hidden; }
+.persona-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.persona-card:first-child::before { background: var(--blue); }
+.persona-card:last-child::before { background: var(--purple); }
+.persona-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); margin-bottom: 0.8rem; }
+.persona-card h3 { font-family: 'Instrument Serif', serif; font-size: 1.6rem; font-weight: 400; margin-bottom: 1rem; }
+.persona-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1rem; }
+.persona-detail { display: flex; flex-direction: column; gap: 0.6rem; }
+.persona-row { display: flex; gap: 0.8rem; font-size: 0.85rem; }
+.persona-key { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); min-width: 100px; }
+.persona-val { color: var(--text-secondary); }
+.persona-example { margin-top: 1.2rem; padding: 0.8rem 1rem; background: rgba(0,0,0,0.3); border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent); }
+
+/* DEMO */
 .demo { padding: 8rem 0; border-bottom: 1px solid var(--border-subtle); }
-.terminal {
-  background: var(--bg-secondary); border: 1px solid var(--border);
-  border-radius: 12px; overflow: hidden; max-width: 800px; margin: 0 auto;
-}
-.terminal-bar {
-  display: flex; align-items: center; gap: 0.5rem;
-  padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--bg-card);
-}
+.terminal { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; max-width: 800px; margin: 0 auto; }
+.terminal-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--bg-card); }
 .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
-.terminal-dot.r { background: #ff5f57; }
-.terminal-dot.y { background: #febc2e; }
-.terminal-dot.g { background: #28c840; }
-.terminal-title {
-  margin-left: 0.8rem; font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem; color: var(--text-muted);
-}
+.terminal-dot.r { background: #ff5f57; } .terminal-dot.y { background: #febc2e; } .terminal-dot.g { background: #28c840; }
+.terminal-title { margin-left: 0.8rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); }
 .terminal-body { padding: 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.9; }
 .terminal-prompt { color: var(--accent); }
 .terminal-cmd { color: var(--text-primary); }
@@ -329,13 +200,10 @@ nav .nav-inner {
 .terminal-output .warn { color: var(--amber); }
 .terminal-output .val { color: var(--blue); }
 
-/* ── ROLES ── */
+/* ROLES */
 .roles { padding: 8rem 0; border-bottom: 1px solid var(--border-subtle); }
 .roles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-.role-card {
-  padding: 2rem; background: var(--bg-card); border: 1px solid var(--border-subtle);
-  border-radius: 12px; transition: all 0.3s ease; position: relative; overflow: hidden;
-}
+.role-card { padding: 2rem; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; transition: all 0.3s ease; position: relative; overflow: hidden; }
 .role-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
 .role-card:nth-child(1)::before { background: var(--accent); }
 .role-card:nth-child(2)::before { background: var(--blue); }
@@ -344,107 +212,80 @@ nav .nav-inner {
 .role-card:nth-child(5)::before { background: var(--red); }
 .role-card:nth-child(6)::before { background: #66d9ef; }
 .role-card:hover { border-color: var(--border); transform: translateY(-4px); }
-.role-title {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
-  text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 0.8rem;
-}
-.role-card h3 { font-family: 'Instrument Serif', serif; font-size: 1.5rem; font-weight: 400; margin-bottom: 0.8rem; }
+.role-title { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 0.8rem; }
+.role-card h3 { font-family: 'Instrument Serif', serif; font-size: 1.5rem; font-weight: 400; margin-bottom: 0.5rem; }
+.role-tools { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent); margin-bottom: 0.6rem; }
 .role-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
 
-/* ── STACK ── */
+/* STACK */
 .stack { padding: 8rem 0; border-bottom: 1px solid var(--border-subtle); }
 .stack-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
-.stack-card {
-  padding: 2.5rem 2rem; border: 1px solid var(--border-subtle);
-  border-radius: 12px; position: relative; background: var(--bg-card);
-}
-.stack-card.featured {
-  border-color: var(--accent);
-  background: linear-gradient(180deg, rgba(0,212,170,0.04) 0%, var(--bg-card) 100%);
-}
-.stack-badge {
-  position: absolute; top: -10px; right: 1.5rem;
-  background: var(--accent); color: var(--bg-primary);
-  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600;
-  padding: 0.2rem 0.8rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.08em;
-}
+.stack-card { padding: 2.5rem 2rem; border: 1px solid var(--border-subtle); border-radius: 12px; position: relative; background: var(--bg-card); }
+.stack-card.featured { border-color: var(--accent); background: linear-gradient(180deg, rgba(0,212,170,0.04) 0%, var(--bg-card) 100%); }
+.stack-badge { position: absolute; top: -10px; right: 1.5rem; background: var(--accent); color: var(--bg-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; padding: 0.2rem 0.8rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
 .stack-icon { font-size: 1.5rem; margin-bottom: 1.2rem; }
 .stack-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.4rem; }
 .stack-card .stack-by { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem; }
 .stack-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.2rem; }
 .stack-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-.stack-tag {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
-  padding: 0.25rem 0.6rem; background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border-subtle); border-radius: 4px; color: var(--text-muted);
-}
+.stack-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; padding: 0.25rem 0.6rem; background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); border-radius: 4px; color: var(--text-muted); }
 
-/* ── INSTALL ── */
+/* INSTALL */
 .install { padding: 8rem 0; border-bottom: 1px solid var(--border-subtle); }
-.install-box { max-width: 700px; margin: 0 auto; text-align: center; }
-.install-box h2 {
-  font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 400; margin-bottom: 1.5rem;
-}
-.install-box > p { color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 2.5rem; line-height: 1.7; }
-.install-cmd {
-  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;
-  padding: 1.2rem 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
-  color: var(--accent); display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 2rem; cursor: pointer; transition: border-color 0.3s;
-}
-.install-cmd:hover { border-color: var(--accent); }
-.copy-hint { font-size: 0.7rem; color: var(--text-muted); }
-.install-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; text-align: left; }
-.step-num {
-  font-family: 'Instrument Serif', serif; font-size: 2.5rem;
-  color: var(--accent); opacity: 0.3; line-height: 1; margin-bottom: 0.8rem;
-}
-.install-steps h4 { font-size: 0.95rem; margin-bottom: 0.4rem; }
-.install-steps p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0; line-height: 1.5; }
+.install-box { max-width: 800px; margin: 0 auto; }
+.install-box h2 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; margin-bottom: 1.5rem; text-align: center; }
+.install-box > p { color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 2.5rem; line-height: 1.7; text-align: center; }
+.install-methods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
+.method-card { padding: 2rem 1.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; transition: all 0.3s; }
+.method-card:hover { border-color: var(--border); }
+.method-card.recommended { border-color: var(--accent); }
+.method-num { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.6rem; }
+.method-card h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+.method-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem; }
+.method-cmd { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); background: rgba(0,0,0,0.3); padding: 0.5rem 0.8rem; border-radius: 4px; display: block; overflow-x: auto; }
+.rec-badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; background: var(--accent); color: var(--bg-primary); padding: 0.15rem 0.5rem; border-radius: 3px; margin-bottom: 0.6rem; font-weight: 600; }
 
-/* ── FOOTER ── */
+/* FOOTER */
 footer { padding: 4rem 0; text-align: center; }
 .footer-brand { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
 .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; list-style: none; }
 .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
 .footer-links a:hover { color: var(--accent); }
 .footer-copy { font-size: 0.8rem; color: var(--text-muted); }
-.footer-author {
-  margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);
-  font-size: 0.85rem; color: var(--text-muted);
-}
+.footer-author { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle); font-size: 0.85rem; color: var(--text-muted); }
 .footer-author a { color: var(--accent); text-decoration: none; }
 
-/* ── RESPONSIVE ── */
+/* RESPONSIVE */
 @media (max-width: 900px) {
-  .origin-layout, .python-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .origin-layout, .python-grid, .persona-grid { grid-template-columns: 1fr; gap: 3rem; }
   .roles-grid { grid-template-columns: 1fr 1fr; }
-  .stack-grid, .install-steps { grid-template-columns: 1fr; }
+  .stack-grid, .install-methods { grid-template-columns: 1fr; }
   .tools-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(3, 1fr); }
   .nav-links { display: none; }
+  .cmd-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
 }
 @media (max-width: 600px) {
   .hero h1 { font-size: 2.5rem; }
   .roles-grid { grid-template-columns: 1fr; }
   .hero-actions { flex-direction: column; }
   .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
-  .career-stat { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .conv-bubble { max-width: 95%; }
 }
 </style>
 </head>
 <body>
-
 <div class="grid-bg"></div>
 
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <a href="#" class="nav-logo"><span class="dot"></span> Claude Finance</a>
+    <a href="#" class="nav-logo"><span class="dot"></span> Claude Finance <span style="font-weight:400; color:var(--text-muted); font-size:0.7rem; margin-left:0.3rem;">v1.4.0</span></a>
     <ul class="nav-links">
       <li><a href="#story">Story</a></li>
       <li><a href="#tools">Tools</a></li>
+      <li><a href="#commands">Commands</a></li>
       <li><a href="#roles">Walkthroughs</a></li>
       <li><a href="#stack">Stack</a></li>
       <li><a href="#install" class="nav-cta">Get Started</a></li>
@@ -457,19 +298,32 @@ footer { padding: 4rem 0; text-align: center; }
   <div class="hero-glow"></div>
   <div class="container">
     <div class="hero-content">
-      <div class="badge">Open Source &nbsp;·&nbsp; Free &nbsp;·&nbsp; Claude Code Skill</div>
+      <div class="badge">v1.4.0 &nbsp;·&nbsp; Open Source &nbsp;·&nbsp; MIT License</div>
       <h1>Institutional analytics.<br>In <em>plain English.</em></h1>
-      <p class="hero-sub">11 analytical tools finance professionals can run without writing a single line of code. Built by an engineer who spent 15 years watching Wall Street wait for the tools it deserved.</p>
+      <p class="hero-sub">11 MCP tools. 18 slash commands. 15 PE workflows. 2 professional personas. All runnable in natural language. Built by an engineer who spent 15 years watching Wall Street wait for tools like this.</p>
       <div class="hero-actions">
         <a href="https://github.com/bolnet/Claude-Finance" class="btn-primary">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
           View on GitHub
         </a>
-        <a href="#story" class="btn-secondary">Read the Story →</a>
+        <a href="#story" class="btn-secondary">Read the Story</a>
       </div>
     </div>
   </div>
 </section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div><div class="stat-big">11</div><div class="stat-desc">MCP Tools</div></div>
+      <div><div class="stat-big">18</div><div class="stat-desc">Slash Commands</div></div>
+      <div><div class="stat-big">15</div><div class="stat-desc">PE Workflows</div></div>
+      <div><div class="stat-big">265</div><div class="stat-desc">Tests Passing</div></div>
+      <div><div class="stat-big">3</div><div class="stat-desc">Install Methods</div></div>
+    </div>
+  </div>
+</div>
 
 <!-- TICKER -->
 <div class="ticker-strip">
@@ -500,11 +354,11 @@ footer { padding: 4rem 0; text-align: center; }
       <div class="origin-text">
         <div class="origin-label">Why I Built This</div>
         <h2>I've had the same conversation hundreds of times.</h2>
-        <p>Over 15 years in financial services - Merrill Lynch, Fidelity, and beyond - I kept meeting the same person. A VP. An MD. A senior analyst. Brilliant at their craft. Standing by a whiteboard or hunched over a Bloomberg terminal.</p>
+        <p>Over 15 years in financial services, Merrill Lynch, Fidelity, and beyond, I kept meeting the same person. A VP. An MD. A senior analyst. Brilliant at their craft. Standing by a whiteboard or hunched over a Bloomberg terminal.</p>
         <p>And they'd always say some version of this:</p>
         <blockquote>"I know exactly what analysis I need. I just can't get it done fast enough."</blockquote>
         <p>Then they'd show me the spreadsheet. <strong>Always a spreadsheet.</strong></p>
-        <p>A $100 trillion industry - portfolios, models, forecasts, reconciliations, board decks - all flowing through .xlsx files held together by VLOOKUP and prayer.</p>
+        <p>A $100 trillion industry, portfolios, models, forecasts, reconciliations, board decks, all flowing through .xlsx files held together by VLOOKUP and prayer.</p>
         <p>The smartest people in the room weren't bottlenecked by ideas. They were bottlenecked by tooling. Waiting on engineering tickets. Waiting on the quant team. Waiting on a Python script someone wrote in 2019 that nobody remembers how to run.</p>
         <p><strong>So I stopped waiting and built the thing they actually needed.</strong></p>
       </div>
@@ -519,22 +373,10 @@ footer { padding: 4rem 0; text-align: center; }
           <h4>Trading Infrastructure</h4>
           <div class="career-role">Order routing systems and distributed trading platforms</div>
         </div>
-
         <div class="career-card" style="border-color:var(--accent);">
           <div class="career-years" style="color:var(--accent);">FINTECH STARTUP</div>
           <h4>Production RAG Systems</h4>
-          <div class="career-role">55% → 91% precision, 65% cost reduction - AI that actually ships</div>
-        </div>
-
-        <div class="career-stat">
-          <div class="stat-box">
-            <div class="stat-num">15+</div>
-            <div class="stat-label">Years in<br>Financial Services</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num">100s</div>
-            <div class="stat-label">Finance Professionals<br>Same Conversation</div>
-          </div>
+          <div class="career-role">55% to 91% precision, 65% cost reduction, AI that actually ships</div>
         </div>
       </div>
     </div>
@@ -581,82 +423,194 @@ footer { padding: 4rem 0; text-align: center; }
         <div class="python-label">The Industry's Answer Was Wrong</div>
         <h2>They said "learn Python."<br>I watched what happened next.</h2>
         <p>In 2023, JPMorgan told investors every new analyst would be trained in Python. Training companies charged $200+ per seat. Thousands enrolled.</p>
-        <p>I watched from the inside. The same cycle played out everywhere - enthusiasm, frustration, abandonment. <strong style="color:var(--text-primary);">Deadlines don't wait for your learning curve.</strong></p>
+        <p>I watched from the inside. The same cycle played out everywhere, enthusiasm, frustration, abandonment. <strong style="color:var(--text-primary);">Deadlines don't wait for your learning curve.</strong></p>
         <p>Python is powerful. I've built production systems in it. But asking finance professionals to become software engineers just to run a Sharpe ratio was always the wrong answer.</p>
         <p style="color:var(--accent); font-weight:500; margin-top:1rem;">The right answer: give them tools that speak their language.</p>
       </div>
       <div class="timeline">
         <div class="timeline-item">
           <div class="timeline-dot">W1</div>
-          <div>
-            <div class="timeline-week">Week 1</div>
-            <div class="timeline-text">Excited. Installed Python. "This is going to change everything."</div>
-          </div>
+          <div><div class="timeline-week">Week 1</div><div class="timeline-text">Excited. Installed Python. "This is going to change everything."</div></div>
         </div>
         <div class="timeline-item">
           <div class="timeline-dot">W3</div>
-          <div>
-            <div class="timeline-week">Week 3</div>
-            <div class="timeline-text">Debugging import errors. Stack Overflow tabs multiplying. Deadline looming.</div>
-          </div>
+          <div><div class="timeline-week">Week 3</div><div class="timeline-text">Debugging import errors. Stack Overflow tabs multiplying. Deadline looming.</div></div>
         </div>
         <div class="timeline-item">
           <div class="timeline-dot">W6</div>
-          <div>
-            <div class="timeline-week">Week 6</div>
-            <div class="timeline-text">Back in Excel. The model ships. The Python course gathers dust.</div>
-          </div>
+          <div><div class="timeline-week">Week 6</div><div class="timeline-text">Back in Excel. The model ships. The Python course gathers dust.</div></div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-dot" style="color:var(--accent);">→</div>
-          <div>
-            <div class="timeline-week" style="color:var(--accent);">With Claude Finance</div>
-            <div class="timeline-text" style="color:var(--accent);">30 seconds. One sentence. Full analysis with charts and interpretation.</div>
-          </div>
+          <div class="timeline-dot" style="color:var(--accent);">✓</div>
+          <div><div class="timeline-week" style="color:var(--accent);">With Claude Finance</div><div class="timeline-text" style="color:var(--accent);">30 seconds. One sentence. Full analysis with charts and interpretation.</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- TOOLS -->
+<!-- 11 TOOLS -->
 <section class="tools" id="tools">
   <div class="container">
     <div class="section-header">
-      <span class="section-label">11 Analytical Tools</span>
-      <h2>Everything you need. Nothing you don't.</h2>
-      <p>From basic price analysis to ML-powered risk scoring - all accessible in natural language.</p>
+      <span class="section-label">11 MCP Tools</span>
+      <h2>Three categories. Zero code.</h2>
+      <p>Environment checks, market analysis, and ML workflows, all accessible in natural language.</p>
     </div>
-    <div class="tools-grid">
-      <div class="tool-card">
-        <div class="tool-icon icon-green">📈</div>
-        <h3>Stock Price Analysis</h3>
-        <p>Historical price charts, daily/weekly/monthly returns, and performance visualization across any ticker.</p>
+
+    <div class="tools-category">
+      <div class="cat-label cat-blue">Market Analysis (6 tools)</div>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-icon icon-green">📈</div>
+          <h3>Stock Price Analysis</h3>
+          <div class="tool-cmd">analyze_stock</div>
+          <p>Price chart with trend summary. "Show me AAPL's price chart for the last 6 months"</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon icon-blue">📊</div>
+          <h3>Returns Analysis</h3>
+          <div class="tool-cmd">get_returns</div>
+          <p>Daily and cumulative return charts. "What are NVDA's returns since January?"</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon icon-amber">🌊</div>
+          <h3>Volatility Analysis</h3>
+          <div class="tool-cmd">get_volatility</div>
+          <p>Annualized and 21-day rolling volatility. "How volatile has TSLA been this quarter?"</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon icon-red">⚡</div>
+          <h3>Risk Metrics</h3>
+          <div class="tool-cmd">get_risk_metrics</div>
+          <p>Sharpe ratio, max drawdown, beta vs S&P 500. "Get risk metrics for GOOGL over the last year"</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon icon-purple">📉</div>
+          <h3>Ticker Comparison</h3>
+          <div class="tool-cmd">compare_tickers</div>
+          <p>Normalized performance chart for 2-5 tickers. "Compare AAPL, MSFT, and GOOGL over 90 days"</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon icon-blue">🔗</div>
+          <h3>Correlation Heatmap</h3>
+          <div class="tool-cmd">correlation_map</div>
+          <p>Return correlation for 2-10 tickers. "Show correlation between AAPL, JPM, JNJ, and XOM"</p>
+        </div>
       </div>
-      <div class="tool-card">
-        <div class="tool-icon icon-blue">📊</div>
-        <h3>Volatility Analysis</h3>
-        <p>Rolling volatility windows, regime detection, and historical volatility comparisons across time periods.</p>
+    </div>
+
+    <div class="tools-category">
+      <div class="cat-label cat-purple">ML Workflows (3 tools)</div>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-icon icon-amber">🔍</div>
+          <h3>CSV Data Ingestion</h3>
+          <div class="tool-cmd">ingest_csv</div>
+          <p>Auto-profile any CSV: column detection, outlier removal, EDA charts.</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon icon-red">🎯</div>
+          <h3>Liquidity Risk Model</h3>
+          <div class="tool-cmd">liquidity_predictor + predict_liquidity</div>
+          <p>Train regression model, then score clients with LOW / MODERATE / HIGH risk ratings.</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon icon-purple">🤖</div>
+          <h3>Investor Classifier</h3>
+          <div class="tool-cmd">investor_classifier + classify_investor</div>
+          <p>RandomForest classification for investor segmentation by profile attributes.</p>
+        </div>
       </div>
-      <div class="tool-card">
-        <div class="tool-icon icon-red">⚡</div>
-        <h3>Risk Metrics</h3>
-        <p>Sharpe ratio, Sortino ratio, max drawdown, Value at Risk, and beta versus S&P 500 benchmarks.</p>
+    </div>
+
+    <div class="tools-category">
+      <div class="cat-label cat-green">Environment (2 tools)</div>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-icon icon-green">🏓</div>
+          <h3>Ping</h3>
+          <div class="tool-cmd">ping</div>
+          <p>Confirm the MCP server is running and ready.</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon icon-green">✅</div>
+          <h3>Validate Environment</h3>
+          <div class="tool-cmd">validate_environment</div>
+          <p>Check all 7 required packages are installed with version numbers.</p>
+        </div>
       </div>
-      <div class="tool-card">
-        <div class="tool-icon icon-purple">🔗</div>
-        <h3>Correlation Analysis</h3>
-        <p>Multi-ticker correlation matrices, heatmap generation, and rolling correlation tracking.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 18 SLASH COMMANDS -->
+<section class="commands" id="commands">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">18 Slash Commands</span>
+      <h2>Type a slash. Get institutional output.</h2>
+      <p>3 finance persona commands plus 15 private equity workflow commands.</p>
+    </div>
+
+    <div class="cmd-section-label">Finance Personas (3)</div>
+    <div class="cmd-grid">
+      <div class="cmd-chip"><div class="cmd-name">/finance</div><div class="cmd-desc">General-purpose analysis, routes to any of the 11 tools</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/finance-analyst</div><div class="cmd-desc">Equity analyst lens: Sharpe first, single-stock focus</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/finance-pm</div><div class="cmd-desc">Portfolio manager lens: drawdown first, portfolio risk</div></div>
+    </div>
+
+    <div class="cmd-section-label">Private Equity Workflows (15)</div>
+    <div class="cmd-grid">
+      <div class="cmd-chip"><div class="cmd-name">/source</div><div class="cmd-desc">Source PE deal targets</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/screen-deal</div><div class="cmd-desc">Screen against fund criteria</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/dd-checklist</div><div class="cmd-desc">Sector-tailored DD checklist</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/dd-prep</div><div class="cmd-desc">DD meeting prep + red flags</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/ic-memo</div><div class="cmd-desc">Investment Committee memo</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/public-comps</div><div class="cmd-desc">Public market comp analysis</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/returns</div><div class="cmd-desc">IRR/MOIC with sensitivity</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/portfolio</div><div class="cmd-desc">Portfolio KPI dashboards</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/unit-economics</div><div class="cmd-desc">ARR cohorts, LTV/CAC</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/value-creation</div><div class="cmd-desc">EBITDA bridges, 100-day plans</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/liquidity-risk</div><div class="cmd-desc">ML-powered risk scoring</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/market-risk</div><div class="cmd-desc">Sharpe, drawdown, beta scan</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/score-prospect</div><div class="cmd-desc">ML classifier for prospects</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/profile-pipeline</div><div class="cmd-desc">CRM CSV profiling + EDA</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/ai-readiness</div><div class="cmd-desc">Portfolio company AI audit</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONAS -->
+<section class="personas" id="personas">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">2 Professional Personas</span>
+      <h2>Same data. Different lens.</h2>
+      <p>Both use the same tools. The difference is framing, priority, and audience.</p>
+    </div>
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-tag">/finance-analyst</div>
+        <h3>Equity Analyst</h3>
+        <p>Frames every ticker as a security under research coverage. Optimized for buy-side and sell-side consumers.</p>
+        <div class="persona-detail">
+          <div class="persona-row"><span class="persona-key">Leads with</span><span class="persona-val">Sharpe ratio (risk-adjusted return quality)</span></div>
+          <div class="persona-row"><span class="persona-key">Beta means</span><span class="persona-val">Stock-level market sensitivity</span></div>
+          <div class="persona-row"><span class="persona-key">Next step</span><span class="persona-val">Compare to sector peers</span></div>
+        </div>
+        <div class="persona-example">❯ /finance-analyst initiate coverage on NVDA</div>
       </div>
-      <div class="tool-card">
-        <div class="tool-icon icon-amber">🔍</div>
-        <h3>CSV Data Ingestion</h3>
-        <p>Automated exploratory data analysis on any dataset - profiling, distributions, outlier detection.</p>
-      </div>
-      <div class="tool-card">
-        <div class="tool-icon icon-green">🤖</div>
-        <h3>ML Risk Scoring</h3>
-        <p>Machine learning models for liquidity risk scoring and investor segmentation - no ML expertise needed.</p>
+      <div class="persona-card">
+        <div class="persona-tag">/finance-pm</div>
+        <h3>Portfolio Manager</h3>
+        <p>Frames every ticker as a holding in the portfolio book. Optimized for internal risk committee and LP reporting.</p>
+        <div class="persona-detail">
+          <div class="persona-row"><span class="persona-key">Leads with</span><span class="persona-val">Max drawdown (worst-case portfolio loss)</span></div>
+          <div class="persona-row"><span class="persona-key">Beta means</span><span class="persona-val">Portfolio-level systematic risk exposure</span></div>
+          <div class="persona-row"><span class="persona-key">Next step</span><span class="persona-val">Check correlation with other holdings</span></div>
+        </div>
+        <div class="persona-example">❯ /finance-pm review risk on my holdings: AAPL, NVDA, JPM</div>
       </div>
     </div>
   </div>
@@ -674,28 +628,26 @@ footer { padding: 4rem 0; text-align: center; }
         <div class="terminal-dot r"></div>
         <div class="terminal-dot y"></div>
         <div class="terminal-dot g"></div>
-        <span class="terminal-title">claude-code - ~/portfolio-analysis</span>
+        <span class="terminal-title">claude-code ~/portfolio-analysis</span>
       </div>
       <div class="terminal-body">
-        <div>
-          <span class="terminal-prompt">❯ </span>
-          <span class="terminal-cmd">Compare AAPL, MSFT, and NVDA over 2 years. Show Sharpe ratios, max drawdown, beta, and a correlation heatmap.</span>
-        </div>
+        <div><span class="terminal-prompt">❯ </span><span class="terminal-cmd">/finance-pm check diversification across AAPL, JPM, JNJ, XOM</span></div>
         <div class="terminal-output">
           <br>
-          <span class="highlight">⠋ Fetching 2Y daily data for 3 tickers...</span><br>
-          <span class="highlight">✓</span> Retrieved 504 trading days per ticker<br><br>
-          <span style="color:var(--text-primary);">Risk Metrics Summary</span><br>
+          <span class="highlight">⠋ Running compare_tickers + correlation_map...</span><br>
+          <span class="highlight">✓</span> Retrieved 252 trading days per ticker<br><br>
+          <span style="color:var(--text-primary);">Portfolio Risk Summary (PM Lens)</span><br>
           ┌──────────┬────────────┬──────────────┬──────────┐<br>
-          │ Ticker &nbsp; │ Sharpe &nbsp;&nbsp;&nbsp; │ Max Drawdown │ Beta &nbsp;&nbsp;&nbsp; │<br>
+          │ Holding &nbsp;│ Sharpe &nbsp;&nbsp;&nbsp; │ Max Drawdown │ Beta &nbsp;&nbsp;&nbsp; │<br>
           ├──────────┼────────────┼──────────────┼──────────┤<br>
           │ AAPL &nbsp;&nbsp;&nbsp; │ <span class="val">1.42</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ <span class="warn">-14.2%</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ <span class="val">1.12</span> &nbsp;&nbsp;&nbsp; │<br>
-          │ MSFT &nbsp;&nbsp;&nbsp; │ <span class="val">1.38</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ <span class="warn">-11.8%</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ <span class="val">0.97</span> &nbsp;&nbsp;&nbsp; │<br>
-          │ NVDA &nbsp;&nbsp;&nbsp; │ <span class="val">2.01</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ <span class="warn">-22.6%</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ <span class="val">1.64</span> &nbsp;&nbsp;&nbsp; │<br>
+          │ JPM &nbsp;&nbsp;&nbsp;&nbsp; │ <span class="val">1.18</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ <span class="warn">-9.7%</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ <span class="val">1.08</span> &nbsp;&nbsp;&nbsp; │<br>
+          │ JNJ &nbsp;&nbsp;&nbsp;&nbsp; │ <span class="val">0.64</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ <span class="warn">-7.1%</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ <span class="val">0.55</span> &nbsp;&nbsp;&nbsp; │<br>
+          │ XOM &nbsp;&nbsp;&nbsp;&nbsp; │ <span class="val">0.91</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ <span class="warn">-11.4%</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ <span class="val">0.72</span> &nbsp;&nbsp;&nbsp; │<br>
           └──────────┴────────────┴──────────────┴──────────┘<br><br>
-          <span class="highlight">✓</span> Correlation heatmap → <span style="color:var(--blue)">correlation_heatmap.png</span><br>
-          <span class="highlight">✓</span> Full report → <span style="color:var(--blue)">risk_analysis_report.md</span><br><br>
-          <span style="color:var(--text-secondary); font-style:italic;">NVDA shows the highest risk-adjusted return (Sharpe 2.01) but also the deepest drawdown at -22.6%. AAPL and MSFT correlate at 0.78 while NVDA diverges...</span>
+          <span class="highlight">✓</span> Correlation heatmap saved<br>
+          <span class="highlight">✓</span> Normalized performance chart saved<br><br>
+          <span style="color:var(--text-secondary); font-style:italic;">Real diversification detected. JNJ (beta 0.55) and XOM (0.72) provide meaningful downside protection against the tech-heavy AAPL position. Cross-correlation between JNJ and AAPL is only 0.31...</span>
         </div>
       </div>
     </div>
@@ -708,38 +660,44 @@ footer { padding: 4rem 0; text-align: center; }
     <div class="section-header">
       <span class="section-label">6 Guided Walkthroughs</span>
       <h2>Built for how you actually work.</h2>
-      <p>Role-specific workflows - because I've sat across the table from every one of these roles.</p>
+      <p>Role-specific workflows, because I've sat across the table from every one of these roles.</p>
     </div>
     <div class="roles-grid">
       <div class="role-card">
-        <div class="role-title">Walkthrough 01</div>
-        <h3>Equity Research</h3>
-        <p>Coverage initiation, peer comps, and performance benchmarking for buy-side and sell-side analysts.</p>
+        <div class="role-title">Equity Research</div>
+        <h3>Coverage Initiation</h3>
+        <div class="role-tools">analyze_stock · get_risk_metrics · get_returns</div>
+        <p>Price charts, risk metrics, and cumulative performance. The three data points that feed every research note.</p>
       </div>
       <div class="role-card">
-        <div class="role-title">Walkthrough 02</div>
-        <h3>Hedge Fund PM</h3>
-        <p>Volatility regime analysis, pair trading signals, and portfolio risk decomposition.</p>
+        <div class="role-title">Hedge Fund PM</div>
+        <h3>Diversification Audit</h3>
+        <div class="role-tools">compare_tickers · correlation_map · get_volatility</div>
+        <p>Real diversification or correlated bets in different names? Vol regime detection and pair trading signals.</p>
       </div>
       <div class="role-card">
-        <div class="role-title">Walkthrough 03</div>
-        <h3>Investment Banking</h3>
-        <p>Comparable company analysis, trading comps, and market positioning for pitch materials.</p>
+        <div class="role-title">Investment Banking</div>
+        <h3>Comparable Analysis</h3>
+        <div class="role-tools">compare_tickers · correlation_map</div>
+        <p>Normalized performance comparisons and relative positioning for deal pitches and pitch materials.</p>
       </div>
       <div class="role-card">
-        <div class="role-title">Walkthrough 04</div>
-        <h3>FP&A</h3>
-        <p>Budget forecasting, variance drivers, and automated data profiling for financial planning.</p>
+        <div class="role-title">FP&A</div>
+        <h3>Data Profiling</h3>
+        <div class="role-tools">ingest_csv · liquidity_predictor</div>
+        <p>Automated CSV profiling, forecasting model inputs, and variance analysis prep.</p>
       </div>
       <div class="role-card">
-        <div class="role-title">Walkthrough 05</div>
-        <h3>Accounting</h3>
-        <p>Anomaly detection, ERP data review, and automated reconciliation pattern analysis.</p>
+        <div class="role-title">Accounting</div>
+        <h3>Anomaly Detection</h3>
+        <div class="role-tools">ingest_csv</div>
+        <p>Transaction data profiling, outlier detection prep, and ERP export cleanup.</p>
       </div>
       <div class="role-card">
-        <div class="role-title">Walkthrough 06</div>
-        <h3>Private Equity</h3>
-        <p>Due diligence scoring, portfolio company monitoring, and return attribution analysis.</p>
+        <div class="role-title">Private Equity</div>
+        <h3>Due Diligence + ML</h3>
+        <div class="role-tools">ingest_csv · liquidity_predictor · investor_classifier</div>
+        <p>DD scoring, portfolio monitoring, LP segmentation. 15 dedicated slash commands.</p>
       </div>
     </div>
   </div>
@@ -758,24 +716,18 @@ footer { padding: 4rem 0; text-align: center; }
         <div class="stack-icon">🔷</div>
         <h3>Copilot for Finance</h3>
         <div class="stack-by">Microsoft</div>
-        <p>Operational finance - reconciliation, variance analysis, collections, ERP integration.</p>
+        <p>Operational finance: reconciliation, variance analysis, collections, ERP integration.</p>
         <div class="stack-tags">
-          <span class="stack-tag">Reconciliation</span>
-          <span class="stack-tag">Variance</span>
-          <span class="stack-tag">Collections</span>
-          <span class="stack-tag">ERP</span>
+          <span class="stack-tag">Reconciliation</span><span class="stack-tag">Variance</span><span class="stack-tag">Collections</span><span class="stack-tag">ERP</span>
         </div>
       </div>
       <div class="stack-card">
         <div class="stack-icon">🟣</div>
         <h3>Claude in Excel</h3>
         <div class="stack-by">Anthropic</div>
-        <p>Model intelligence - formula tracing, scenario testing, error debugging with cell-level citations.</p>
+        <p>Model intelligence: formula tracing, scenario testing, error debugging with cell-level citations.</p>
         <div class="stack-tags">
-          <span class="stack-tag">Formula Trace</span>
-          <span class="stack-tag">Debugging</span>
-          <span class="stack-tag">Scenarios</span>
-          <span class="stack-tag">Skills</span>
+          <span class="stack-tag">Formula Trace</span><span class="stack-tag">Debugging</span><span class="stack-tag">Scenarios</span><span class="stack-tag">Skills</span>
         </div>
       </div>
       <div class="stack-card featured">
@@ -783,12 +735,12 @@ footer { padding: 4rem 0; text-align: center; }
         <div class="stack-icon">⚡</div>
         <h3>Claude Finance</h3>
         <div class="stack-by">Open Source</div>
-        <p>Analytical horsepower - risk metrics, ML models, portfolio analysis, institutional-grade research.</p>
+        <p>Analytical horsepower: 11 tools, 18 commands, ML models, institutional-grade research.</p>
         <div class="stack-tags">
           <span class="stack-tag" style="border-color:rgba(0,212,170,0.3); color:var(--accent);">Sharpe / Beta</span>
           <span class="stack-tag" style="border-color:rgba(0,212,170,0.3); color:var(--accent);">ML Models</span>
-          <span class="stack-tag" style="border-color:rgba(0,212,170,0.3); color:var(--accent);">Charts</span>
-          <span class="stack-tag" style="border-color:rgba(0,212,170,0.3); color:var(--accent);">EDA</span>
+          <span class="stack-tag" style="border-color:rgba(0,212,170,0.3); color:var(--accent);">15 PE Workflows</span>
+          <span class="stack-tag" style="border-color:rgba(0,212,170,0.3); color:var(--accent);">Personas</span>
         </div>
       </div>
     </div>
@@ -800,27 +752,28 @@ footer { padding: 4rem 0; text-align: center; }
   <div class="container">
     <div class="install-box">
       <span class="section-label">Get Started</span>
-      <h2>Up and running in 60 seconds.</h2>
-      <p>Clone the repo, point Claude Code at the skill, and start asking questions in plain English.</p>
-      <div class="install-cmd" onclick="navigator.clipboard.writeText('git clone https://github.com/bolnet/Claude-Finance.git'); this.querySelector('.copy-hint').textContent='copied!';">
-        <span>$ git clone https://github.com/bolnet/Claude-Finance.git</span>
-        <span class="copy-hint">click to copy</span>
-      </div>
-      <div class="install-steps">
-        <div>
-          <div class="step-num">01</div>
-          <h4>Clone the repo</h4>
-          <p>Download the Claude Finance skill to your local machine.</p>
+      <h2>Three ways to install.</h2>
+      <p>MCP server for Claude Code CLI, plugin for slash commands, or web connection for claude.ai in your browser.</p>
+
+      <div class="install-methods">
+        <div class="method-card recommended">
+          <div class="rec-badge">Recommended</div>
+          <div class="method-num">Method 1</div>
+          <h4>MCP Server</h4>
+          <p>Claude Code CLI. Local stdio transport. Full 11 tools.</p>
+          <code class="method-cmd">git clone https://github.com/bolnet/Claude-Finance.git<br>cd Claude-Finance<br>python3 -m venv .venv<br>source .venv/bin/activate<br>pip install -e .</code>
         </div>
-        <div>
-          <div class="step-num">02</div>
-          <h4>Add the skill</h4>
-          <p>Point Claude Code at the skill directory in your project settings.</p>
+        <div class="method-card">
+          <div class="method-num">Method 2</div>
+          <h4>Claude Code Plugin</h4>
+          <p>MCP server + 18 slash commands + 16 skill definitions bundled together.</p>
+          <code class="method-cmd">cd Claude-Finance<br>claude<br><br># All 18 commands auto-discovered<br>❯ /finance analyze AAPL</code>
         </div>
-        <div>
-          <div class="step-num">03</div>
-          <h4>Start analyzing</h4>
-          <p>Ask for any analysis in plain English. Claude handles the rest.</p>
+        <div class="method-card">
+          <div class="method-num">Method 3</div>
+          <h4>Web (claude.ai)</h4>
+          <p>HTTP tunnel via ngrok or Cloudflare. Use from browser, no CLI needed.</p>
+          <code class="method-cmd">bash scripts/start_web.sh<br><br># Paste URL in claude.ai<br># Settings > Connectors > Add</code>
         </div>
       </div>
     </div>
@@ -830,14 +783,15 @@ footer { padding: 4rem 0; text-align: center; }
 <!-- FOOTER -->
 <footer>
   <div class="container">
-    <div class="footer-brand">Claude Finance</div>
+    <div class="footer-brand">Claude Finance v1.4.0</div>
     <ul class="footer-links">
       <li><a href="https://github.com/bolnet/Claude-Finance">GitHub</a></li>
       <li><a href="#tools">Tools</a></li>
+      <li><a href="#commands">Commands</a></li>
       <li><a href="#roles">Walkthroughs</a></li>
       <li><a href="#stack">Stack</a></li>
     </ul>
-    <div class="footer-copy">Free. Open Source. MIT License.</div>
+    <div class="footer-copy">Free. Open Source. MIT License. Python 3.10+. 265 tests passing.</div>
     <div class="footer-author">
       Built by <a href="https://www.linkedin.com/in/surendrasingh/" target="_blank">Surendra Singh</a> - 15 years building technology for Wall Street. Now building it <em>for</em> the people who run it.
     </div>
