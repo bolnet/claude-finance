@@ -1,12 +1,12 @@
 {
   "name": "finance-mcp",
-  "version": "1.0.0",
-  "description": "Finance AI skill — stock analysis, market metrics, and ML workflows for finance professionals. Powered by yfinance, pandas, scikit-learn.",
+  "version": "1.4.0",
+  "description": "Private Equity plugin for Claude Code — deal flow, portfolio monitoring, and ML-powered analytics for PE professionals. Powered by finance-mcp with 11 MCP tools.",
   "author": {
     "name": "Finance MCP Project"
   },
-  "homepage": "https://github.com/[owner]/machine_learning_skill",
-  "repository": "https://github.com/[owner]/machine_learning_skill",
+  "homepage": "https://github.com/bolnet/Claude-Finance",
+  "repository": "https://github.com/bolnet/Claude-Finance",
   "license": "MIT",
-  "keywords": ["finance", "stocks", "yfinance", "ml", "market-analysis", "portfolio", "mcp"]
+  "keywords": ["finance", "stocks", "yfinance", "ml", "market-analysis", "portfolio", "mcp", "private-equity", "deal-flow", "due-diligence"]
 }

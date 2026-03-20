@@ -54,3 +54,58 @@ def test_plugin_skills_directory():
 def test_plugin_mcp_json_exists():
     """.mcp.json must exist in the plugin root."""
     assert (PLUGIN_DIR / ".mcp.json").exists()
+
+
+def test_plugin_json_no_placeholders():
+    """plugin.json must not contain any [owner] placeholder strings."""
+    text = (PLUGIN_DIR / ".claude-plugin" / "plugin.json").read_text()
+    assert "[owner]" not in text, "plugin.json still contains [owner] placeholder"
+
+
+def test_plugin_json_correct_urls():
+    """plugin.json homepage and repository must point to bolnet/Claude-Finance."""
+    data = json.loads((PLUGIN_DIR / ".claude-plugin" / "plugin.json").read_text())
+    assert "bolnet/Claude-Finance" in data["homepage"], (
+        f"homepage does not contain bolnet/Claude-Finance: {data['homepage']}"
+    )
+    assert "bolnet/Claude-Finance" in data["repository"], (
+        f"repository does not contain bolnet/Claude-Finance: {data['repository']}"
+    )
+
+
+def test_plugin_json_version_format():
+    """plugin.json version must match semver format X.Y.Z."""
+    import re
+    data = json.loads((PLUGIN_DIR / ".claude-plugin" / "plugin.json").read_text())
+    assert re.match(r"^\d+\.\d+\.\d+$", data["version"]), (
+        f"version does not match X.Y.Z semver: {data['version']}"
+    )
+
+
+def test_hooks_json_exists():
+    """hooks/hooks.json must exist in the plugin directory."""
+    assert (PLUGIN_DIR / "hooks" / "hooks.json").exists()
+
+
+def test_hooks_json_empty_array():
+    """hooks/hooks.json must parse as JSON and equal an empty array."""
+    data = json.loads((PLUGIN_DIR / "hooks" / "hooks.json").read_text())
+    assert data == [], f"hooks.json should be empty array [], got: {data}"
+
+
+def test_plugin_directory_structure():
+    """Plugin directory must have all 4 required subdirectories."""
+    for subdir in [".claude-plugin", "commands", "skills", "hooks"]:
+        assert (PLUGIN_DIR / subdir).is_dir(), (
+            f"Missing required subdirectory: finance-mcp-plugin/{subdir}/"
+        )
+
+
+def test_mcp_json_has_finance_server():
+    """.mcp.json must have mcpServers.finance with command and args keys."""
+    data = json.loads((PLUGIN_DIR / ".mcp.json").read_text())
+    assert "mcpServers" in data, "Missing mcpServers key in .mcp.json"
+    assert "finance" in data["mcpServers"], "Missing finance server in mcpServers"
+    server = data["mcpServers"]["finance"]
+    assert "command" in server, "finance server missing 'command' key"
+    assert "args" in server, "finance server missing 'args' key"
