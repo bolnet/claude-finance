@@ -53,7 +53,7 @@ class TestYFinanceProviderProtocol:
 
 
 class TestYFinanceProviderExcludedCapabilities:
-    """Test that polygon-only features are NOT in YFinanceProvider capabilities."""
+    """Test that Massive-only features are NOT in YFinanceProvider capabilities."""
 
     def test_excludes_options_chain(self, provider: YFinanceProvider) -> None:
         assert Capability.OPTIONS_CHAIN not in provider.capabilities

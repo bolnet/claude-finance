@@ -1,8 +1,8 @@
-"""PolygonProvider - composes all Polygon.io mixins into a single DataProvider.
+"""MassiveProvider - composes all Massive mixins into a single DataProvider.
 
 This class satisfies the :class:`~finance_mcp.providers.base.DataProvider`
-Protocol by implementing the three required methods on top of the Polygon
-aggregate bars endpoint, and inheriting the full set of Polygon-specific
+Protocol by implementing the three required methods on top of the Massive
+aggregate bars endpoint, and inheriting the full set of Massive-specific
 methods from the mixin classes.
 """
 from __future__ import annotations
@@ -13,12 +13,12 @@ from datetime import date, timedelta
 import pandas as pd
 
 from finance_mcp.providers.base import Capability
-from finance_mcp.providers.polygon.client import PolygonClient
-from finance_mcp.providers.polygon.currencies import CurrenciesMixin
-from finance_mcp.providers.polygon.indices import IndicesMixin
-from finance_mcp.providers.polygon.options import OptionsMixin
-from finance_mcp.providers.polygon.stocks import StocksMixin
-from finance_mcp.providers.polygon.stubs import BlockedEndpointsMixin
+from finance_mcp.providers.massive.client import MassiveClient
+from finance_mcp.providers.massive.currencies import CurrenciesMixin
+from finance_mcp.providers.massive.indices import IndicesMixin
+from finance_mcp.providers.massive.options import OptionsMixin
+from finance_mcp.providers.massive.stocks import StocksMixin
+from finance_mcp.providers.massive.stubs import BlockedEndpointsMixin
 
 # ---------------------------------------------------------------------------
 # Period -> days mapping (yfinance-style shorthand)
@@ -34,14 +34,14 @@ _PERIOD_DAYS: dict[str, int] = {
 }
 
 
-class PolygonProvider(
+class MassiveProvider(
     StocksMixin,
     OptionsMixin,
     IndicesMixin,
     CurrenciesMixin,
     BlockedEndpointsMixin,
 ):
-    """DataProvider backed by Polygon.io, composing all mixin endpoint groups.
+    """DataProvider backed by Massive, composing all mixin endpoint groups.
 
     Satisfies the :class:`~finance_mcp.providers.base.DataProvider` Protocol
     with ``fetch_price_history``, ``get_adjusted_prices``, and
@@ -49,8 +49,8 @@ class PolygonProvider(
     from :class:`StocksMixin`.
 
     Args:
-        api_key: Polygon.io API key.
-        base_url: Optional override for the Polygon REST base URL.
+        api_key: Massive API key.
+        base_url: Optional override for the Massive REST base URL.
     """
 
     def __init__(
@@ -58,7 +58,7 @@ class PolygonProvider(
         api_key: str,
         base_url: str = "https://api.polygon.io",
     ) -> None:
-        self.client = PolygonClient(api_key=api_key, base_url=base_url)
+        self.client = MassiveClient(api_key=api_key, base_url=base_url)
 
     @property
     def capabilities(self) -> frozenset[Capability]:
@@ -72,7 +72,7 @@ class PolygonProvider(
         end: str | None = None,
         period: str | None = None,
     ) -> pd.DataFrame:
-        """Fetch adjusted daily OHLCV bars from Polygon for a single ticker.
+        """Fetch adjusted daily OHLCV bars from Massive for a single ticker.
 
         If *end* is not provided, *period* is used to compute it relative to
         *start*. If both are provided, *end* takes precedence.
@@ -142,7 +142,7 @@ class PolygonProvider(
                 result[ticker] = self.get_adjusted_prices(df)
             except Exception as exc:  # noqa: BLE001
                 print(
-                    f"[polygon] fetch_multi_ticker: skipping {ticker!r} - {exc}",
+                    f"[massive] fetch_multi_ticker: skipping {ticker!r} - {exc}",
                     file=sys.stderr,
                 )
         return result

@@ -7,7 +7,7 @@ from unittest.mock import MagicMock
 import pandas as pd
 import pytest
 
-from finance_mcp.providers.polygon.currencies import CurrenciesMixin
+from finance_mcp.providers.massive.currencies import CurrenciesMixin
 
 
 # ---------------------------------------------------------------------------

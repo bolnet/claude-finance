@@ -1,4 +1,4 @@
-"""BlockedEndpointsMixin – stubs for Polygon endpoints beyond current subscription.
+"""BlockedEndpointsMixin – stubs for Massive endpoints beyond current subscription.
 
 Each method raises :class:`NotImplementedError` with a clear message indicating
 the required subscription tier.

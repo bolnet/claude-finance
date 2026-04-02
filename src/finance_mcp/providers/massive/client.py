@@ -1,4 +1,4 @@
-"""Low-level synchronous REST client for the Polygon.io API."""
+"""Low-level synchronous REST client for the Massive (Polygon.io) API."""
 from __future__ import annotations
 
 import sys
@@ -7,16 +7,16 @@ from typing import Any
 import httpx
 
 
-class PolygonAPIError(Exception):
-    """Raised when Polygon API returns an error response."""
+class MassiveAPIError(Exception):
+    """Raised when Massive API returns an error response."""
 
     def __init__(self, status_code: int, message: str) -> None:
         self.status_code = status_code
-        super().__init__(f"Polygon API {status_code}: {message}")
+        super().__init__(f"Massive API {status_code}: {message}")
 
 
-class PolygonClient:
-    """Synchronous REST client for Polygon.io API."""
+class MassiveClient:
+    """Synchronous REST client for Massive API."""
 
     def __init__(
         self,
@@ -48,9 +48,9 @@ class PolygonClient:
             Parsed JSON response as a dict.
 
         Raises:
-            PolygonAPIError: If the response status code is not 2xx.
+            MassiveAPIError: If the response status code is not 2xx.
         """
-        print(f"[polygon] GET {path}", file=sys.stderr)
+        print(f"[massive] GET {path}", file=sys.stderr)
 
         merged_params: dict[str, Any] = {**self._default_params()}
         if params:
@@ -60,7 +60,7 @@ class PolygonClient:
         response = self._session.get(url, params=merged_params)
 
         if not (200 <= response.status_code < 300):
-            raise PolygonAPIError(response.status_code, response.text)
+            raise MassiveAPIError(response.status_code, response.text)
 
         return response.json()
 

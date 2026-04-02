@@ -1,7 +1,7 @@
-"""Pure data transformation functions: Polygon.io JSON → pandas / plain Python.
+"""Pure data transformation functions: Massive JSON → pandas / plain Python.
 
 No API calls are made here. Each function accepts a raw response dict
-(as returned by the Polygon REST API) and returns a pandas DataFrame,
+(as returned by the Massive REST API) and returns a pandas DataFrame,
 Series, or plain Python dict / list.
 """
 from __future__ import annotations
@@ -19,7 +19,7 @@ _AGG_COLUMNS = ["Open", "High", "Low", "Close", "Volume"]
 
 
 def aggs_to_dataframe(raw: dict[str, Any]) -> pd.DataFrame:
-    """Convert a Polygon aggregates response to a DataFrame.
+    """Convert a Massive aggregates response to a DataFrame.
 
     Timestamp column ``t`` (milliseconds, UTC) becomes the DatetimeIndex.
     Returns an empty DataFrame with the correct column schema when there are

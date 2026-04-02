@@ -75,15 +75,15 @@ Claude Finance supports two data providers. The active provider is selected via 
 
 No setup needed. Yahoo Finance is used automatically when `DATA_PROVIDER` is unset or set to `yfinance`.
 
-### Polygon.io (premium)
+### Massive (premium)
 
 | Property | Value |
 |----------|-------|
-| Cost | Paid subscription ([polygon.io](https://polygon.io)) |
-| Config | `DATA_PROVIDER=polygon` and `POLYGON_API_KEY=<your-key>` |
+| Cost | Paid subscription |
+| Config | `DATA_PROVIDER=massive` and `MASSIVE_API_KEY=<your-key>` |
 | Data | Everything in Yahoo Finance, plus real-time quotes, options chains, forex, crypto, indices, SEC filings, and technical indicators |
 
-**To enable Polygon:**
+**To enable Massive:**
 
 1. Copy `.env.example` to `.env`:
    ```bash
@@ -92,13 +92,13 @@ No setup needed. Yahoo Finance is used automatically when `DATA_PROVIDER` is uns
 
 2. Edit `.env`:
    ```env
-   DATA_PROVIDER=polygon
-   POLYGON_API_KEY=your_polygon_api_key_here
+   DATA_PROVIDER=massive
+   MASSIVE_API_KEY=your_massive_api_key_here
    ```
 
 3. Restart the MCP server (or relaunch Claude Code).
 
-**16 additional tools unlocked with Polygon:**
+**16 additional tools unlocked with Massive:**
 
 | Tool | Description |
 |------|-------------|

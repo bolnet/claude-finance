@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from finance_mcp.providers.polygon.stocks import StocksMixin
+from finance_mcp.providers.massive.stocks import StocksMixin
 
 
 # ---------------------------------------------------------------------------
@@ -15,7 +15,7 @@ from finance_mcp.providers.polygon.stocks import StocksMixin
 
 
 class FakeClient:
-    """Minimal test double for PolygonClient."""
+    """Minimal test double for MassiveClient."""
 
     def __init__(self, response: object) -> None:
         self._response = response

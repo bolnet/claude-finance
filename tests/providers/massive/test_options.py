@@ -9,7 +9,7 @@ from typing import Any
 
 import pytest
 
-from finance_mcp.providers.polygon.options import OptionsMixin
+from finance_mcp.providers.massive.options import OptionsMixin
 
 
 # ---------------------------------------------------------------------------

@@ -1,11 +1,11 @@
-"""CurrenciesMixin — Forex (8) and Crypto (7) endpoints for Polygon.io."""
+"""CurrenciesMixin — Forex (8) and Crypto (7) endpoints for Massive."""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
 import pandas as pd
 
-from finance_mcp.providers.polygon.mappers import (
+from finance_mcp.providers.massive.mappers import (
     aggs_to_dataframe,
     prev_close_to_dict,
     snapshot_to_dict,
@@ -13,17 +13,17 @@ from finance_mcp.providers.polygon.mappers import (
 )
 
 if TYPE_CHECKING:
-    from finance_mcp.providers.polygon.client import PolygonClient
+    from finance_mcp.providers.massive.client import MassiveClient
 
 
 class CurrenciesMixin:
     """Mixin providing Forex and Crypto market data methods.
 
-    Requires ``self.client`` to be a :class:`~finance_mcp.providers.polygon.client.PolygonClient`
+    Requires ``self.client`` to be a :class:`~finance_mcp.providers.massive.client.MassiveClient`
     (or any object that implements a compatible ``.get(path, params)`` interface).
     """
 
-    client: PolygonClient
+    client: MassiveClient
 
     # ------------------------------------------------------------------
     # Forex — 8 endpoints
