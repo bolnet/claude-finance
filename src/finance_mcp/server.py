@@ -29,6 +29,10 @@ from finance_mcp.tools.ticker_info import get_ticker_details, search_tickers
 from finance_mcp.tools.indices_tool import indices_snapshot
 from finance_mcp.tools.fundamentals import get_dividends, get_splits, get_short_interest
 from finance_mcp.tools.technicals import get_technical_indicator
+from finance_mcp.tools.news import get_news
+from finance_mcp.tools.options_chain import get_options_chain
+from finance_mcp.tools.forex import forex_convert, forex_quote
+from finance_mcp.tools.crypto import crypto_snapshot, crypto_movers
 
 mcp = FastMCP("Finance MCP Server")
 
@@ -56,6 +60,12 @@ mcp.add_tool(get_dividends)
 mcp.add_tool(get_splits)
 mcp.add_tool(get_short_interest)
 mcp.add_tool(get_technical_indicator)
+mcp.add_tool(get_news)
+mcp.add_tool(get_options_chain)
+mcp.add_tool(forex_convert)
+mcp.add_tool(forex_quote)
+mcp.add_tool(crypto_snapshot)
+mcp.add_tool(crypto_movers)
 
 
 @mcp.tool
