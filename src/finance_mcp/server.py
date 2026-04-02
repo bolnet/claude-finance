@@ -23,6 +23,12 @@ from finance_mcp.tools.correlation import correlation_map
 from finance_mcp.tools.csv_ingest import ingest_csv
 from finance_mcp.tools.liquidity_model import liquidity_predictor, predict_liquidity
 from finance_mcp.tools.investor_model import investor_classifier, classify_investor
+from finance_mcp.tools.market_movers import market_movers
+from finance_mcp.tools.sec_filings import get_sec_filings, get_risk_factors
+from finance_mcp.tools.ticker_info import get_ticker_details, search_tickers
+from finance_mcp.tools.indices_tool import indices_snapshot
+from finance_mcp.tools.fundamentals import get_dividends, get_splits, get_short_interest
+from finance_mcp.tools.technicals import get_technical_indicator
 
 mcp = FastMCP("Finance MCP Server")
 
@@ -40,6 +46,16 @@ mcp.add_tool(liquidity_predictor)
 mcp.add_tool(predict_liquidity)
 mcp.add_tool(investor_classifier)
 mcp.add_tool(classify_investor)
+mcp.add_tool(market_movers)
+mcp.add_tool(get_sec_filings)
+mcp.add_tool(get_risk_factors)
+mcp.add_tool(get_ticker_details)
+mcp.add_tool(search_tickers)
+mcp.add_tool(indices_snapshot)
+mcp.add_tool(get_dividends)
+mcp.add_tool(get_splits)
+mcp.add_tool(get_short_interest)
+mcp.add_tool(get_technical_indicator)
 
 
 @mcp.tool
