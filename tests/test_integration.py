@@ -53,13 +53,13 @@ class TestProviderIntegration:
             assert name in tools, f"Tool '{name}' not registered"
 
 
-class TestPolygonProviderEndpoints:
-    def test_polygon_provider_has_all_67_methods(self):
-        """Verify PolygonProvider has all 57 working + 10 blocked endpoint methods."""
-        from finance_mcp.providers.polygon.provider import PolygonProvider
+class TestMassiveProviderEndpoints:
+    def test_massive_provider_has_all_67_methods(self):
+        """Verify MassiveProvider has all 57 working + 10 blocked endpoint methods."""
+        from finance_mcp.providers.massive.provider import MassiveProvider
 
-        with patch("finance_mcp.providers.polygon.provider.PolygonClient"):
-            p = PolygonProvider(api_key="test")
+        with patch("finance_mcp.providers.massive.provider.MassiveClient"):
+            p = MassiveProvider(api_key="test")
 
         stock_methods = [
             "stocks_prev_close", "stocks_bars", "stocks_grouped_daily", "stocks_daily_ohlc",

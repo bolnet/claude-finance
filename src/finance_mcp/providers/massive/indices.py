@@ -1,4 +1,4 @@
-"""Polygon.io indices endpoints mixin.
+"""Massive indices endpoints mixin.
 
 Provides methods for index tickers using the I: prefix convention.
 All ticker values are passed as-is (no additional uppercasing).
@@ -9,7 +9,7 @@ from typing import Any
 
 import pandas as pd
 
-from finance_mcp.providers.polygon.mappers import (
+from finance_mcp.providers.massive.mappers import (
     aggs_to_dataframe,
     indicator_to_series,
     prev_close_to_dict,
@@ -17,9 +17,9 @@ from finance_mcp.providers.polygon.mappers import (
 
 
 class IndicesMixin:
-    """Mixin providing Polygon.io indices API endpoints.
+    """Mixin providing Massive indices API endpoints.
 
-    Requires ``self.client`` to be a PolygonClient instance (or compatible
+    Requires ``self.client`` to be a MassiveClient instance (or compatible
     duck-typed object exposing a ``get(path, params)`` method).
     """
 
@@ -87,7 +87,7 @@ class IndicesMixin:
             tickers: List of index ticker symbols (e.g. ``["I:SPX", "I:NDX"]``).
 
         Returns:
-            Raw ``results`` list from the Polygon response.
+            Raw ``results`` list from the Massive response.
         """
         path = "/v3/snapshot/indices"
         params: dict[str, Any] = {"ticker.any_of": ",".join(tickers)}
@@ -101,7 +101,7 @@ class IndicesMixin:
             tickers: List of index ticker symbols.
 
         Returns:
-            Raw ``results`` list from the Polygon response.
+            Raw ``results`` list from the Massive response.
         """
         path = "/v3/snapshot"
         params: dict[str, Any] = {"ticker.any_of": ",".join(tickers)}

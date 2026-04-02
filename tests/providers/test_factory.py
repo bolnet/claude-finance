@@ -30,19 +30,19 @@ class TestGetProvider:
         assert type(provider).__name__ == "YFinanceProvider"
         assert isinstance(provider, DataProvider)
 
-    def test_polygon_requires_api_key(self) -> None:
-        """DATA_PROVIDER=polygon without POLYGON_API_KEY raises RuntimeError."""
+    def test_massive_requires_api_key(self) -> None:
+        """DATA_PROVIDER=massive without MASSIVE_API_KEY raises RuntimeError."""
         with pytest.MonkeyPatch.context() as mp:
-            mp.setenv("DATA_PROVIDER", "polygon")
-            mp.delenv("POLYGON_API_KEY", raising=False)
-            with pytest.raises(RuntimeError, match="POLYGON_API_KEY"):
+            mp.setenv("DATA_PROVIDER", "massive")
+            mp.delenv("MASSIVE_API_KEY", raising=False)
+            with pytest.raises(RuntimeError, match="MASSIVE_API_KEY"):
                 get_provider()
 
-    def test_polygon_with_api_key(self) -> None:
-        """DATA_PROVIDER=polygon with POLYGON_API_KEY returns PolygonProvider."""
+    def test_massive_with_api_key(self) -> None:
+        """DATA_PROVIDER=massive with MASSIVE_API_KEY returns MassiveProvider."""
         with pytest.MonkeyPatch.context() as mp:
-            mp.setenv("DATA_PROVIDER", "polygon")
-            mp.setenv("POLYGON_API_KEY", "test123")
+            mp.setenv("DATA_PROVIDER", "massive")
+            mp.setenv("MASSIVE_API_KEY", "test123")
             provider = get_provider()
-        assert type(provider).__name__ == "PolygonProvider"
+        assert type(provider).__name__ == "MassiveProvider"
         assert isinstance(provider, DataProvider)

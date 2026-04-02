@@ -1,27 +1,27 @@
-"""Polygon.io options endpoints mixin.
+"""Massive options endpoints mixin.
 
 Provides four options-related methods that delegate HTTP calls to
-``self.client`` (a :class:`~finance_mcp.providers.polygon.client.PolygonClient`
+``self.client`` (a :class:`~finance_mcp.providers.massive.client.MassiveClient`
 or any object exposing the same ``get`` interface).
 """
 from __future__ import annotations
 
 from typing import Any
 
-from finance_mcp.providers.polygon.mappers import (
+from finance_mcp.providers.massive.mappers import (
     options_chain_to_list,
     prev_close_to_dict,
 )
 
 
 class OptionsMixin:
-    """Mixin that adds options data methods to a Polygon provider.
+    """Mixin that adds options data methods to a Massive provider.
 
     Expects the host class to expose ``self.client`` with a
     ``get(path, params=None)`` method returning a raw JSON dict.
     """
 
-    client: Any  # typed as Any to avoid circular imports; real type is PolygonClient
+    client: Any  # typed as Any to avoid circular imports; real type is MassiveClient
 
     # ------------------------------------------------------------------
     # 1. Options contracts reference data

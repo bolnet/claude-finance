@@ -10,8 +10,8 @@ def get_provider() -> object:
     Reads the ``DATA_PROVIDER`` environment variable to decide which provider
     to instantiate:
 
-    - ``"polygon"`` → :class:`~finance_mcp.providers.polygon_provider.PolygonProvider`
-      Requires the ``POLYGON_API_KEY`` environment variable to be set.
+    - ``"massive"`` → :class:`~finance_mcp.providers.massive.provider.MassiveProvider`
+      Requires the ``MASSIVE_API_KEY`` environment variable to be set.
     - anything else (including unset) → :class:`~finance_mcp.providers.yfinance_provider.YFinanceProvider`
 
     Returns:
@@ -19,21 +19,21 @@ def get_provider() -> object:
         Protocol.
 
     Raises:
-        RuntimeError: When ``DATA_PROVIDER=polygon`` but ``POLYGON_API_KEY`` is
+        RuntimeError: When ``DATA_PROVIDER=massive`` but ``MASSIVE_API_KEY`` is
             not set.
     """
     provider_name = os.environ.get("DATA_PROVIDER", "yfinance").lower().strip()
 
-    if provider_name == "polygon":
-        api_key = os.environ.get("POLYGON_API_KEY")
+    if provider_name == "massive":
+        api_key = os.environ.get("MASSIVE_API_KEY")
         if not api_key:
             raise RuntimeError(
-                "DATA_PROVIDER=polygon requires POLYGON_API_KEY to be set. "
-                "Export POLYGON_API_KEY=<your-key> and try again."
+                "DATA_PROVIDER=massive requires MASSIVE_API_KEY to be set. "
+                "Export MASSIVE_API_KEY=<your-key> and try again."
             )
-        from finance_mcp.providers.polygon.provider import PolygonProvider
+        from finance_mcp.providers.massive.provider import MassiveProvider
 
-        return PolygonProvider(api_key=api_key)
+        return MassiveProvider(api_key=api_key)
 
     from finance_mcp.providers.yfinance_provider import YFinanceProvider
 

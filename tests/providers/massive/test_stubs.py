@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from finance_mcp.providers.polygon.stubs import BlockedEndpointsMixin
+from finance_mcp.providers.massive.stubs import BlockedEndpointsMixin
 
 
 class ConcreteProvider(BlockedEndpointsMixin):
@@ -91,13 +91,13 @@ def test_crypto_trades_raises(provider: ConcreteProvider) -> None:
 
 
 def test_available_expansions_has_13_entries() -> None:
-    from finance_mcp.providers.polygon.stubs import AVAILABLE_EXPANSIONS
+    from finance_mcp.providers.massive.stubs import AVAILABLE_EXPANSIONS
 
     assert len(AVAILABLE_EXPANSIONS) == 13
 
 
 def test_available_expansions_have_required_keys() -> None:
-    from finance_mcp.providers.polygon.stubs import AVAILABLE_EXPANSIONS
+    from finance_mcp.providers.massive.stubs import AVAILABLE_EXPANSIONS
 
     for entry in AVAILABLE_EXPANSIONS:
         assert "name" in entry
@@ -106,7 +106,7 @@ def test_available_expansions_have_required_keys() -> None:
 
 
 def test_available_expansions_price_format() -> None:
-    from finance_mcp.providers.polygon.stubs import AVAILABLE_EXPANSIONS
+    from finance_mcp.providers.massive.stubs import AVAILABLE_EXPANSIONS
 
     for entry in AVAILABLE_EXPANSIONS:
         assert entry["price"] == "$99/mo"

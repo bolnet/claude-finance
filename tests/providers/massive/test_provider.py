@@ -1,4 +1,4 @@
-"""Tests for PolygonProvider – composition and DataProvider protocol."""
+"""Tests for MassiveProvider – composition and DataProvider protocol."""
 from __future__ import annotations
 
 from datetime import date, timedelta
@@ -8,7 +8,7 @@ import pandas as pd
 import pytest
 
 from finance_mcp.providers.base import Capability, DataProvider
-from finance_mcp.providers.polygon.provider import PolygonProvider
+from finance_mcp.providers.massive.provider import MassiveProvider
 
 
 # ---------------------------------------------------------------------------
@@ -16,13 +16,13 @@ from finance_mcp.providers.polygon.provider import PolygonProvider
 # ---------------------------------------------------------------------------
 
 
-def _make_provider(mock_client: MagicMock | None = None) -> PolygonProvider:
-    """Return a PolygonProvider with a mocked PolygonClient."""
+def _make_provider(mock_client: MagicMock | None = None) -> MassiveProvider:
+    """Return a MassiveProvider with a mocked MassiveClient."""
     with patch(
-        "finance_mcp.providers.polygon.provider.PolygonClient",
+        "finance_mcp.providers.massive.provider.MassiveClient",
         return_value=mock_client or MagicMock(),
     ):
-        return PolygonProvider(api_key="test-key")
+        return MassiveProvider(api_key="test-key")
 
 
 def _sample_df() -> pd.DataFrame:

@@ -1,6 +1,6 @@
-"""StocksMixin – wraps Polygon.io stocks endpoints.
+"""StocksMixin – wraps Massive stocks endpoints.
 
-Assumes ``self.client`` is a :class:`~finance_mcp.providers.polygon.client.PolygonClient`
+Assumes ``self.client`` is a :class:`~finance_mcp.providers.massive.client.MassiveClient`
 (or any object with a ``.get(path, params)`` method).
 """
 from __future__ import annotations
@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 
 import pandas as pd
 
-from finance_mcp.providers.polygon.mappers import (
+from finance_mcp.providers.massive.mappers import (
     aggs_to_dataframe,
     dividends_to_list,
     indicator_to_series,
@@ -23,16 +23,16 @@ from finance_mcp.providers.polygon.mappers import (
 )
 
 if TYPE_CHECKING:
-    from finance_mcp.providers.polygon.client import PolygonClient
+    from finance_mcp.providers.massive.client import MassiveClient
 
 
 class StocksMixin:
-    """Mixin that adds 30 Polygon stocks methods.
+    """Mixin that adds 30 Massive stocks methods.
 
-    Requires ``self.client: PolygonClient`` to be set by the host class.
+    Requires ``self.client: MassiveClient`` to be set by the host class.
     """
 
-    client: PolygonClient
+    client: MassiveClient
 
     # -----------------------------------------------------------------------
     # Aggregates & OHLC
@@ -196,7 +196,7 @@ class StocksMixin:
         return raw.get("results") or []
 
     def exchanges(self) -> list[dict[str, Any]]:
-        """Return all exchanges recognized by Polygon."""
+        """Return all exchanges recognized by Massive."""
         raw = self.client.get("/v3/reference/exchanges")
         return raw.get("results") or []
 

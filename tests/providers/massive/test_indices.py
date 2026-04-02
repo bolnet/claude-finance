@@ -6,7 +6,7 @@ from typing import Any
 import pandas as pd
 import pytest
 
-from finance_mcp.providers.polygon.indices import IndicesMixin
+from finance_mcp.providers.massive.indices import IndicesMixin
 
 
 # ---------------------------------------------------------------------------
@@ -15,7 +15,7 @@ from finance_mcp.providers.polygon.indices import IndicesMixin
 
 
 class FakeClient:
-    """Minimal stand-in for PolygonClient that records calls and returns canned data."""
+    """Minimal stand-in for MassiveClient that records calls and returns canned data."""
 
     def __init__(self, response: dict[str, Any]) -> None:
         self._response = response

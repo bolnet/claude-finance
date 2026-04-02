@@ -8,7 +8,7 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
-from finance_mcp.providers.polygon.mappers import (
+from finance_mcp.providers.massive.mappers import (
     aggs_to_dataframe,
     dividends_to_list,
     indicator_to_series,
