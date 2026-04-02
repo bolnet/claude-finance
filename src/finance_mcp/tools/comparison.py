@@ -2,7 +2,7 @@
 from finance_mcp.output import save_chart, format_output  # import before pyplot
 import matplotlib.pyplot as plt
 import pandas as pd
-from finance_mcp.adapter import fetch_multi_ticker, DataFetchError
+from finance_mcp.adapter import DataFetchError
 from fastmcp.exceptions import ToolError
 
 
@@ -21,6 +21,7 @@ def compare_tickers(tickers: str, start: str, end: str = "") -> str:
     Returns:
         Formatted output with comparison summary, chart path, and disclaimer.
     """
+    from finance_mcp.server import provider
     ticker_list = [t.strip().upper() for t in tickers.split(",") if t.strip()]
     if len(ticker_list) < 2:
         raise ToolError("compare_tickers requires at least 2 ticker symbols, comma-separated.")
@@ -28,7 +29,7 @@ def compare_tickers(tickers: str, start: str, end: str = "") -> str:
         raise ToolError("compare_tickers supports up to 5 ticker symbols at a time.")
 
     try:
-        prices_dict = fetch_multi_ticker(ticker_list, start=start, end=end or None)
+        prices_dict = provider.fetch_multi_ticker(ticker_list, start=start, end=end or None)
     except DataFetchError as exc:
         raise ToolError(str(exc)) from exc
 

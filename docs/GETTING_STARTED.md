@@ -10,20 +10,21 @@ Institutional-grade financial analytics in plain English. Built by a Wall Street
 
 1. [What You Get](#what-you-get)
 2. [Prerequisites](#prerequisites)
-3. [Installation](#installation)
+3. [Data Providers](#data-providers)
+4. [Installation](#installation)
    - [Method 1: MCP Server (Claude Code CLI)](#method-1-mcp-server-claude-code-cli)
    - [Method 2: Claude Code Plugin](#method-2-claude-code-plugin)
    - [Method 3: Web Connection (claude.ai)](#method-3-web-connection-claudeai)
    - [Method 4: Marketplace (Coming Soon)](#method-4-marketplace)
-4. [Verify Your Setup](#verify-your-setup)
-5. [All 11 Tools](#all-11-tools)
-6. [All 18 Slash Commands](#all-18-slash-commands)
-7. [Personas](#personas)
-8. [Real-World Workflows by Role](#real-world-workflows-by-role)
-9. [Sample Data](#sample-data)
-10. [Project Structure](#project-structure)
-11. [Troubleshooting](#troubleshooting)
-12. [Disclaimer](#disclaimer)
+5. [Verify Your Setup](#verify-your-setup)
+6. [All 11 Tools](#all-11-tools)
+7. [All 18 Slash Commands](#all-18-slash-commands)
+8. [Personas](#personas)
+9. [Real-World Workflows by Role](#real-world-workflows-by-role)
+10. [Sample Data](#sample-data)
+11. [Project Structure](#project-structure)
+12. [Troubleshooting](#troubleshooting)
+13. [Disclaimer](#disclaimer)
 
 ---
 
@@ -57,6 +58,66 @@ Equity Research, Hedge Fund PM, Investment Banking, FP&A, Accounting, Private Eq
 - **Python 3.10+**
 - **Claude Code CLI** (for MCP/Plugin methods) or **claude.ai account** (for web method)
 - **Internet connection** (Yahoo Finance data fetching)
+
+---
+
+## Data Providers
+
+Claude Finance supports two data providers. The active provider is selected via the `DATA_PROVIDER` environment variable. See `.env.example` for the full configuration reference.
+
+### Yahoo Finance (default)
+
+| Property | Value |
+|----------|-------|
+| Cost | Free |
+| Config | None required |
+| Data | Historical prices, risk metrics, dividends, splits, news |
+
+No setup needed. Yahoo Finance is used automatically when `DATA_PROVIDER` is unset or set to `yfinance`.
+
+### Massive (premium)
+
+| Property | Value |
+|----------|-------|
+| Cost | Paid subscription |
+| Config | `DATA_PROVIDER=massive` and `MASSIVE_API_KEY=<your-key>` |
+| Data | Everything in Yahoo Finance, plus real-time quotes, options chains, forex, crypto, indices, SEC filings, and technical indicators |
+
+**To enable Massive:**
+
+1. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edit `.env`:
+   ```env
+   DATA_PROVIDER=massive
+   MASSIVE_API_KEY=your_massive_api_key_here
+   ```
+
+3. Restart the MCP server (or relaunch Claude Code).
+
+**16 additional tools unlocked with Massive:**
+
+| Tool | Description |
+|------|-------------|
+| `get_news` | Real-time news articles for any ticker |
+| `get_options_chain` | Full options chain with Greeks |
+| `forex_convert` | Convert amounts between currency pairs |
+| `forex_quote` | Live forex bid/ask quotes |
+| `crypto_snapshot` | Real-time crypto price snapshot |
+| `crypto_movers` | Top crypto gainers and losers |
+| `indices_snapshot` | Snapshot of major market indices |
+| `get_dividends` | Dividend history for any stock |
+| `get_splits` | Stock split history |
+| `get_short_interest` | Short interest and float data |
+| `get_technical_indicator` | SMA, EMA, MACD, RSI on any ticker |
+| `market_movers` | Top stock gainers and losers |
+| `get_sec_filings` | SEC filing list (10-K, 8-K, etc.) |
+| `get_risk_factors` | Risk factors extracted from 10-K filings |
+| `get_ticker_details` | Full company profile and metadata |
+| `search_tickers` | Search for tickers by keyword |
 
 ---
 
