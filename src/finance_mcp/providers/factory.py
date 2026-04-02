@@ -31,7 +31,7 @@ def get_provider() -> object:
                 "DATA_PROVIDER=polygon requires POLYGON_API_KEY to be set. "
                 "Export POLYGON_API_KEY=<your-key> and try again."
             )
-        from finance_mcp.providers.polygon_provider import PolygonProvider
+        from finance_mcp.providers.polygon.provider import PolygonProvider
 
         return PolygonProvider(api_key=api_key)
 
