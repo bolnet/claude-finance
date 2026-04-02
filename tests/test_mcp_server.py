@@ -50,3 +50,12 @@ def test_validate_environment_checks_required_packages():
     result = validate_environment()
     expected_keys = {"yfinance", "pandas", "numpy", "matplotlib", "seaborn", "sklearn"}
     assert expected_keys.issubset(result.keys())
+
+
+def test_server_has_provider_instance():
+    """MCP-03: server module exposes an active DataProvider instance."""
+    from finance_mcp import server
+    from finance_mcp.providers.base import DataProvider
+
+    assert hasattr(server, "provider")
+    assert isinstance(server.provider, DataProvider)
