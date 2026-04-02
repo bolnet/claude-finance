@@ -2,7 +2,7 @@
 from finance_mcp.output import save_chart, format_output  # import before pyplot; sets Agg backend
 import matplotlib.pyplot as plt
 import pandas as pd
-from finance_mcp.adapter import fetch_multi_ticker, DataFetchError
+from finance_mcp.adapter import DataFetchError
 from fastmcp.exceptions import ToolError
 
 
@@ -22,6 +22,7 @@ def correlation_map(tickers: str, start: str, end: str = "") -> str:
         Formatted output with correlation summary, heatmap chart path, and disclaimer.
     """
     import seaborn as sns  # imported here — output.py has already set Agg backend
+    from finance_mcp.server import provider
 
     ticker_list = [t.strip().upper() for t in tickers.split(",") if t.strip()]
     if len(ticker_list) < 2:
@@ -30,7 +31,7 @@ def correlation_map(tickers: str, start: str, end: str = "") -> str:
         raise ToolError("correlation_map supports up to 10 ticker symbols at a time.")
 
     try:
-        prices_dict = fetch_multi_ticker(ticker_list, start=start, end=end or None)
+        prices_dict = provider.fetch_multi_ticker(ticker_list, start=start, end=end or None)
     except DataFetchError as exc:
         raise ToolError(str(exc)) from exc
 

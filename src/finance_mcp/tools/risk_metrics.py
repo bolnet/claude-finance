@@ -2,7 +2,7 @@
 from finance_mcp.output import save_chart, format_output  # import before pyplot
 import numpy as np
 import pandas as pd
-from finance_mcp.adapter import fetch_price_history, get_adjusted_prices, DataFetchError
+from finance_mcp.adapter import DataFetchError
 from fastmcp.exceptions import ToolError
 
 
@@ -36,17 +36,18 @@ def get_risk_metrics(ticker: str, start: str, end: str = "") -> str:
     Returns:
         Formatted output with risk metric values, plain-English interpretation, and disclaimer.
     """
+    from finance_mcp.server import provider
     ticker_upper = ticker.strip().upper()
     end_label = end if end else None
 
     try:
-        df = fetch_price_history(ticker_upper, start=start, end=end_label)
-        bench_df = fetch_price_history("^GSPC", start=start, end=end_label)
+        df = provider.fetch_price_history(ticker_upper, start=start, end=end_label)
+        bench_df = provider.fetch_price_history("^GSPC", start=start, end=end_label)
     except DataFetchError as exc:
         raise ToolError(str(exc)) from exc
 
-    prices = get_adjusted_prices(df)
-    bench_prices = get_adjusted_prices(bench_df)
+    prices = provider.get_adjusted_prices(df)
+    bench_prices = provider.get_adjusted_prices(bench_df)
 
     daily = prices.pct_change().dropna()
     bench_daily = bench_prices.pct_change().dropna()

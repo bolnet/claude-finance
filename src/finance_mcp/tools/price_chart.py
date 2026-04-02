@@ -2,7 +2,7 @@
 from finance_mcp.output import save_chart, format_output  # MUST import output first (sets Agg backend)
 import matplotlib.pyplot as plt
 import pandas as pd
-from finance_mcp.adapter import fetch_price_history, get_adjusted_prices, DataFetchError
+from finance_mcp.adapter import DataFetchError
 from fastmcp.exceptions import ToolError
 
 
@@ -18,12 +18,13 @@ def analyze_stock(ticker: str, start: str, end: str = "") -> str:
     Returns:
         Formatted output with plain-English price trend summary, chart path, and disclaimer.
     """
+    from finance_mcp.server import provider
     try:
-        df = fetch_price_history(ticker, start=start, end=end or None)
+        df = provider.fetch_price_history(ticker, start=start, end=end or None)
     except DataFetchError as exc:
         raise ToolError(str(exc)) from exc
 
-    prices = get_adjusted_prices(df)
+    prices = provider.get_adjusted_prices(df)
     ticker_upper = ticker.strip().upper()
 
     # Build price chart

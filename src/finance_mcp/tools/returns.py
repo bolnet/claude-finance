@@ -3,7 +3,7 @@ from finance_mcp.output import save_chart, format_output  # import before pyplot
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from finance_mcp.adapter import fetch_price_history, get_adjusted_prices, DataFetchError
+from finance_mcp.adapter import DataFetchError
 from fastmcp.exceptions import ToolError
 
 
@@ -19,12 +19,13 @@ def get_returns(ticker: str, start: str, end: str = "") -> str:
     Returns:
         Formatted output with returns summary, data table, chart path, and disclaimer.
     """
+    from finance_mcp.server import provider
     try:
-        df = fetch_price_history(ticker, start=start, end=end or None)
+        df = provider.fetch_price_history(ticker, start=start, end=end or None)
     except DataFetchError as exc:
         raise ToolError(str(exc)) from exc
 
-    prices = get_adjusted_prices(df)
+    prices = provider.get_adjusted_prices(df)
     ticker_upper = ticker.strip().upper()
     daily = prices.pct_change().dropna()
     cumulative = (1 + daily).cumprod() - 1
