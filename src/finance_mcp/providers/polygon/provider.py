@@ -7,6 +7,10 @@ methods from the mixin classes.
 """
 from __future__ import annotations
 
+import sys
+from datetime import date, timedelta
+from typing import Any
+
 import pandas as pd
 
 from finance_mcp.providers.base import Capability
@@ -17,20 +21,23 @@ from finance_mcp.providers.polygon.options import OptionsMixin
 from finance_mcp.providers.polygon.stocks import StocksMixin
 
 
-_POLYGON_CAPABILITIES: frozenset[Capability] = frozenset(
-    {
-        Capability.PRICE_HISTORY,
-        Capability.NEWS,
-        Capability.OPTIONS_CHAIN,
-        Capability.FOREX,
-        Capability.CRYPTO,
-        Capability.INDICES,
-        Capability.TECHNICALS,
-        Capability.FUNDAMENTALS,
-        Capability.MARKET_MOVERS,
-        Capability.TICKER_INFO,
-    }
-)
+# All 11 Capability flags
+_POLYGON_CAPABILITIES: frozenset[Capability] = frozenset(Capability)
+
+# Mapping from period string to timedelta days offset from start
+_PERIOD_DAYS: dict[str, int] = {
+    "1d": 1,
+    "5d": 5,
+    "1mo": 30,
+    "3mo": 90,
+    "6mo": 180,
+    "1y": 365,
+    "2y": 730,
+    "5y": 1825,
+    "10y": 3650,
+    "ytd": 365,
+    "max": 3650,
+}
 
 
 class PolygonProvider(StocksMixin, OptionsMixin, IndicesMixin, CurrenciesMixin):
@@ -69,30 +76,42 @@ class PolygonProvider(StocksMixin, OptionsMixin, IndicesMixin, CurrenciesMixin):
     ) -> pd.DataFrame:
         """Fetch adjusted daily OHLCV bars from Polygon for a single ticker.
 
+        ``end`` takes priority over ``period``.  When only ``period`` is given,
+        the end date is computed by adding the period's day offset to ``start``.
+        When neither is provided, today is used as the end date.
+
         Args:
             ticker: Ticker symbol (e.g. "AAPL").
             start: Start date as "YYYY-MM-DD".
-            end: End date as "YYYY-MM-DD". Defaults to today if not supplied.
-            period: Unused by Polygon (present for protocol compatibility).
+            end: End date as "YYYY-MM-DD". Takes priority over *period*.
+            period: Period shorthand (e.g. "1mo", "1y"). Used only when *end*
+                is not supplied.
 
         Returns:
             DataFrame with DatetimeIndex and OHLCV columns.
         """
-        import datetime
+        if end is not None:
+            to_date = end
+        elif period is not None:
+            days = _PERIOD_DAYS.get(period, 365)
+            start_dt = date.fromisoformat(start)
+            to_date = (start_dt + timedelta(days=days)).isoformat()
+        else:
+            to_date = date.today().isoformat()
 
-        to_date = end or datetime.date.today().isoformat()
         return self.stocks_bars(
-            ticker=ticker,
+            ticker,
             multiplier=1,
             timespan="day",
             from_date=start,
             to_date=to_date,
-            adjusted=True,
-            sort="asc",
         )
 
     def get_adjusted_prices(self, df: pd.DataFrame) -> pd.Series:
         """Extract the adjusted closing price series from a fetched DataFrame.
+
+        Looks for a ``Close`` column (capital C) first, then ``close``,
+        then falls back to the last column.
 
         Args:
             df: DataFrame returned by ``fetch_price_history``.
@@ -100,8 +119,10 @@ class PolygonProvider(StocksMixin, OptionsMixin, IndicesMixin, CurrenciesMixin):
         Returns:
             pd.Series with DatetimeIndex representing adjusted close prices.
         """
-        col = "close" if "close" in df.columns else df.columns[-1]
-        return df[col]
+        for col in ("Close", "close"):
+            if col in df.columns:
+                return df[col]
+        return df.iloc[:, -1]
 
     def fetch_multi_ticker(
         self,
@@ -112,17 +133,30 @@ class PolygonProvider(StocksMixin, OptionsMixin, IndicesMixin, CurrenciesMixin):
     ) -> dict[str, pd.Series]:
         """Fetch adjusted close price series for multiple tickers.
 
+        Failures for individual tickers are logged to stderr and skipped;
+        the returned dict will contain only the tickers that succeeded.
+
         Args:
             tickers: List of ticker symbols.
             start: Start date as "YYYY-MM-DD".
             end: End date as "YYYY-MM-DD". Optional.
-            period: Unused by Polygon (present for protocol compatibility).
+            period: Period shorthand. Optional.
 
         Returns:
             Dict mapping ticker symbol → pd.Series of adjusted closing prices.
         """
         result: dict[str, pd.Series] = {}
         for ticker in tickers:
-            df = self.fetch_price_history(ticker, start=start, end=end)
-            result[ticker] = self.get_adjusted_prices(df)
+            try:
+                df = self.fetch_price_history(ticker, start=start, end=end, period=period)
+                result[ticker] = self.get_adjusted_prices(df)
+            except Exception as exc:  # noqa: BLE001
+                print(
+                    f"[PolygonProvider] fetch_multi_ticker: skipping {ticker} — {exc}",
+                    file=sys.stderr,
+                )
         return result
+
+    def close(self) -> None:
+        """Close the underlying HTTP client session."""
+        self.client.close()

@@ -13,6 +13,7 @@ import importlib
 
 from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError
+from finance_mcp.providers import get_provider
 from finance_mcp.tools.price_chart import analyze_stock
 from finance_mcp.tools.returns import get_returns
 from finance_mcp.tools.volatility import get_volatility
@@ -24,6 +25,9 @@ from finance_mcp.tools.liquidity_model import liquidity_predictor, predict_liqui
 from finance_mcp.tools.investor_model import investor_classifier, classify_investor
 
 mcp = FastMCP("Finance MCP Server")
+
+# Initialize the active data provider (reads DATA_PROVIDER env var)
+provider = get_provider()
 
 mcp.add_tool(analyze_stock)
 mcp.add_tool(get_returns)
