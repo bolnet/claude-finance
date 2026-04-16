@@ -40,3 +40,6 @@ ENV/
 
 # Generated outputs
 finance_output/
+
+# Memwright cache
+.memwright/
