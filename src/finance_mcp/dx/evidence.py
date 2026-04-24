@@ -69,7 +69,7 @@ def dx_evidence_rows(
         ts_col = session.template.timestamp_column
         if ts_col in seg.columns:
             seg = seg.assign(
-                _ts=pd.to_datetime(seg[ts_col], errors="coerce")
+                _ts=pd.to_datetime(seg[ts_col], errors="coerce", format="mixed")
             ).sort_values("_ts", ascending=False, na_position="last").drop(columns=["_ts"])
     else:
         raise ToolError(f"Unknown sort_by='{sort_by}'")

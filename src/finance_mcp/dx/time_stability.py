@@ -68,7 +68,7 @@ def dx_time_stability(
             "note": "Segment filter matched zero rows.",
         }
 
-    ts = pd.to_datetime(seg[timestamp_col], errors="coerce")
+    ts = pd.to_datetime(seg[timestamp_col], errors="coerce", format="mixed")
     seg = seg.assign(_quarter=ts.dt.to_period("Q").astype(str))
     seg = seg[seg["_quarter"].notna()]
     if seg.empty:

@@ -217,9 +217,110 @@ SAAS_PRICING = VerticalTemplate(
 # Registry
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Reference template: Consumer lending (Lending-Club-style)
+# ---------------------------------------------------------------------------
+
+
+def _lending_b2c_outcome(joined: pd.DataFrame) -> pd.Series:
+    """
+    Per-loan realized lender outcome.
+
+        outcome = total_pymnt + recoveries - funded_amnt
+
+    A positive number means the loan's cashflow (interest + principal + any
+    recovery post-default) exceeded the originating principal. Negative means
+    the loan lost the lender money.
+
+    Columns come from Lending Club servicing data; real users map their own
+    columns via an ETL step before handoff.
+    """
+    pay = joined.get("total_pymnt")
+    rec = joined.get("recoveries")
+    fund = joined.get("funded_amnt")
+    if pay is None or fund is None:
+        raise ValueError(
+            "lending_b2c outcome requires columns: total_pymnt, funded_amnt "
+            "(recoveries optional)."
+        )
+    return (
+        pay.fillna(0.0)
+        + (rec.fillna(0.0) if rec is not None else 0.0)
+        - fund.fillna(0.0)
+    )
+
+
+LENDING_B2C = VerticalTemplate(
+    id="lending_b2c",
+    version="1.0.0",
+    description=(
+        "Consumer unsecured lending — loans are funded at various grades, "
+        "terms, and purposes, then paid back (or charged off). Outcome is "
+        "the realized lender cashflow minus principal. Reference corpus: "
+        "Lending Club 2015-2016 public loan history."
+    ),
+    entities=(
+        EntitySpec(
+            name="loan",
+            filename_patterns=("loan",),
+            primary_key="loan_id",
+            expected_columns=(
+                "loan_id",
+                "issue_d",
+                "grade",
+                "term",
+                "purpose",
+                "addr_state",
+                "funded_amnt",
+            ),
+        ),
+        EntitySpec(
+            name="performance",
+            filename_patterns=("perf", "servicing", "repay"),
+            primary_key="loan_id",
+            expected_columns=(
+                "loan_id",
+                "loan_status",
+                "total_pymnt",
+                "recoveries",
+            ),
+        ),
+    ),
+    join_keys=(
+        # child, parent, key
+        ("performance", "loan", "loan_id"),
+    ),
+    timestamp_column="issue_d",
+    compute_outcome=_lending_b2c_outcome,
+    archetypes=(
+        ArchetypeSpec(
+            archetype="pricing",
+            decision_columns=("grade", "term"),
+            description="How credit grade × term combine to set loan pricing.",
+        ),
+        ArchetypeSpec(
+            archetype="selection",
+            decision_columns=("purpose", "grade"),
+            description="Which loan purposes to fund at which credit grade.",
+        ),
+        ArchetypeSpec(
+            archetype="allocation",
+            decision_columns=("addr_state", "grade"),
+            description="State × grade exposure — geographic concentration risk.",
+        ),
+    ),
+    validation_gates=ValidationGates(
+        min_rows_per_segment=30,
+        min_months_coverage=12,
+        max_missing_pct_in_outcome=0.05,
+    ),
+)
+
+
 _BUILTIN_TEMPLATES: Dict[str, VerticalTemplate] = {
     INSURANCE_B2C.id: INSURANCE_B2C,
     SAAS_PRICING.id: SAAS_PRICING,
+    LENDING_B2C.id: LENDING_B2C,
 }
 
 

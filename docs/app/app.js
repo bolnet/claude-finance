@@ -75,12 +75,15 @@ dropZone.addEventListener("drop", (e) => {
 async function loadDemo(kind) {
   // The server doesn't expose demo files as endpoints, so we just prefill the
   // portco_id and show a hint. Full "try demo" requires a dedicated endpoint.
-  const hint = kind === "saas"
-    ? "Generate demo files locally with:\npython -c \"from demo.saas_pricing import generate as g; g.generate(out_dir='./demo_out', n_deals=8000, months=36, seed=42)\""
-    : "Generate demo files locally with:\npython -c \"from demo.etelequote import generate as g; g.generate(out_dir='./demo_out', n_leads=4800, months=24, seed=42)\"";
-  log.textContent = hint;
+  const hints = {
+    lending: "Generate the lending demo (real Lending Club loans, first run downloads ~1.6 GB once):\npython -m demo.lending_club.slice --out demo/lending_club\n\nThen drop demo/lending_club/loans.csv + performance.csv here.",
+    saas: "Generate saas_pricing demo files locally with:\npython -c \"from demo.saas_pricing import generate as g; g.generate(out_dir='./demo_out', n_deals=8000, months=36, seed=42)\"",
+    insurance: "Generate etelequote demo files locally with:\npython -c \"from demo.etelequote import generate as g; g.generate(out_dir='./demo_out', n_leads=4800, months=24, seed=42)\"",
+  };
+  log.textContent = hints[kind] || "";
   pipelinePanel.hidden = false;
-  portcoInput.value = kind === "saas" ? "saas_demo" : "etelequote_demo";
+  const ids = { lending: "LendingCo", saas: "saas_demo", insurance: "etelequote_demo" };
+  portcoInput.value = ids[kind] || "";
 }
 document.querySelectorAll(".chip[data-demo]").forEach((el) => {
   el.addEventListener("click", () => loadDemo(el.dataset.demo));
