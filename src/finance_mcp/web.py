@@ -31,7 +31,6 @@ from starlette.responses import (
     FileResponse,
     JSONResponse,
     PlainTextResponse,
-    RedirectResponse,
 )
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
@@ -41,12 +40,15 @@ from finance_mcp.dx_orchestrator import run_diagnostic
 
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-_APP_DIR = _REPO_ROOT / "docs" / "app"
+_DOCS_DIR = _REPO_ROOT / "docs"
+_APP_DIR = _DOCS_DIR / "app"
+_LANDING_HTML = _DOCS_DIR / "index.html"
 _OUTPUT_DIR = _REPO_ROOT / "finance_output"
 
 
-async def index(request: Request) -> RedirectResponse:
-    return RedirectResponse(url="/app/", status_code=307)
+async def index(request: Request) -> FileResponse:
+    """Serve the marketing landing page at /."""
+    return FileResponse(str(_LANDING_HTML), media_type="text/html")
 
 
 async def healthz(request: Request) -> PlainTextResponse:
