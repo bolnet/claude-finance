@@ -36,12 +36,17 @@ ProgressCallback = Callable[[str, dict], None]
 _ARCHETYPE_PRIORITY = {
     "insurance_b2c": "allocation",
     "saas_pricing": "pricing",
+    "lending_b2c": "selection",
 }
 
 # EBITDA baseline defaults (USD) — demo datasets were sized around these.
 _EBITDA_DEFAULTS = {
     "insurance_b2c": 1_200_000.0,
     "saas_pricing": 40_000_000.0,
+    # 30k loans × ~$486 mean net / loan ≈ $14.6M realized book contribution
+    # per vintage; treat that as the EBITDA baseline the opportunity map is
+    # measured against.
+    "lending_b2c": 14_500_000.0,
 }
 
 

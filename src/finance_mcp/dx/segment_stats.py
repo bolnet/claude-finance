@@ -21,7 +21,7 @@ def _annualization_factor(df: pd.DataFrame, timestamp_col: str) -> float:
     """Months of data ÷ 12 → scalar to convert totals to annual."""
     if timestamp_col not in df.columns:
         return 1.0
-    ts = pd.to_datetime(df[timestamp_col], errors="coerce")
+    ts = pd.to_datetime(df[timestamp_col], errors="coerce", format="mixed")
     if not ts.notna().any():
         return 1.0
     months = max((ts.max() - ts.min()).days / 30.44, 1.0)

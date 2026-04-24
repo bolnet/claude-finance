@@ -97,7 +97,7 @@ def _run_validation_gates(
 
     # Months coverage gate
     if template.timestamp_column in joined.columns:
-        ts = pd.to_datetime(joined[template.timestamp_column], errors="coerce")
+        ts = pd.to_datetime(joined[template.timestamp_column], errors="coerce", format="mixed")
         if ts.notna().any():
             months = (ts.max() - ts.min()).days / 30.44
             if months >= gates.min_months_coverage:
@@ -222,7 +222,7 @@ def dx_ingest(
 
     # Months coverage for the report
     if template.timestamp_column in joined.columns:
-        ts = pd.to_datetime(joined[template.timestamp_column], errors="coerce")
+        ts = pd.to_datetime(joined[template.timestamp_column], errors="coerce", format="mixed")
         if ts.notna().any():
             months = int((ts.max() - ts.min()).days / 30.44)
         else:
