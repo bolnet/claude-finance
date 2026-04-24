@@ -2,7 +2,7 @@
 
 > **The analyst team you always wanted. Available whenever you ask.**
 
-**🔗 Live demo →** https://bolnet.github.io/Claude-Finance/
+**🔗 Live demo →** https://bolnet.github.io/claude-finance/
 
 Claude Finance is an open-source AI skill for Claude Code. Ask Claude institutional-grade questions about any stock, any portfolio, or any market — in plain English. Get charts, risk metrics, ML-powered scoring, and written interpretation in under a minute.
 
