@@ -30,6 +30,7 @@ Classify every finance request into one of these intents before taking action:
 | `ml-liquidity` | "liquidity model", "liquidity predictor", "regression on CSV", "predict liquidity risk" | CSV ingestion; sklearn regression pipeline |
 | `ml-investor` | "investor classifier", "segment investors", "classify investors", "investor profiling" | CSV ingestion; sklearn classification pipeline |
 | `decision-diagnostic` | "diagnose decisions", "find hidden losses", "where are we losing money", "cross-section analysis", "run the diagnostic", "decision-optimization", "what's destroying EBITDA" | Load the decision-diagnostic skill (`skills/private-equity/decision-diagnostic/SKILL.md`) and run the 7-step DX pipeline against the user's CSVs |
+| `benchmarking` | "benchmark my fund", "rank portcos", "peer group", "archetype index", "compare portcos", "what changed since last quarter", "snapshot this", "delta between snapshots", "trend for X" | Load the benchmarking skill (`skills/private-equity/benchmarking/SKILL.md`) and run the BX pipeline against user-supplied OpportunityMap JSONs |
 
 If the intent is ambiguous, ask one clarifying question. Do not generate code before clarifying.
 
