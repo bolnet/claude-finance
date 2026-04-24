@@ -61,7 +61,7 @@ def test_operator_skeleton_extends_board():
 def test_valid_narrative_passes_validation():
     good = (
         "### What the data says\n"
-        "Over 1,430 rows in TX × Affiliate_B, segment returned "
+        "Over 1,430 rows in TX × Affiliate_B (sample rows 56978, 79982), segment returned "
         "$-14,000 annually.\n\n"
         "### Why it persists\n"
         "Bad in all 12 of 12 quarters; cross-section is hidden.\n\n"
@@ -126,7 +126,7 @@ def test_unit_abbreviations_accepted():
     """$18.8k should match $18,829 within ±5% tolerance."""
     text = (
         "### What the data says\n"
-        "Over 1,430 rows.\n\n"
+        "Over 1,430 rows. Sample: 56978, 79982.\n\n"
         "### Why it persists\n"
         "12 of 12 quarters.\n\n"
         "### Counterfactual\n"
@@ -151,3 +151,51 @@ def test_numbers_cited_and_allowed_in_response():
     assert isinstance(r["numbers_allowed"], list)
     # Skeleton must cite at least one dollar amount
     assert len(r["numbers_cited"]) >= 1
+
+
+# v2 validator additions ---------------------------------------------------
+
+
+def test_v2_missing_evidence_citation_fails():
+    """v2 requires every memo to cite at least one evidence_row_id when ids exist."""
+    no_citation = (
+        "### What the data says\n"
+        "Over 1,430 rows. $-14,000 annually.\n\n"
+        "### Why it persists\n"
+        "12 of 12 quarters.\n\n"
+        "### Counterfactual\n"
+        "Lift of $18,829.\n\n"
+        "### Recommendation\n"
+        "Throttle.\n\n"
+        "### Implementation\n"
+        "2 weeks."
+    )
+    r = dx_memo(_opp(narrative_board=no_citation), audience="board")
+    assert r["validated"] is False
+    assert any("evidence_row_id" in v for v in r["violations"])
+
+
+def test_v2_hedge_language_fails():
+    """v2 disallows hedge words in memos (might / could / perhaps / etc)."""
+    hedged = (
+        "### What the data says\n"
+        "Over 1,430 rows; sample 56978, 79982. Segment might be losing money.\n\n"
+        "### Why it persists\n"
+        "Negative in 12 of 12 quarters.\n\n"
+        "### Counterfactual\n"
+        "Throttling could potentially yield a $18,829 lift.\n\n"
+        "### Recommendation\n"
+        "Perhaps throttle 97%.\n\n"
+        "### Implementation\n"
+        "2 weeks."
+    )
+    r = dx_memo(_opp(narrative_board=hedged), audience="board")
+    assert r["validated"] is False
+    assert any("hedging language" in v for v in r["violations"])
+
+
+def test_v2_default_skeleton_self_validates_with_evidence():
+    """The deterministic skeleton must auto-cite evidence and pass v2 rules."""
+    r = dx_memo(_opp(), audience="board")
+    assert r["used_default_skeleton"] is True
+    assert r["validated"] is True, f"violations: {r['violations']}"

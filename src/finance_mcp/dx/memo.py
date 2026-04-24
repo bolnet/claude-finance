@@ -37,6 +37,21 @@ _REQUIRED_SECTIONS_BOARD = (
 
 _REQUIRED_SECTIONS_OPERATOR = _REQUIRED_SECTIONS_BOARD
 
+# Hedge language disallowed in memos. v2: enforces the SKILL.md rule
+# "no hedging — the numbers are either material or they aren't."
+_HEDGE_PATTERNS = (
+    r"\bmight\b",
+    r"\bcould\b(?!\s+have)",        # "could have" is past-tense, allowed
+    r"\bperhaps\b",
+    r"\bpotentially\b",
+    r"\bmay\s+help\b",
+    r"\bappears\s+to\b",
+    r"\bseems\s+to\b",
+    r"\bprobably\b",
+    r"\bpossibly\b",
+)
+_HEDGE_RE = re.compile("|".join(_HEDGE_PATTERNS), re.IGNORECASE)
+
 _DOLLAR_RE = re.compile(
     r"""
     (?P<sign>[-−+]?)          # optional sign
@@ -138,12 +153,12 @@ def _validate_narrative(narrative: str, opp: dict) -> list[str]:
     if not narrative or not narrative.strip():
         return ["empty narrative"]
 
-    # Required sections
+    # Required sections (presence check; v1 contract preserved).
     missing = [s for s in _REQUIRED_SECTIONS_BOARD if s.lower() not in narrative.lower()]
     if missing:
         violations.append(f"missing sections: {missing}")
 
-    # Dollar-value grounding
+    # Dollar-value grounding (unchanged from v1)
     allowed_dollars = _allowed_numbers(opp)
     for val in _extract_dollar_values(narrative):
         if not _number_matches_any(val, allowed_dollars):
@@ -152,14 +167,35 @@ def _validate_narrative(narrative: str, opp: dict) -> list[str]:
                 f"(not within tolerance of any opportunity field)"
             )
 
-    # Percent grounding — looser, only flag if clearly inventing
+    # Percent grounding — looser, only flag if clearly inventing (v1 behavior;
+    # tightening would false-flag legitimate policy %s like "cap at 20%").
     allowed_pcts = _allowed_percents(opp)
     for val in _extract_percent_values(narrative):
-        # Percentages in [0, 100] are sometimes just rounding (e.g., "97%")
-        # and we don't want to block every rounded figure. Only flag values
-        # outside a reasonable band.
         if abs(val) > 1000:
             violations.append(f"percent out of range: {val}%")
+
+    # v2: Evidence-citation requirement. Skill v2 promises board memos cite
+    # at least one evidence row. Only enforce if the opportunity actually
+    # has evidence_row_ids attached — older opportunities won't.
+    evidence_ids = opp.get("evidence_row_ids") or []
+    if evidence_ids:
+        cited = any(
+            str(rid) in narrative or f"row {rid}" in narrative.lower()
+            for rid in evidence_ids
+        )
+        if not cited:
+            violations.append(
+                "narrative cites no evidence_row_id — "
+                "every memo must reference at least one sample row"
+            )
+
+    # v2: Hedge-language detector. Tone rule from skill v2.
+    hedge_hits = _HEDGE_RE.findall(narrative)
+    if hedge_hits:
+        sample = sorted({h.strip().lower() for h in hedge_hits})[:3]
+        violations.append(
+            "hedging language detected — remove: " + ", ".join(repr(h) for h in sample)
+        )
 
     return violations
 
@@ -182,11 +218,20 @@ def _format_default_skeleton(opp: dict, audience: Audience) -> str:
     recommendation = opp.get("recommendation") or ""
     archetype = opp.get("archetype") or ""
 
+    # v2: auto-cite up to 3 evidence row IDs in the "What the data says"
+    # section so the default skeleton self-validates against the v2 evidence-
+    # citation rule. Skipped silently if no evidence ids are attached.
+    evidence_ids = opp.get("evidence_row_ids") or []
+    cited = ", ".join(str(rid) for rid in evidence_ids[:3])
+    citation_clause = (
+        f" Sample rows: {cited}." if cited else ""
+    )
+
     sections = [
         "### What the data says",
         (
             f"Segment {segment_str} contains {n:,} rows "
-            f"with current annualized outcome ${current:,.0f}."
+            f"with current annualized outcome ${current:,.0f}.{citation_clause}"
         ),
         "",
         "### Why it persists",
