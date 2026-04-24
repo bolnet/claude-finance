@@ -33,6 +33,15 @@ from finance_mcp.tools.news import get_news
 from finance_mcp.tools.options_chain import get_options_chain
 from finance_mcp.tools.forex import forex_convert, forex_quote
 from finance_mcp.tools.crypto import crypto_snapshot, crypto_movers
+from finance_mcp.dx import (
+    dx_ingest,
+    dx_segment_stats,
+    dx_time_stability,
+    dx_counterfactual,
+    dx_evidence_rows,
+    dx_memo,
+    dx_report,
+)
 
 mcp = FastMCP("Finance MCP Server")
 
@@ -66,6 +75,15 @@ mcp.add_tool(forex_convert)
 mcp.add_tool(forex_quote)
 mcp.add_tool(crypto_snapshot)
 mcp.add_tool(crypto_movers)
+
+# Decision-Optimization Diagnostic (DX) — Claude-native, pandas-only
+mcp.add_tool(dx_ingest)
+mcp.add_tool(dx_segment_stats)
+mcp.add_tool(dx_time_stability)
+mcp.add_tool(dx_counterfactual)
+mcp.add_tool(dx_evidence_rows)
+mcp.add_tool(dx_memo)
+mcp.add_tool(dx_report)
 
 
 @mcp.tool

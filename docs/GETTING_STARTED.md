@@ -1,8 +1,8 @@
 # Claude Finance — Getting Started Guide
 
-**Version 1.4.0** | **License: MIT** | **Python 3.10+**
+**Version 1.5.0** | **License: MIT** | **Python 3.10+**
 
-Institutional-grade financial analytics in plain English. Built by a Wall Street engineer with 15 years of experience, Claude Finance gives equity analysts, portfolio managers, hedge funds, IB analysts, FP&A teams, and PE firms access to real-time market data, risk scoring, and ML workflows — without writing a single line of code.
+Institutional-grade financial analytics in plain English. Built by a Wall Street engineer with 15 years of experience, Claude Finance gives equity analysts, portfolio managers, hedge funds, IB analysts, FP&A teams, and PE firms access to real-time market data, risk scoring, ML workflows, and a **Decision-Optimization Diagnostic** that finds cross-section $ losses hidden in aggregate dashboards — without writing a single line of code.
 
 ---
 
@@ -17,30 +17,33 @@ Institutional-grade financial analytics in plain English. Built by a Wall Street
    - [Method 3: Web Connection (claude.ai)](#method-3-web-connection-claudeai)
    - [Method 4: Marketplace (Coming Soon)](#method-4-marketplace)
 5. [Verify Your Setup](#verify-your-setup)
-6. [All 11 Tools](#all-11-tools)
-7. [All 18 Slash Commands](#all-18-slash-commands)
+6. [All 34 Tools](#all-34-tools)
+7. [All 19 Slash Commands](#all-19-slash-commands)
 8. [Personas](#personas)
 9. [Real-World Workflows by Role](#real-world-workflows-by-role)
-10. [Sample Data](#sample-data)
-11. [Project Structure](#project-structure)
-12. [Troubleshooting](#troubleshooting)
-13. [Disclaimer](#disclaimer)
+10. [Decision-Optimization Diagnostic](#decision-optimization-diagnostic)
+11. [Sample Data](#sample-data)
+12. [Project Structure](#project-structure)
+13. [Troubleshooting](#troubleshooting)
+14. [Disclaimer](#disclaimer)
 
 ---
 
 ## What You Get
 
-### 11 MCP Tools
+### 34 MCP Tools
 
 | Category | Tools | What They Do |
 |----------|-------|--------------|
 | **Environment** (2) | `validate_environment`, `ping` | Health check, package validation |
 | **Market Analysis** (6) | `analyze_stock`, `get_returns`, `get_volatility`, `get_risk_metrics`, `compare_tickers`, `correlation_map` | Price charts, daily/cumulative returns, rolling volatility, Sharpe/drawdown/beta, normalized peer comparison, correlation heatmaps |
 | **ML Workflows** (3) | `ingest_csv`, `liquidity_predictor` + `predict_liquidity`, `investor_classifier` + `classify_investor` | Auto data profiling, regression risk scoring, classification segmentation |
+| **Massive (provider)** (16) | `get_news`, `get_options_chain`, `forex_convert`, `forex_quote`, `crypto_snapshot`, `crypto_movers`, `indices_snapshot`, `get_dividends`, `get_splits`, `get_short_interest`, `get_technical_indicator`, `market_movers`, `get_sec_filings`, `get_risk_factors`, `get_ticker_details`, `search_tickers` | Real-time quotes, options chains, forex, crypto, indices, SEC filings, technicals — unlocked by [Massive provider](#data-providers) |
+| **Decision Diagnostic** (7) | `dx_ingest`, `dx_segment_stats`, `dx_time_stability`, `dx_counterfactual`, `dx_evidence_rows`, `dx_memo`, `dx_report` | Claude-native pipeline that finds cross-section $ losses invisible to aggregate dashboards — produces ranked OpportunityMap + self-contained HTML report |
 
-### 18 Slash Commands
+### 19 Slash Commands
 
-3 finance persona commands + 15 private equity workflow commands. See [full list below](#all-18-slash-commands).
+3 finance persona commands + 15 private equity workflow commands + 1 decision-diagnostic command (`/diagnose-decisions`). See [full list below](#all-34-tools).
 
 ### 2 Personas
 
@@ -225,7 +228,7 @@ finance-mcp-plugin/
 ├── .mcp.json                # MCP server config for the plugin
 ├── hooks/
 │   └── hooks.json           # Event hooks (extensible)
-├── commands/                 # 18 slash commands
+├── commands/                 # 19 slash commands
 │   ├── finance.md
 │   ├── finance-analyst.md
 │   ├── finance-pm.md
@@ -255,7 +258,7 @@ finance-mcp-plugin/
 }
 ```
 
-Claude Code discovers the plugin when you open the project directory. All 18 slash commands and 11 MCP tools become available.
+Claude Code discovers the plugin when you open the project directory. All 19 slash commands and 18 MCP tools become available.
 
 **Step 4: Start Claude Code**
 
@@ -391,7 +394,7 @@ pip install -e .
 
 ---
 
-## All 11 Tools
+## All 34 Tools
 
 ### Environment Tools
 
@@ -423,7 +426,7 @@ pip install -e .
 
 ---
 
-## All 18 Slash Commands
+## All 19 Slash Commands
 
 ### Finance Personas (3)
 
@@ -527,6 +530,87 @@ This trains a regression model, then scores each prospect with a risk rating (LO
 
 ---
 
+## Decision-Optimization Diagnostic
+
+The Decision-Optimization Diagnostic (DX) finds **cross-section $ losses** that aggregate dashboards miss — the reference pattern is the e-TeleQuote case: a $79M revenue company losing $1–2M/year, where the real hemorrhage was $9.7M/year hidden in 3 state × source lead-buying cells that looked fine at either dimension alone.
+
+DX is **Claude-native** — seven MCP tools expose pandas aggregates, and Claude reasons over them. No sklearn, no causal-inference libs, no trained models.
+
+### What the seven DX tools do
+
+| Tool | Purpose |
+|---|---|
+| `dx_ingest` | Load multi-file CSVs, match to a vertical template, validate |
+| `dx_segment_stats` | Rank decision × segment cells by $ outcome |
+| `dx_time_stability` | Check persistence across quarters (filters transient effects) |
+| `dx_counterfactual` | Project $ impact of throttle / cap / reroute / discontinue |
+| `dx_evidence_rows` | Return raw rows backing any claim |
+| `dx_memo` | Validate that memo prose only cites real numbers |
+| `dx_report` | Render the final OpportunityMap as a self-contained HTML + JSON sidecar |
+
+### Built-in vertical templates
+
+| Template | Decision archetypes | Demo dataset |
+|---|---|---|
+| `insurance_b2c` | allocation (source × state), routing (agent), selection (source) | `demo/etelequote/generate.py` |
+| `saas_pricing` | pricing (discount × customer size), selection (plan × customer size) | `demo/saas_pricing/generate.py` |
+
+Custom templates are Python dataclasses — see `src/finance_mcp/dx/templates.py`.
+
+### Quickstart — reproduce the e-TeleQuote finding
+
+**Step 1: Generate the synthetic demo dataset** (deterministic, seed=42):
+
+```bash
+python3 demo/etelequote/generate.py --leads 80000 --months 36
+# Wrote 80,000 leads, ~6,800 policies, 220 agents to demo/etelequote
+```
+
+**Step 2: Run the diagnostic via the slash command:**
+
+```
+/diagnose-decisions etelequote_demo demo/etelequote
+```
+
+Claude will:
+1. Call `dx_ingest` on the three CSVs; confirm the `insurance_b2c` template matches.
+2. Call `dx_segment_stats` with `decision_cols=["source","state"]`.
+3. Call `dx_time_stability` on the top candidates to confirm persistence.
+4. Call `dx_counterfactual` with `action="throttle"` and `keep_pct=0.03`.
+5. Call `dx_evidence_rows` for narrative grounding.
+6. Call `dx_memo` to validate the board/operator memos.
+7. Call `dx_report` to render the final HTML + JSON.
+
+**Output location:** `finance_output/dx_report_etelequote_demo.html` (self-contained, double-click to open).
+
+### What the report includes
+
+- **Executive summary** — big-number headline ($ identified + % of EBITDA), top-3 list, coverage %, CSS EBITDA bridge (baseline → post-top-3 → post-all).
+- **Per-opportunity card** — segment, archetype, difficulty, persistence, embedded quarterly trend chart (base64 PNG, no external images), board memo, operator memo, validation flags.
+- **JSON sidecar** — contract documented in `docs/opportunity_map_schema.md`. Consume from LP reporting pipelines.
+
+### Trigger phrases
+
+The main `/finance` router recognizes Decision Diagnostic requests from plain English:
+
+- "diagnose decisions"
+- "find hidden losses"
+- "where are we losing money"
+- "cross-section analysis"
+- "run the diagnostic"
+- "what's destroying EBITDA"
+
+### Expected timing
+
+| Phase | Duration (80k-lead demo) |
+|---|---|
+| Ingest + validate | ~1 second |
+| Segment search + persistence + counterfactual | ~2 seconds |
+| Memo validation + report render | <1 second |
+| **Total** | **<5 seconds** |
+
+---
+
 ## Sample Data
 
 A sample portfolio CSV is included at `demo/sample_portfolio.csv` for testing the ML tools:
@@ -578,8 +662,8 @@ Claude-Finance/
 │   ├── .claude-plugin/
 │   │   └── plugin.json              # Plugin manifest
 │   ├── .mcp.json                    # Plugin MCP config
-│   ├── commands/                    # 18 slash commands (.md files)
-│   └── skills/                      # 16 skill definitions
+│   ├── commands/                    # 19 slash commands (.md files)
+│   └── skills/                      # 17 skill definitions
 │       ├── finance/SKILL.md
 │       └── private-equity/          # 15 PE skill directories
 ├── tests/                           # 265 tests across 26 files
