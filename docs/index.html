@@ -255,6 +255,24 @@ footer { padding: 4rem 0; text-align: center; }
 .footer-author { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle); font-size: 0.85rem; color: var(--text-muted); }
 .footer-author a { color: var(--accent); text-decoration: none; }
 
+/* MODULES (DX + BX) */
+.modules { padding: 8rem 0; border-bottom: 1px solid var(--border-subtle); background: var(--bg-secondary); position: relative; }
+.modules-intro { text-align: center; margin-bottom: 4rem; }
+.modules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.module-card { padding: 2.5rem; border: 1px solid var(--border); border-radius: 14px; background: var(--bg-card); transition: all 0.3s ease; position: relative; overflow: hidden; }
+.module-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.module-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.6; }
+.module-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.module-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; padding: 0.35rem 0.7rem; background: var(--accent-dim); color: var(--accent); border-radius: 6px; letter-spacing: 0.08em; }
+.module-head h3 { font-family: 'Instrument Serif', serif; font-size: 1.65rem; font-weight: 400; line-height: 1.2; letter-spacing: -0.01em; flex: 1; min-width: 0; }
+.module-lede { color: var(--text-secondary); font-size: 1rem; line-height: 1.7; margin-bottom: 1.75rem; }
+.module-pipeline { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 1.75rem; padding: 1.25rem; background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 10px; }
+.pipe-stage { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-primary); padding: 0.35rem 0.7rem; background: var(--bg-card-hover); border: 1px solid var(--border-subtle); border-radius: 5px; white-space: nowrap; }
+.pipe-arrow { color: var(--text-muted); font-size: 0.85rem; }
+.module-cta { display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 0.75rem; }
+.module-cta code { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--accent); background: transparent; }
+.module-cta .meta { font-size: 0.78rem; color: var(--text-muted); }
+
 /* RESPONSIVE */
 @media (max-width: 900px) {
   .origin-layout, .python-grid, .persona-grid { grid-template-columns: 1fr; gap: 3rem; }
@@ -264,6 +282,7 @@ footer { padding: 4rem 0; text-align: center; }
   .stats-grid { grid-template-columns: repeat(3, 1fr); }
   .nav-links { display: none; }
   .cmd-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+  .modules-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
   .hero h1 { font-size: 2.5rem; }
@@ -272,6 +291,9 @@ footer { padding: 4rem 0; text-align: center; }
   .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .conv-bubble { max-width: 95%; }
+  .module-card { padding: 1.75rem; }
+  .module-pipeline { padding: 1rem; }
+  .pipe-stage { font-size: 0.68rem; padding: 0.3rem 0.55rem; }
 }
 </style>
 </head>
@@ -281,13 +303,13 @@ footer { padding: 4rem 0; text-align: center; }
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <a href="#" class="nav-logo"><span class="dot"></span> Claude Finance <span style="font-weight:400; color:var(--text-muted); font-size:0.7rem; margin-left:0.3rem;">v1.4.0</span></a>
+    <a href="#" class="nav-logo"><span class="dot"></span> Claude Finance <span style="font-weight:400; color:var(--text-muted); font-size:0.7rem; margin-left:0.3rem;">v1.5.0</span></a>
     <ul class="nav-links">
       <li><a href="#story">Story</a></li>
       <li><a href="#tools">Tools</a></li>
       <li><a href="#commands">Commands</a></li>
+      <li><a href="#modules">Modules</a></li>
       <li><a href="#roles">Walkthroughs</a></li>
-      <li><a href="#stack">Stack</a></li>
       <li><a href="#install" class="nav-cta">Get Started</a></li>
     </ul>
   </div>
@@ -298,11 +320,11 @@ footer { padding: 4rem 0; text-align: center; }
   <div class="hero-glow"></div>
   <div class="container">
     <div class="hero-content">
-      <div class="badge">v1.4.0 &nbsp;·&nbsp; Open Source &nbsp;·&nbsp; MIT License</div>
+      <div class="badge">v1.5.0 &nbsp;·&nbsp; Open Source &nbsp;·&nbsp; MIT License</div>
       <h1>Institutional analytics.<br>In <em>plain English.</em></h1>
-      <p class="hero-sub">11 MCP tools. 18 slash commands. 15 PE workflows. 2 professional personas. All runnable in natural language. Built by an engineer who spent 15 years watching Wall Street wait for tools like this.</p>
+      <p class="hero-sub">40+ MCP tools. 21 slash commands. 15 PE workflows. Plus two premium modules — DX decision diagnostic and BX cross-portco benchmarking. All runnable in natural language. Built by an engineer who spent 15 years watching Wall Street wait for tools like this.</p>
       <div class="hero-actions">
-        <a href="https://github.com/bolnet/Claude-Finance" class="btn-primary">
+        <a href="https://github.com/bolnet/claude-finance" class="btn-primary">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
           View on GitHub
         </a>
@@ -316,10 +338,10 @@ footer { padding: 4rem 0; text-align: center; }
 <div class="stats-bar">
   <div class="container">
     <div class="stats-grid">
-      <div><div class="stat-big">11</div><div class="stat-desc">MCP Tools</div></div>
-      <div><div class="stat-big">18</div><div class="stat-desc">Slash Commands</div></div>
+      <div><div class="stat-big">40+</div><div class="stat-desc">MCP Tools</div></div>
+      <div><div class="stat-big">21</div><div class="stat-desc">Slash Commands</div></div>
       <div><div class="stat-big">15</div><div class="stat-desc">PE Workflows</div></div>
-      <div><div class="stat-big">265</div><div class="stat-desc">Tests Passing</div></div>
+      <div><div class="stat-big">700+</div><div class="stat-desc">Tests Passing</div></div>
       <div><div class="stat-big">3</div><div class="stat-desc">Install Methods</div></div>
     </div>
   </div>
@@ -449,13 +471,13 @@ footer { padding: 4rem 0; text-align: center; }
   </div>
 </section>
 
-<!-- 11 TOOLS -->
+<!-- CORE TOOLS -->
 <section class="tools" id="tools">
   <div class="container">
     <div class="section-header">
-      <span class="section-label">11 MCP Tools</span>
+      <span class="section-label">Core MCP Tools</span>
       <h2>Three categories. Zero code.</h2>
-      <p>Environment checks, market analysis, and ML workflows, all accessible in natural language.</p>
+      <p>The foundation layer — market analysis, ML workflows, and environment checks. 30+ more tools power the DX and BX modules below.</p>
     </div>
 
     <div class="tools-category">
@@ -544,18 +566,18 @@ footer { padding: 4rem 0; text-align: center; }
   </div>
 </section>
 
-<!-- 18 SLASH COMMANDS -->
+<!-- 21 SLASH COMMANDS -->
 <section class="commands" id="commands">
   <div class="container">
     <div class="section-header">
-      <span class="section-label">18 Slash Commands</span>
+      <span class="section-label">21 Slash Commands</span>
       <h2>Type a slash. Get institutional output.</h2>
-      <p>3 finance persona commands plus 15 private equity workflow commands.</p>
+      <p>3 finance personas, 15 private-equity workflows, and 3 analytical-module commands that trigger the DX and BX pipelines.</p>
     </div>
 
     <div class="cmd-section-label">Finance Personas (3)</div>
     <div class="cmd-grid">
-      <div class="cmd-chip"><div class="cmd-name">/finance</div><div class="cmd-desc">General-purpose analysis, routes to any of the 11 tools</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/finance</div><div class="cmd-desc">General-purpose analysis, routes to any of the 40+ tools</div></div>
       <div class="cmd-chip"><div class="cmd-name">/finance-analyst</div><div class="cmd-desc">Equity analyst lens: Sharpe first, single-stock focus</div></div>
       <div class="cmd-chip"><div class="cmd-name">/finance-pm</div><div class="cmd-desc">Portfolio manager lens: drawdown first, portfolio risk</div></div>
     </div>
@@ -577,6 +599,76 @@ footer { padding: 4rem 0; text-align: center; }
       <div class="cmd-chip"><div class="cmd-name">/score-prospect</div><div class="cmd-desc">ML classifier for prospects</div></div>
       <div class="cmd-chip"><div class="cmd-name">/profile-pipeline</div><div class="cmd-desc">CRM CSV profiling + EDA</div></div>
       <div class="cmd-chip"><div class="cmd-name">/ai-readiness</div><div class="cmd-desc">Portfolio company AI audit</div></div>
+    </div>
+
+    <div class="cmd-section-label">Analytical Modules (3)</div>
+    <div class="cmd-grid">
+      <div class="cmd-chip"><div class="cmd-name">/diagnose-decisions</div><div class="cmd-desc">DX — top cross-section decisions + EBITDA uplift</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/benchmark-corpus</div><div class="cmd-desc">BX — cross-portco ranking + archetype index</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/benchmark-trend</div><div class="cmd-desc">BX — within-portco time-series, closed vs new</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DX + BX MODULES -->
+<section class="modules" id="modules">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Featured Modules</span>
+      <h2>Two pipelines. Two answers a sponsor actually wants.</h2>
+      <p>Built on the core tools. Ship in minutes what consulting firms scope as multi-month engagements.</p>
+    </div>
+
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-head">
+          <span class="module-badge">DX</span>
+          <h3>Decision-Optimization Diagnostic</h3>
+        </div>
+        <p class="module-lede">Ingest a portfolio company's CRM, ERP, or ops data and auto-identify the top repeatable, high-volume decisions being made badly — ranked by modeled EBITDA uplift. Ends in a defensible memo with counterfactuals, not a generic AI-readiness scorecard.</p>
+        <div class="module-pipeline">
+          <span class="pipe-stage">ingest</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-stage">segment stats</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-stage">time stability</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-stage">counterfactual</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-stage">evidence</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-stage">memo + report</span>
+        </div>
+        <div class="module-cta">
+          <code>/diagnose-decisions</code>
+          <span class="meta">7 MCP tools · HTML + Markdown output</span>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-head">
+          <span class="module-badge">BX</span>
+          <h3>Cross-Portco Benchmarking</h3>
+        </div>
+        <p class="module-lede">Rank every portco against its fund peers by archetype. Track within-portco trend quarter-over-quarter — see what gaps closed, what risks are new. Ship the answer before the LP call, not after it.</p>
+        <div class="module-pipeline">
+          <span class="pipe-stage">ingest corpus</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-stage">archetype index</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-stage">peer group</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-stage">rank</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-stage">trend + delta</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-stage">report</span>
+        </div>
+        <div class="module-cta">
+          <code>/benchmark-corpus  ·  /benchmark-trend</code>
+          <span class="meta">8 MCP tools · cross-portco + time-series</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
