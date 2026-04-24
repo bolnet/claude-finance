@@ -42,6 +42,16 @@ from finance_mcp.dx import (
     dx_memo,
     dx_report,
 )
+from finance_mcp.bx import (
+    bx_ingest_corpus,
+    bx_portco_rank,
+    bx_archetype_index,
+    bx_peer_group,
+    bx_report,
+    bx_snapshot,
+    bx_trend,
+    bx_delta,
+)
 
 mcp = FastMCP("Finance MCP Server")
 
@@ -84,6 +94,16 @@ mcp.add_tool(dx_counterfactual)
 mcp.add_tool(dx_evidence_rows)
 mcp.add_tool(dx_memo)
 mcp.add_tool(dx_report)
+
+# Benchmarking (BX) — cross-portco + within-portco time-series
+mcp.add_tool(bx_ingest_corpus)
+mcp.add_tool(bx_portco_rank)
+mcp.add_tool(bx_archetype_index)
+mcp.add_tool(bx_peer_group)
+mcp.add_tool(bx_report)
+mcp.add_tool(bx_snapshot)
+mcp.add_tool(bx_trend)
+mcp.add_tool(bx_delta)
 
 
 @mcp.tool
