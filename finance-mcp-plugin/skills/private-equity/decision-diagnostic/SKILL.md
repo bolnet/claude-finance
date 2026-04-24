@@ -436,8 +436,23 @@ Per-opportunity memos (board and operator):
 
 <model_routing>
 
-For multi-model orchestration (when calling Claude API directly, not via Claude Code
-slash command), route stages to the cheapest model that delivers the required quality:
+**Default behavior — read this first:**
+
+When this skill runs via Claude Code (the `/diagnose-decisions` slash command),
+the model is **always your Claude Code session model** — typically **Opus** via
+your subscription. There is no model downgrade. No code in this repo imports
+`anthropic` or sets a `model=` parameter. The `dx_orchestrator.py` web pipeline
+is pure pandas with **zero LLM calls**.
+
+The routing table below is **future / external-API guidance only** — for a
+hypothetical client that calls the Anthropic SDK directly (e.g., a serverless
+deployment of the diagnostic). It does not affect Claude Code, Claude.ai, or
+the bundled web UI. Treat it as reference, not as runtime behavior.
+
+---
+
+For multi-model orchestration (only when calling the Anthropic SDK directly,
+NOT via Claude Code slash command), one possible cost-optimized routing:
 
 | Stage                                | Model                       | Effort     | Why                                |
 |--------------------------------------|-----------------------------|------------|------------------------------------|
@@ -448,9 +463,9 @@ slash command), route stages to the cheapest model that delivers the required qu
 | 6. Memo prose                        | Opus 4.7                    | high       | Defensible narrative writing       |
 | 7. Validation + report rendering     | Haiku 4.5                   | low        | Deterministic, schema-bound        |
 
-Cache the static skill body (this file's `<role>`, `<context>`, `<intents>`,
-`<examples>`, `<output_schema>`, `<narrative_rules>`) with `cache_control:
-{"type": "ephemeral"}` — it's ~5k tokens and changes only on skill version bumps.
+If you prefer single-model quality, run **Opus end-to-end** — that's the default
+when the skill is invoked through Claude Code and is the recommended configuration
+for highest fidelity.
 
 When invoked via Claude Code slash command, model routing is handled by the user's
 session model. Skill caching is automatic per-conversation.
