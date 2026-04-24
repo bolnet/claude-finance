@@ -53,3 +53,13 @@ demo/etelequote/policies.csv
 demo/etelequote/agents.csv
 demo/saas_pricing/deals.csv
 demo/saas_pricing/customers.csv
+
+# Root-level scratch artifacts (screenshots, scraped data, ad-hoc snapshots).
+# Anchored to repo root so legitimate images/JSON in docs/, src/, tests/ stay tracked.
+/*.png
+/politicians-*.json
+/portfolio-snapshot.md
+
+# Local-only docs (not for distribution)
+docs/superpowers/
+docs/system8_build_analysis_apr2026.md
