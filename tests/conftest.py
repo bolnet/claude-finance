@@ -1,8 +1,16 @@
 """Shared pytest fixtures for finance_mcp test suite."""
+import os
+import sys
 import pytest
 import pandas as pd
 import numpy as np
 from unittest.mock import MagicMock
+
+# Ensure the in-repo src/ wins over any stale editable-install path
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_SRC = os.path.abspath(os.path.join(_HERE, "..", "src"))
+if _SRC not in sys.path:
+    sys.path.insert(0, _SRC)
 
 
 @pytest.fixture

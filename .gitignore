@@ -40,6 +40,16 @@ ENV/
 
 # Generated outputs
 finance_output/
+.fastembed_cache/
+.playwright-mcp/
 
 # Memwright cache
 .memwright/
+MEMWRIGHT_CHANGES.md
+
+# Generated demo datasets (reproducible via demo/*/generate.py, seed=42)
+demo/etelequote/leads.csv
+demo/etelequote/policies.csv
+demo/etelequote/agents.csv
+demo/saas_pricing/deals.csv
+demo/saas_pricing/customers.csv

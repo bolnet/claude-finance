@@ -1,12 +1,12 @@
 {
   "name": "finance-mcp",
-  "version": "1.4.0",
-  "description": "Private Equity plugin for Claude Code — deal flow, portfolio monitoring, and ML-powered analytics for PE professionals. Powered by finance-mcp with 11 MCP tools.",
+  "version": "1.5.0",
+  "description": "Private Equity plugin for Claude Code — deal flow, portfolio monitoring, ML-powered analytics, and the Decision-Optimization Diagnostic that finds cross-section $ losses hidden in aggregate dashboards. Powered by finance-mcp with 18 MCP tools.",
   "author": {
     "name": "Finance MCP Project"
   },
   "homepage": "https://github.com/bolnet/Claude-Finance",
   "repository": "https://github.com/bolnet/Claude-Finance",
   "license": "MIT",
-  "keywords": ["finance", "stocks", "yfinance", "ml", "market-analysis", "portfolio", "mcp", "private-equity", "deal-flow", "due-diligence"]
+  "keywords": ["finance", "stocks", "yfinance", "ml", "market-analysis", "portfolio", "mcp", "private-equity", "deal-flow", "due-diligence", "decision-optimization", "value-creation", "ebitda"]
 }
