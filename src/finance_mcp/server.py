@@ -12,7 +12,7 @@ import sys
 import importlib
 
 from fastmcp import FastMCP
-from fastmcp.exceptions import ToolError
+
 from finance_mcp.providers import get_provider
 from finance_mcp.tools.price_chart import analyze_stock
 from finance_mcp.tools.returns import get_returns
@@ -33,26 +33,6 @@ from finance_mcp.tools.news import get_news
 from finance_mcp.tools.options_chain import get_options_chain
 from finance_mcp.tools.forex import forex_convert, forex_quote
 from finance_mcp.tools.crypto import crypto_snapshot, crypto_movers
-from finance_mcp.dx import (
-    dx_ingest,
-    dx_segment_stats,
-    dx_time_stability,
-    dx_counterfactual,
-    dx_evidence_rows,
-    dx_memo,
-    dx_report,
-)
-from finance_mcp.bx import (
-    bx_ingest_corpus,
-    bx_portco_rank,
-    bx_archetype_index,
-    bx_peer_group,
-    bx_report,
-    bx_snapshot,
-    bx_trend,
-    bx_delta,
-)
-
 mcp = FastMCP("Finance MCP Server")
 
 # Initialize the active data provider (reads DATA_PROVIDER env var)
@@ -86,24 +66,7 @@ mcp.add_tool(forex_quote)
 mcp.add_tool(crypto_snapshot)
 mcp.add_tool(crypto_movers)
 
-# Decision-Optimization Diagnostic (DX) — Claude-native, pandas-only
-mcp.add_tool(dx_ingest)
-mcp.add_tool(dx_segment_stats)
-mcp.add_tool(dx_time_stability)
-mcp.add_tool(dx_counterfactual)
-mcp.add_tool(dx_evidence_rows)
-mcp.add_tool(dx_memo)
-mcp.add_tool(dx_report)
-
-# Benchmarking (BX) — cross-portco + within-portco time-series
-mcp.add_tool(bx_ingest_corpus)
-mcp.add_tool(bx_portco_rank)
-mcp.add_tool(bx_archetype_index)
-mcp.add_tool(bx_peer_group)
-mcp.add_tool(bx_report)
-mcp.add_tool(bx_snapshot)
-mcp.add_tool(bx_trend)
-mcp.add_tool(bx_delta)
+# Note: PE workflows (DX + BX) live in https://github.com/bolnet/private-equity.
 
 
 @mcp.tool
