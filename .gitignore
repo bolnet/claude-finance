@@ -55,6 +55,8 @@ demo/saas_pricing/deals.csv
 demo/saas_pricing/customers.csv
 demo/lending_club/loans.csv
 demo/lending_club/performance.csv
+demo/regional_lenders/*/loans.csv
+demo/regional_lenders/*/performance.csv
 
 # Root-level scratch artifacts (screenshots, scraped data, ad-hoc snapshots).
 # Anchored to repo root so legitimate images/JSON in docs/, src/, tests/ stay tracked.
