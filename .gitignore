@@ -47,16 +47,7 @@ finance_output/
 .memwright/
 MEMWRIGHT_CHANGES.md
 
-# Generated demo datasets (reproducible via demo/*/generate.py, seed=42)
-demo/etelequote/leads.csv
-demo/etelequote/policies.csv
-demo/etelequote/agents.csv
-demo/saas_pricing/deals.csv
-demo/saas_pricing/customers.csv
-demo/lending_club/loans.csv
-demo/lending_club/performance.csv
-demo/regional_lenders/*/loans.csv
-demo/regional_lenders/*/performance.csv
+# PE-specific demo datasets moved to bolnet/private-equity
 
 # Root-level scratch artifacts (screenshots, scraped data, ad-hoc snapshots).
 # Anchored to repo root so legitimate images/JSON in docs/, src/, tests/ stay tracked.

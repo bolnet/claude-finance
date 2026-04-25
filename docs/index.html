@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Claude Finance - Institutional-Grade Analytics in Plain English</title>
-<meta name="description" content="Open-source AI skill for Claude Code. 11 MCP tools, 18 slash commands, 15 PE workflows. No code required.">
+<meta name="description" content="Open-source AI skill for Claude Code. 25+ MCP tools across stocks, options, ML scoring, and risk analytics. No code required.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -255,7 +255,7 @@ footer { padding: 4rem 0; text-align: center; }
 .footer-author { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle); font-size: 0.85rem; color: var(--text-muted); }
 .footer-author a { color: var(--accent); text-decoration: none; }
 
-/* MODULES (DX + BX) */
+/* (Module section removed — PE moved to bolnet/private-equity) */
 .modules { padding: 8rem 0; border-bottom: 1px solid var(--border-subtle); background: var(--bg-secondary); position: relative; }
 .modules-intro { text-align: center; margin-bottom: 4rem; }
 .modules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
@@ -310,7 +310,6 @@ footer { padding: 4rem 0; text-align: center; }
       <li><a href="#story">Story</a></li>
       <li><a href="#tools">Tools</a></li>
       <li><a href="#commands">Commands</a></li>
-      <li><a href="#modules">Modules</a></li>
       <li><a href="#roles">Walkthroughs</a></li>
       <li><a href="#install" class="nav-cta">Get Started</a></li>
     </ul>
@@ -324,7 +323,7 @@ footer { padding: 4rem 0; text-align: center; }
     <div class="hero-content">
       <div class="badge">v1.5.0 &nbsp;·&nbsp; Open Source &nbsp;·&nbsp; MIT License</div>
       <h1>Institutional analytics.<br>In <em>plain English.</em></h1>
-      <p class="hero-sub">40+ MCP tools. 21 slash commands. 15 PE workflows. Plus two premium modules — DX decision diagnostic and BX cross-portco benchmarking. All runnable in natural language. Built by an engineer who spent 15 years watching Wall Street wait for tools like this.</p>
+      <p class="hero-sub">25+ MCP tools across stocks, options, forex, crypto, fundamentals, and ML scoring. Three slash-command personas. All runnable in natural language. Built by an engineer who spent 15 years watching Wall Street wait for tools like this. <em style="color: var(--text-muted); font-size: 0.85rem;">PE workflows (DX, BX, IC memo, DD) live at <a href="https://github.com/bolnet/private-equity" style="color: var(--accent);">bolnet/private-equity</a>.</em></p>
       <div class="hero-actions">
         <a href="https://github.com/bolnet/claude-finance" class="btn-primary">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
@@ -340,10 +339,10 @@ footer { padding: 4rem 0; text-align: center; }
 <div class="stats-bar">
   <div class="container">
     <div class="stats-grid">
-      <div><div class="stat-big">40+</div><div class="stat-desc">MCP Tools</div></div>
-      <div><div class="stat-big">21</div><div class="stat-desc">Slash Commands</div></div>
-      <div><div class="stat-big">15</div><div class="stat-desc">PE Workflows</div></div>
-      <div><div class="stat-big">700+</div><div class="stat-desc">Tests Passing</div></div>
+      <div><div class="stat-big">25+</div><div class="stat-desc">MCP Tools</div></div>
+      <div><div class="stat-big">3</div><div class="stat-desc">Slash Commands</div></div>
+      <div><div class="stat-big">2</div><div class="stat-desc">Personas</div></div>
+      <div><div class="stat-big">500+</div><div class="stat-desc">Tests Passing</div></div>
       <div><div class="stat-big">3</div><div class="stat-desc">Install Methods</div></div>
     </div>
   </div>
@@ -479,7 +478,7 @@ footer { padding: 4rem 0; text-align: center; }
     <div class="section-header">
       <span class="section-label">Core MCP Tools</span>
       <h2>Three categories. Zero code.</h2>
-      <p>The foundation layer — market analysis, ML workflows, and environment checks. 30+ more tools power the DX and BX modules below.</p>
+      <p>The foundation layer — market analysis, ML workflows, and environment checks.</p>
     </div>
 
     <div class="tools-category">
@@ -572,110 +571,33 @@ footer { padding: 4rem 0; text-align: center; }
 <section class="commands" id="commands">
   <div class="container">
     <div class="section-header">
-      <span class="section-label">21 Slash Commands</span>
+      <span class="section-label">3 Slash Commands</span>
       <h2>Type a slash. Get institutional output.</h2>
-      <p>3 finance personas, 15 private-equity workflows, and 3 analytical-module commands that trigger the DX and BX pipelines.</p>
+      <p>Three finance personas. One auto-router and two role-specific lenses (analyst and PM).</p>
     </div>
 
     <div class="cmd-section-label">Finance Personas (3)</div>
     <div class="cmd-grid">
-      <div class="cmd-chip"><div class="cmd-name">/finance</div><div class="cmd-desc">General-purpose analysis, routes to any of the 40+ tools</div></div>
+      <div class="cmd-chip"><div class="cmd-name">/finance</div><div class="cmd-desc">General-purpose analysis, routes to any of the 25+ tools</div></div>
       <div class="cmd-chip"><div class="cmd-name">/finance-analyst</div><div class="cmd-desc">Equity analyst lens: Sharpe first, single-stock focus</div></div>
       <div class="cmd-chip"><div class="cmd-name">/finance-pm</div><div class="cmd-desc">Portfolio manager lens: drawdown first, portfolio risk</div></div>
     </div>
 
-    <div class="cmd-section-label">Private Equity Workflows (15)</div>
-    <div class="cmd-grid">
-      <div class="cmd-chip"><div class="cmd-name">/source</div><div class="cmd-desc">Source PE deal targets</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/screen-deal</div><div class="cmd-desc">Screen against fund criteria</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/dd-checklist</div><div class="cmd-desc">Sector-tailored DD checklist</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/dd-prep</div><div class="cmd-desc">DD meeting prep + red flags</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/ic-memo</div><div class="cmd-desc">Investment Committee memo</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/public-comps</div><div class="cmd-desc">Public market comp analysis</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/returns</div><div class="cmd-desc">IRR/MOIC with sensitivity</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/portfolio</div><div class="cmd-desc">Portfolio KPI dashboards</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/unit-economics</div><div class="cmd-desc">ARR cohorts, LTV/CAC</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/value-creation</div><div class="cmd-desc">EBITDA bridges, 100-day plans</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/liquidity-risk</div><div class="cmd-desc">ML-powered risk scoring</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/market-risk</div><div class="cmd-desc">Sharpe, drawdown, beta scan</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/score-prospect</div><div class="cmd-desc">ML classifier for prospects</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/profile-pipeline</div><div class="cmd-desc">CRM CSV profiling + EDA</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/ai-readiness</div><div class="cmd-desc">Portfolio company AI audit</div></div>
-    </div>
-
-    <div class="cmd-section-label">Analytical Modules (3)</div>
-    <div class="cmd-grid">
-      <div class="cmd-chip"><div class="cmd-name">/diagnose-decisions</div><div class="cmd-desc">DX — top cross-section decisions + EBITDA uplift</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/benchmark-corpus</div><div class="cmd-desc">BX — cross-portco ranking + archetype index</div></div>
-      <div class="cmd-chip"><div class="cmd-name">/benchmark-trend</div><div class="cmd-desc">BX — within-portco time-series, closed vs new</div></div>
+    <div style="margin-top: 2.5rem; padding: 1.5rem 1.75rem; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-card); font-size: 0.9rem;">
+      <div style="margin-bottom: 0.65rem; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted);">Private Equity</div>
+      <p style="margin-bottom: 0.85rem;">Looking for the PE workflows — DX decision diagnostic, BX cross-portco benchmarking, IC memos, DD checklists, value-creation plans? They moved to their own focused repo.</p>
+      <p style="font-size: 0.85rem; color: var(--text-secondary);">
+        <a href="https://github.com/bolnet/private-equity" style="color: var(--accent);">bolnet/private-equity →</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/bolnet/private-equity/tree/main/demo/regional_lenders" style="color: var(--accent);">5-lender BX demo →</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/bolnet/private-equity/tree/main/demo/lending_club" style="color: var(--accent);">Lending Club DX demo →</a>
+      </p>
     </div>
   </div>
 </section>
 
-<!-- DX + BX MODULES -->
-<section class="modules" id="modules">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-label">Featured Modules</span>
-      <h2>Two pipelines. Two answers a sponsor actually wants.</h2>
-      <p>Built on the core tools. Ship in minutes what consulting firms scope as multi-month engagements.</p>
-    </div>
-
-    <div class="modules-grid">
-      <div class="module-card">
-        <div class="module-head">
-          <span class="module-badge">DX</span>
-          <h3>Decision-Optimization Diagnostic</h3>
-        </div>
-        <p class="module-lede">Ingest a portfolio company's CRM, ERP, or ops data and auto-identify the top repeatable, high-volume decisions being made badly — ranked by modeled EBITDA uplift. Ends in a defensible memo with counterfactuals, not a generic AI-readiness scorecard.</p>
-        <div class="module-pipeline">
-          <span class="pipe-stage">ingest</span>
-          <span class="pipe-arrow">→</span>
-          <span class="pipe-stage">segment stats</span>
-          <span class="pipe-arrow">→</span>
-          <span class="pipe-stage">time stability</span>
-          <span class="pipe-arrow">→</span>
-          <span class="pipe-stage">counterfactual</span>
-          <span class="pipe-arrow">→</span>
-          <span class="pipe-stage">evidence</span>
-          <span class="pipe-arrow">→</span>
-          <span class="pipe-stage">memo + report</span>
-        </div>
-        <div class="module-cta">
-          <code>/diagnose-decisions</code>
-          <span class="meta">7 MCP tools · HTML + Markdown output</span>
-        </div>
-        <a href="/app/" class="module-try">Try it on your data →</a>
-      </div>
-
-      <div class="module-card">
-        <div class="module-head">
-          <span class="module-badge">BX</span>
-          <h3>Cross-Portco Benchmarking</h3>
-        </div>
-        <p class="module-lede">Rank every portco against its fund peers by archetype. Track within-portco trend quarter-over-quarter — see what gaps closed, what risks are new. Ship the answer before the LP call, not after it.</p>
-        <div class="module-pipeline">
-          <span class="pipe-stage">ingest corpus</span>
-          <span class="pipe-arrow">→</span>
-          <span class="pipe-stage">archetype index</span>
-          <span class="pipe-arrow">→</span>
-          <span class="pipe-stage">peer group</span>
-          <span class="pipe-arrow">→</span>
-          <span class="pipe-stage">rank</span>
-          <span class="pipe-arrow">→</span>
-          <span class="pipe-stage">trend + delta</span>
-          <span class="pipe-arrow">→</span>
-          <span class="pipe-stage">report</span>
-        </div>
-        <div class="module-cta">
-          <code>/benchmark-corpus  ·  /benchmark-trend</code>
-          <span class="meta">8 MCP tools · cross-portco + time-series</span>
-        </div>
-        <a href="https://github.com/bolnet/claude-finance/tree/main/demo/regional_lenders" class="module-try">See the 5-lender demo →</a>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- DX + BX MODULES (moved to bolnet/private-equity) -->
 
 <!-- PERSONAS -->
 <section class="personas" id="personas">
@@ -754,7 +676,7 @@ footer { padding: 4rem 0; text-align: center; }
 <section class="roles" id="roles">
   <div class="container">
     <div class="section-header">
-      <span class="section-label">6 Guided Walkthroughs</span>
+      <span class="section-label">5 Guided Walkthroughs</span>
       <h2>Built for how you actually work.</h2>
       <p>Role-specific workflows, because I've sat across the table from every one of these roles.</p>
     </div>
@@ -788,12 +710,6 @@ footer { padding: 4rem 0; text-align: center; }
         <h3>Anomaly Detection</h3>
         <div class="role-tools">ingest_csv</div>
         <p>Transaction data profiling, outlier detection prep, and ERP export cleanup.</p>
-      </div>
-      <div class="role-card">
-        <div class="role-title">Private Equity</div>
-        <h3>Due Diligence + ML</h3>
-        <div class="role-tools">ingest_csv · liquidity_predictor · investor_classifier</div>
-        <p>DD scoring, portfolio monitoring, LP segmentation. 15 dedicated slash commands.</p>
       </div>
     </div>
   </div>
@@ -831,11 +747,11 @@ footer { padding: 4rem 0; text-align: center; }
         <div class="stack-icon">⚡</div>
         <h3>Claude Finance</h3>
         <div class="stack-by">Open Source</div>
-        <p>Analytical horsepower: 11 tools, 18 commands, ML models, institutional-grade research.</p>
+        <p>Analytical horsepower: 25+ tools, ML models, institutional-grade research.</p>
         <div class="stack-tags">
           <span class="stack-tag" style="border-color:rgba(0,212,170,0.3); color:var(--accent);">Sharpe / Beta</span>
           <span class="stack-tag" style="border-color:rgba(0,212,170,0.3); color:var(--accent);">ML Models</span>
-          <span class="stack-tag" style="border-color:rgba(0,212,170,0.3); color:var(--accent);">15 PE Workflows</span>
+          <span class="stack-tag" style="border-color:rgba(0,212,170,0.3); color:var(--accent);">Options Greeks</span>
           <span class="stack-tag" style="border-color:rgba(0,212,170,0.3); color:var(--accent);">Personas</span>
         </div>
       </div>

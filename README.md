@@ -13,11 +13,13 @@ No Python. No tickets. No waiting.
 ## What you get
 
 - **Live portfolio dashboard** — positions, cost basis, allocation donut, day/all-time changes. Live prices via yfinance.
-- **11 MCP tools** — `analyze_stock`, `get_returns`, `get_volatility`, `get_risk_metrics`, `compare_tickers`, `correlation_map`, `ingest_csv`, `liquidity_predictor`, `investor_classifier`, `ping`, `validate_environment`
-- **18 slash commands** — 3 finance personas + 15 private equity workflows
-- **16 skill definitions** — focused reasoning scaffolds that teach Claude the method, the domain, and the expected output shape
-- **2 professional personas** — `/finance-analyst` (Sharpe-first, equity research lens) and `/finance-pm` (drawdown-first, portfolio risk lens)
-- **6 guided walkthroughs** — Equity Research, Hedge Fund PM, Investment Banking, FP&A, Accounting, Private Equity
+- **25+ MCP tools** — analyze_stock, returns, volatility, risk_metrics, compare_tickers, correlation_map, options_chain, forex, crypto, news, sec_filings, technicals, fundamentals, market_movers, ML scoring (`liquidity_predictor`, `investor_classifier`), and more
+- **3 slash commands** — `/finance` (auto-router), `/finance-analyst` (Sharpe-first equity research lens), `/finance-pm` (drawdown-first portfolio risk lens)
+- **5 guided walkthroughs** — Equity Research, Hedge Fund PM, Investment Banking, FP&A, Accounting
+
+> **Looking for the PE workflows?** DX (Decision-Optimization Diagnostic), BX
+> (Cross-Portco Benchmarking), IC memos, DD checklists, and value-creation plans
+> live in their own focused repo: **[bolnet/private-equity](https://github.com/bolnet/private-equity)**.
 
 ## Data layer
 
@@ -103,9 +105,9 @@ Three complementary surfaces for finance professionals:
 
 ## Project stats
 
-- 265 tests passing
+- 500+ tests passing (general-finance only — PE tests live in [bolnet/private-equity](https://github.com/bolnet/private-equity))
 - MIT licensed
-- 11 MCP tools · 18 slash commands · 16 skill definitions · 15 PE workflows
+- 25+ MCP tools · 3 slash commands · 2 personas
 
 ## About
 
