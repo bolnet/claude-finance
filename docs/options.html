@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Options &amp; Technicals — Finance</title>
+<meta name="description" content="Options chains with full Greeks, plus RSI, MACD, SMA, and Bollinger technical indicators — derivatives and signal processing in plain English.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="dot"></span> Finance</a>
+    <a href="index.html" class="nav-back">← back to index</a>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <div class="crumb"><a href="index.html">Finance</a> &nbsp;/&nbsp; Options &amp; Technicals</div>
+    <span class="kicker" style="margin-top: 1rem;">Derivatives · Signal Processing</span>
+    <h1>The chain prices the <em>future.</em><br>The indicators describe the <em>present.</em></h1>
+    <p class="lede">An options chain with full Greeks tells you what the market is paying for convexity, time decay, and volatility — right now, by strike, by expiry. Technical indicators take the same price series and ask a different question: <strong>has the recent path changed</strong>. Both are noisy. Both are useful when the user knows what they're being told.</p>
+    <p class="sig">Notes from <a href="https://www.linkedin.com/in/surendrasingh/">Surendra Singh</a>.</p>
+  </div>
+</header>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 01</span>
+    <h2>The chain object.</h2>
+    <p><code class="inline">get_options_chain(ticker, expiry)</code> returns the full chain — calls and puts, all strikes — with mid-price, bid/ask, open interest, volume, implied vol, and Greeks. Greeks are sourced from the Massive provider where available; the math is Black-Scholes with dividend yield, and yes, you can argue with that choice (American exercise, early-exercise premium for puts, dividend timing). For a quick read on positioning, BS is fine. For a market-making book, you build your own pricer.</p>
+    <pre class="code"><span class="fn">get_options_chain</span>(
+    ticker: <span class="typ">str</span>,
+    expiry: <span class="typ">str</span> = <span class="str">""</span>,            <span class="com"># YYYY-MM-DD; default: nearest weekly</span>
+    option_type: <span class="typ">str</span> = <span class="str">"both"</span>,    <span class="com"># "calls" | "puts" | "both"</span>
+    moneyness: <span class="typ">str</span> = <span class="str">"all"</span>,        <span class="com"># "itm" | "atm" | "otm" | "all"</span>
+) -> <span class="typ">str</span></pre>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 02</span>
+    <h2>The Greeks, one sentence each.</h2>
+    <div class="greeks">
+      <div class="greek">
+        <div class="gk-sym">Δ</div>
+        <div class="gk-name">Delta</div>
+        <p>Price sensitivity to a $1 move in the underlying. Calls 0 to 1, puts -1 to 0. ATM ≈ 0.5. The hedge ratio.</p>
+      </div>
+      <div class="greek">
+        <div class="gk-sym">Γ</div>
+        <div class="gk-name">Gamma</div>
+        <p>Rate of change of Δ. Highest at the money, near expiry. Long gamma is the desk that profits from volatility, period.</p>
+      </div>
+      <div class="greek">
+        <div class="gk-sym">Θ</div>
+        <div class="gk-name">Theta</div>
+        <p>Time decay per day. Always negative for a long option. The cost you pay for being right slowly.</p>
+      </div>
+      <div class="greek">
+        <div class="gk-sym">ν</div>
+        <div class="gk-name">Vega</div>
+        <p>Sensitivity to a 1-vol-point move in implied volatility. Long vega benefits when IV expands — earnings, macro, stress.</p>
+      </div>
+      <div class="greek">
+        <div class="gk-sym">ρ</div>
+        <div class="gk-name">Rho</div>
+        <p>Sensitivity to interest rates. Mostly ignored on short-dated equity options. Matters on LEAPS and rates products.</p>
+      </div>
+      <div class="greek">
+        <div class="gk-sym">IV</div>
+        <div class="gk-name">Implied Volatility</div>
+        <p>Not a Greek, but the input to all of them. The vol the market is pricing in — backed out of the option premium itself.</p>
+      </div>
+    </div>
+    <div class="callout"><p>"Δ tells you the hedge. Γ tells you how fast the hedge breaks. Θ tells you what you're paying to wait. ν tells you what happens when the world panics."</p></div>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 03</span>
+    <h2>Technical indicators — RSI, MACD, SMA, Bollinger.</h2>
+    <p><code class="inline">get_technical_indicator(ticker, indicator, ...)</code> dispatches into one of four computations. They share a common preprocessing step: fetch adjusted close, drop NaNs, run the formula, return the series with a written interpretation. Indicators are cheap to compute. The expensive part is interpretation, and that's the part most retail tools hand-wave.</p>
+    <pre class="code">RSI  = <span class="num">100</span> - (<span class="num">100</span> / (<span class="num">1</span> + (avg_gain / avg_loss)))     <span class="com"># 14-period default</span>
+MACD = EMA(<span class="num">12</span>) - EMA(<span class="num">26</span>);  signal = EMA<sub>9</sub>(MACD)        <span class="com"># crossovers, histogram</span>
+SMA  = price.<span class="fn">rolling</span>(window).<span class="fn">mean</span>()                  <span class="com"># 20 / 50 / 200</span>
+BB   = SMA ± <span class="num">2</span> * price.<span class="fn">rolling</span>(window).<span class="fn">std</span>()         <span class="com"># Bollinger bands</span></pre>
+    <div class="note">
+      <div class="note-tag">Design note</div>
+      <p>RSI &gt; 70 is "overbought" only relative to its own recent history. In a strong uptrend, RSI lives above 70 for weeks. The indicator did not become wrong — the user's interpretation rule was wrong. The library returns the number; the persona ( <code class="inline">/finance-analyst</code> ) writes the interpretation in context. <em>Numbers without context are just numbers.</em></p>
+    </div>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 04</span>
+    <h2>Signal vs. noise — when indicators fail.</h2>
+    <p>Three failure modes worth naming, because every indicator-driven workflow runs into them:</p>
+    <ul>
+      <li><strong>Regime mismatch.</strong> RSI mean-reversion signals work in chop and break in trends. MACD crossovers work in trends and chop in chop. Picking the indicator before identifying the regime is backwards.</li>
+      <li><strong>Look-ahead bias.</strong> Computing an EMA up to today and then "signaling" yesterday's close uses future information. Easy to write, easy to ship, slow to detect in PnL.</li>
+      <li><strong>Multiple-testing inflation.</strong> If you run twenty indicators against a name, one will look prophetic by chance. The fact that you can read it on a chart does not make it real.</li>
+    </ul>
+    <p>The library does not flag these for you. <em>The library returns numbers.</em> The persona writes the interpretation, the analyst owns the call. That's the right division of labor.</p>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 05</span>
+    <h2>What this page is not.</h2>
+    <ul>
+      <li><strong>Not an options pricer.</strong> Greeks come from the data provider, not from a local Black-Scholes engine. If you need American early-exercise premium or a custom vol surface, you build it.</li>
+      <li><strong>Not a strategy builder.</strong> No iron condor wizard, no spread P&amp;L diagrams, no payoff-at-expiry plots. Those belong in a dedicated options platform.</li>
+      <li><strong>Not an auto-trader.</strong> No order entry. Indicator output is text. The trade decision is yours.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>One of eight category pages — <a href="index.html">return to index</a>.</p>
+    <div class="pages">
+      <a href="portfolio.html">Portfolio</a>
+      <a href="markets.html">Markets</a>
+      <a href="options.html" class="current">Options</a>
+      <a href="cross-asset.html">Cross-Asset</a>
+      <a href="fundamentals.html">Fundamentals</a>
+      <a href="quant-ml.html">Quant / ML</a>
+      <a href="personas.html">Personas</a>
+      <a href="data-layer.html">Data Layer</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

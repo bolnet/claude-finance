@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fundamentals &amp; Filings — Finance</title>
+<meta name="description" content="Dividends, splits, short interest, SEC filings, risk factors, news, market movers, and ticker metadata.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="dot"></span> Finance</a>
+    <a href="index.html" class="nav-back">← back to index</a>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <div class="crumb"><a href="index.html">Finance</a> &nbsp;/&nbsp; Fundamentals &amp; Filings</div>
+    <span class="kicker" style="margin-top: 1rem;">Filings · Corporate Actions · News</span>
+    <h1>The 10-K is the highest-signal text<br>in <em>finance.</em> Most of it goes unread.</h1>
+    <p class="lede">Eight tools that surface the qualitative layer behind the price: SEC filings, risk factors, dividend history, splits, short interest, news flow, market movers, and ticker metadata. Numbers are the surface; <strong>the why is in the prose</strong>, and the prose is in the filings.</p>
+    <p class="sig">Notes from <a href="https://www.linkedin.com/in/surendrasingh/">Surendra Singh</a>.</p>
+  </div>
+</header>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 01</span>
+    <h2>The fundamental surface.</h2>
+    <pre class="code"><span class="com"># filings &amp; risk factors</span>
+<span class="fn">get_sec_filings</span>(ticker, form_type=<span class="str">"10-K"</span>, limit=<span class="num">5</span>)
+<span class="fn">get_risk_factors</span>(ticker)                 <span class="com"># Item 1A excerpt from latest 10-K</span>
+
+<span class="com"># corporate actions</span>
+<span class="fn">get_dividends</span>(ticker, limit=<span class="num">20</span>)
+<span class="fn">get_splits</span>(ticker, limit=<span class="num">20</span>)
+<span class="fn">get_short_interest</span>(ticker)              <span class="com"># days-to-cover, % of float</span>
+
+<span class="com"># news &amp; market color</span>
+<span class="fn">get_news</span>(ticker=<span class="kw">None</span>, limit=<span class="num">10</span>)          <span class="com"># ticker-scoped or broad</span>
+<span class="fn">market_movers</span>(direction=<span class="str">"gainers"</span>, exchange=<span class="str">"US"</span>, limit=<span class="num">10</span>)
+
+<span class="com"># metadata</span>
+<span class="fn">get_ticker_details</span>(ticker)               <span class="com"># sector, industry, market cap, employees</span>
+<span class="fn">search_tickers</span>(query, limit=<span class="num">10</span>)           <span class="com"># resolve names &rarr; symbols</span></pre>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 02</span>
+    <h2>Risk factors — the alpha hiding in the boilerplate.</h2>
+    <p>Item 1A of every 10-K is the company telling investors, in writing and under legal liability, what could go wrong. Most readers skim it because it sounds boilerplate. <em>The signal is in the changes year-over-year.</em> A factor that appears for the first time, or shifts from a one-paragraph mention to a four-paragraph mention, is management telling you what they are now actually worried about.</p>
+    <div class="callout"><p>"Read the risk factors. Then read last year's risk factors. The diff is the alpha."</p></div>
+    <p><code class="inline">get_risk_factors(ticker)</code> returns the latest section so a Claude prompt can compare it to the prior year on demand. The library does not perform the diff for you — that's a judgment call about what counts as a meaningful change. The tool surfaces the source text. <strong>The reading is still yours.</strong></p>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 03</span>
+    <h2>Dividends, splits, short interest.</h2>
+    <p>Three corporate-action signals, three different audiences:</p>
+    <ul>
+      <li><strong>Dividends.</strong> Yield, growth rate, payout ratio. Income investors care about the level; quality investors care about whether it has ever been cut. <code class="inline">get_dividends</code> returns the full series — <em>the cuts are visible</em>.</li>
+      <li><strong>Splits.</strong> Mostly cosmetic — they don't change the economics. But they shift options strikes, ETF rebalances, and retail attention. The split log is needed to reconcile prices across the event boundary.</li>
+      <li><strong>Short interest.</strong> Days-to-cover and percent of float. High short interest is a sentiment signal in either direction — bear thesis from sophisticated capital, or fuel for a squeeze. <em>Numbers, no narrative — the narrative is yours.</em></li>
+    </ul>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 04</span>
+    <h2>News &amp; market movers.</h2>
+    <p><code class="inline">get_news</code> with a ticker returns ticker-scoped headlines. Without a ticker, it returns the broad market news flow. <code class="inline">market_movers</code> returns the day's biggest gainers, losers, or most-actives by exchange. Both are sentiment surfaces — useful for a quick read on what the desk is talking about, dangerous if treated as signal.</p>
+    <div class="note">
+      <div class="note-tag">Design note</div>
+      <p>News tools return headlines and timestamps, not engagement metrics, sentiment scores, or "news score" rollups. The reason is that any sentiment score is a model on top of the headlines, and that model belongs in the user's prompt where they can inspect it — <em>not buried inside a tool that pretends the score is data</em>. Stuffing a black-box sentiment number into a "fundamentals API" is how trust degrades.</p>
+    </div>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 05</span>
+    <h2>Metadata — the connective tissue.</h2>
+    <p><code class="inline">get_ticker_details</code> and <code class="inline">search_tickers</code> are unglamorous and load-bearing. The first returns sector, industry, market cap, employee count, headquarters, exchange listing, and CIK — the fields that make a ticker comparable to its peers. The second resolves "Apple" to "AAPL" and "Berkshire" to both "BRK.A" and "BRK.B" so the rest of the stack doesn't have to guess.</p>
+    <p>The reason these matter: cross-sectional analysis is impossible without consistent metadata. Comparing AAPL's margin to "the rest of tech" requires a sector classifier; correlating short interest to performance across an industry requires an industry classifier. <strong>Without metadata, every analysis is one ticker at a time.</strong></p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 06</span>
+    <h2>What this page is not.</h2>
+    <ul>
+      <li><strong>Not a financial-statement parser.</strong> Income statements, balance sheets, and cash-flow statements live in the filings; the library exposes filing access, not pre-parsed line items. Parsing tens of thousands of company-specific 10-K formats is its own product.</li>
+      <li><strong>Not a sentiment engine.</strong> News headlines, no scores. The sentiment model is a prompt away — built where the analyst can see it.</li>
+      <li><strong>Not a fundamental-screening platform.</strong> No "stocks with P/E &lt; 15 and dividend yield &gt; 3%" wizard. That's a filter UI, not a data layer.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>One of eight category pages — <a href="index.html">return to index</a>.</p>
+    <div class="pages">
+      <a href="portfolio.html">Portfolio</a>
+      <a href="markets.html">Markets</a>
+      <a href="options.html">Options</a>
+      <a href="cross-asset.html">Cross-Asset</a>
+      <a href="fundamentals.html" class="current">Fundamentals</a>
+      <a href="quant-ml.html">Quant / ML</a>
+      <a href="personas.html">Personas</a>
+      <a href="data-layer.html">Data Layer</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

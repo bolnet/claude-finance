@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineering Notes — A Multi-Agent AI System in Regulated Finance</title>
+<meta name="description" content="Production multi-agent AI for a member-facing financial services product. Architecture, routing, eval infrastructure, and guardrails for fiduciary contexts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="dot"></span> Finance</a>
+    <a href="index.html" class="nav-back">← back to index</a>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <div class="crumb"><a href="index.html">Finance</a> &nbsp;/&nbsp; Engineering Notes &nbsp;/&nbsp; Multi-Agent AI</div>
+    <span class="kicker" style="margin-top: 1rem;">Engineering Notes · Production Multi-Agent AI</span>
+    <h1>A multi-agent system that<br>survives <em>regulatory review.</em></h1>
+    <p class="lede">Notes from four years and counting as <strong>Staff AI Engineer</strong> at a stealth-mode financial services startup, building a member-facing AI product where every response has fiduciary weight. Stack details are deliberately specific. Company and product names are deliberately not.</p>
+    <p class="sig">Notes from <a href="https://www.linkedin.com/in/surendrasingh/">Surendra Singh</a> — Sep 2021 – present · SF Bay Area · hybrid.</p>
+  </div>
+</header>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 01</span>
+    <h2>The shape of the system.</h2>
+    <p>A member opens the app and asks a question that, in the wrong hands, becomes a regulatory letter — <em>"should I refinance my mortgage,"</em> <em>"rebalance my 401(k) toward tech,"</em> <em>"is my emergency fund sized right at this income."</em> The product has to answer in plain English, in real time, across concurrent sessions, with a written record that holds up six months later in a compliance review.</p>
+    <p>The architecture, top-to-bottom:</p>
+    <div class="arch">
+      <div class="lab">Request flow</div>
+      <div class="row"><span class="k">1 · Routing layer</span><span class="v">Intent classification + session context &rarr; specialist dispatch</span></div>
+      <div class="row"><span class="k">2 · Specialists</span><span class="v">planning · budgeting · investment · credit · ...</span></div>
+      <div class="row"><span class="k">3 · Guardrail layer</span><span class="v">Input filter · retrieval boundary · response gate · audit trail</span></div>
+      <div class="row"><span class="k">4 · Response</span><span class="v">Composed output, written interpretation, source attribution</span></div>
+      <div class="row"><span class="k">·</span><span class="v">Multi-turn conversation state managed across concurrent sessions</span></div>
+    </div>
+    <p>The interesting parts are not the boxes — they're the seams between them.</p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 02</span>
+    <h2>Routing — replacing the LLM with an ML-first hybrid.</h2>
+    <p>The first version of the routing layer was a pure-LLM dispatcher: prompt the model with the user's message and the catalog of specialists, ask which one to call. It worked for demos and broke quietly in production. <strong>Two specific failures, both predictable in hindsight:</strong></p>
+    <ul>
+      <li><strong>Latency.</strong> Routing was an LLM call before the actual answer was an LLM call. Two round-trips per user message — measurable, frustrating, and unnecessary for the 80% of queries with unambiguous intent.</li>
+      <li><strong>Ambiguity handling.</strong> Multi-intent queries (<em>"can I afford this house given my current 401(k) trajectory"</em> — that's planning <em>and</em> investment) routed to whichever intent the LLM happened to anchor on. Non-deterministic, hard to explain, brutal to evaluate.</li>
+    </ul>
+    <p>The replacement is a hybrid that puts the deterministic stuff first:</p>
+    <pre class="code"><span class="com"># 1) per-intent classifiers — DeBERTa-v3, fine-tuned on labeled traffic</span>
+intent_scores = {
+    intent: classifier.<span class="fn">predict_proba</span>(message, session_context)
+    <span class="kw">for</span> intent, classifier <span class="kw">in</span> intent_classifiers.items()
+}
+
+<span class="com"># 2) session-level Transformer embedding of the last N turns</span>
+context_vec = session_encoder.<span class="fn">encode</span>(history[-N:])
+intent_scores = <span class="fn">rerank_with_context</span>(intent_scores, context_vec)
+
+<span class="com"># 3) LLM fallback ONLY when no intent clears the calibrated threshold</span>
+<span class="kw">if</span> <span class="fn">max</span>(intent_scores.values()) &lt; CONFIDENCE_THRESHOLD:
+    <span class="kw">return</span> <span class="fn">llm_route</span>(message, history)
+<span class="kw">return</span> <span class="fn">argmax</span>(intent_scores)</pre>
+    <div class="note">
+      <div class="note-tag">Design note</div>
+      <p>The classifier is one model per intent, not one multi-class model. Per-intent gives you a calibrated probability per specialist, makes multi-intent dispatch trivial (route to all that clear threshold), and lets you ship a new specialist by training one classifier instead of retraining the whole router. The downside is more models to maintain. Worth it.</p>
+    </div>
+    <p>The result: routing latency dropped substantially, accuracy improved on ambiguous multi-intent queries, and — the part that matters in regulated environments — <strong>routing decisions became deterministic enough to be reproducible in audit</strong>. Same input, same routing decision, every time, with a stored confidence vector.</p>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 03</span>
+    <h2>Eval — 18 metrics, multi-turn trajectories, self-hosted.</h2>
+    <p>Evaluation infrastructure is where most LLM products go to die. The product reads well in demos, ships with vibes, and the first sign of trouble is a member complaint or a compliance flag. Built the eval stack from the ground up because the off-the-shelf options were either too generic (BLEU, ROUGE — useless here) or required sending production data to a third-party SaaS (non-starter for compliance).</p>
+    <h3>Eighteen metrics, three families.</h3>
+    <ul>
+      <li><strong>Routing.</strong> Intent accuracy, multi-intent recall, refusal precision, fallback rate.</li>
+      <li><strong>Specialist response.</strong> Retrieval relevance, factual grounding, hallucination rate, source attribution coverage, response coherence, tone calibration.</li>
+      <li><strong>Trajectory.</strong> Multi-turn consistency, context retention, contradiction rate across turns, escalation handling, close-out completeness.</li>
+    </ul>
+    <h3>Multi-turn trajectory evaluation.</h3>
+    <p>Single-message eval is necessary and not sufficient. The actual product is a conversation — five, ten, twenty turns — and the failures that bite are <em>across-turn</em> failures: the system forgets what the user said three turns ago, contradicts an earlier number, switches tone mid-conversation. Static benchmarks miss all of that.</p>
+    <p>Built a persona-driven simulator that exercises the full <strong>N × M matrix</strong> of intents × user personas. Each persona has a profile (income band, life stage, risk appetite, communication style) and a script template. The simulator runs a multi-turn dialogue, the production system responds, the eval scores the entire trajectory.</p>
+    <pre class="code"><span class="kw">for</span> persona <span class="kw">in</span> personas:
+    <span class="kw">for</span> intent <span class="kw">in</span> intents:
+        trajectory = simulator.<span class="fn">run</span>(persona, intent, max_turns=<span class="num">12</span>)
+        scores     = eval_suite.<span class="fn">score_trajectory</span>(trajectory)
+        eval_db.<span class="fn">log</span>(persona, intent, scores, git_sha=CURRENT_SHA)</pre>
+    <h3>CI/CD integration.</h3>
+    <p>Every PR runs the eval. Every release is tagged with the eval results. Regressions on any of the 18 metrics block merge by default. Self-hosted on infrastructure inside the compliance perimeter — no production conversations leave the building, ever.</p>
+    <div class="callout"><p>"Without an eval harness, every release is a guess. With one, every release is a measurement. The two products diverge fast."</p></div>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 04</span>
+    <h2>Guardrails for fiduciary contexts.</h2>
+    <p>"Guardrails" in most LLM stacks means <em>"a regex and a prayer."</em> In a fiduciary context that does not survive contact with a regulator. Designed three layers, each with a specific failure mode it is built to catch:</p>
+    <h3>Input filtering.</h3>
+    <p>Before the input reaches any specialist: PII detection and redaction (the user's account numbers do not need to be in the LLM context window), jailbreak/prompt-injection detection (a member trying — usually playfully — to talk the system into giving advice it should not), and topic boundary checks (if the question is medical or legal, decline cleanly with an escalation path, do not improvise).</p>
+    <h3>Retrieval boundaries.</h3>
+    <p>Specialist agents fetch context from internal data sources. What they can fetch is gated by the user's entitlement and the query context. A budgeting specialist asked a credit question does not get to read credit data — the wrong specialist is itself a failure mode, and the architecture refuses rather than improvises.</p>
+    <h3>Response gate.</h3>
+    <p>Before output reaches the user, a final compliance check: forbidden phrasings (anything resembling unlicensed advice), required disclosures (fact-specific, regulator-approved), source attribution coverage (every numeric claim links to its source), and tone calibration (the system is not allowed to be overconfident on questions that warrant nuance). <strong>Full audit trail</strong> — message in, every guardrail decision, every specialist invocation, every retrieval, the final response — stored, indexed, queryable. Reproducibility is a compliance property.</p>
+    <div class="note">
+      <div class="note-tag">Design note</div>
+      <p>The guardrail layer is the most expensive thing to retrofit. Building it after the fact means tearing apart the response composition path and rebuilding it with the right hooks. We built it first, before the specialists shipped to a single member. Every "let's get the demo working and add safety later" plan I have ever seen has cost more in rework than the time it saved up front.</p>
+    </div>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 05</span>
+    <h2>Compliance as a co-author, not a reviewer.</h2>
+    <p>The single largest architectural decision of the project was non-technical: <strong>compliance and legal in the design conversations, not the review meetings.</strong> Most AI products invert this — build first, present to compliance, get a list of things to fix, ship a patched version. That cycle is expensive, demoralizing, and produces systems that pass review by accident rather than by design.</p>
+    <p>The inversion: compliance partners reviewed the routing taxonomy before classifiers were trained. Legal reviewed the disclosure language before specialists were prompted with it. The auditing schema was a joint document. The result is an AI system that survives regulatory review rather than requires post-hoc patching.</p>
+    <div class="callout"><p>"The thing that makes a regulated product different is not the technology. It's whose name is on the architecture diagram."</p></div>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 06</span>
+    <h2>What this system is not.</h2>
+    <ul>
+      <li><strong>Not a chatbot.</strong> The product has fiduciary obligations. The conversation is the product surface; it is not casual.</li>
+      <li><strong>Not an MVP.</strong> Live, in production, with real members and real financial decisions on the other end.</li>
+      <li><strong>Not a research project.</strong> The constraint is shipping safely. Pushing the frontier is a side effect, not the goal.</li>
+      <li><strong>Not a place where "AI replaces the human."</strong> It is a place where AI shows up to the conversation prepared so the human side of the company can do work that requires actual judgment.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Engineering note · accompanies the eight category pages — <a href="index.html">return to index</a>.</p>
+    <div class="pages">
+      <a href="portfolio.html">Portfolio</a>
+      <a href="markets.html">Markets</a>
+      <a href="options.html">Options</a>
+      <a href="cross-asset.html">Cross-Asset</a>
+      <a href="fundamentals.html">Fundamentals</a>
+      <a href="quant-ml.html">Quant / ML</a>
+      <a href="personas.html">Personas</a>
+      <a href="data-layer.html">Data Layer</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

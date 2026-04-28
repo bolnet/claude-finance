@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Layer — Finance</title>
+<meta name="description" content="Three providers behind a single DataProvider Protocol — yfinance, Massive (57 endpoints), Plaid (v1.5 broker sync). Swap via env var.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="dot"></span> Finance</a>
+    <a href="index.html" class="nav-back">← back to index</a>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <div class="crumb"><a href="index.html">Finance</a> &nbsp;/&nbsp; Data Layer</div>
+    <span class="kicker" style="margin-top: 1rem;">Protocol · Providers · Swappable</span>
+    <h1>One Protocol. <em>Three providers.</em><br>The tools never know.</h1>
+    <p class="lede">Every analytical tool calls <code class="inline">provider.fetch_price_history()</code>. The <code class="inline">provider</code> is a duck-typed object — it can be yfinance, Massive, or Plaid, and the tool code is identical. <strong>This is the boring abstraction that makes everything else possible.</strong></p>
+    <p class="sig">Notes from <a href="https://www.linkedin.com/in/surendrasingh/">Surendra Singh</a>.</p>
+  </div>
+</header>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 01</span>
+    <h2>The Protocol.</h2>
+    <pre class="code"><span class="kw">from</span> typing <span class="kw">import</span> Protocol
+
+<span class="kw">class</span> <span class="typ">DataProvider</span>(Protocol):
+    <span class="kw">def</span> <span class="fn">fetch_price_history</span>(self, ticker: <span class="typ">str</span>, start: <span class="typ">str</span>, end: <span class="typ">str</span> | <span class="kw">None</span>) -> <span class="typ">DataFrame</span>: ...
+    <span class="kw">def</span> <span class="fn">get_adjusted_prices</span>(self, df: <span class="typ">DataFrame</span>) -> <span class="typ">Series</span>: ...
+    <span class="kw">def</span> <span class="fn">get_options_chain</span>(self, ticker: <span class="typ">str</span>, expiry: <span class="typ">str</span>) -> <span class="typ">DataFrame</span>: ...
+    <span class="kw">def</span> <span class="fn">get_news</span>(self, ticker: <span class="typ">str</span> | <span class="kw">None</span>, limit: <span class="typ">int</span>) -> <span class="typ">list</span>[<span class="typ">dict</span>]: ...
+    <span class="com"># ... and so on, one method per capability</span></pre>
+    <p>Python's <code class="inline">Protocol</code> is structural typing — any object with the right methods satisfies the contract, no inheritance required. yfinance, Massive, and Plaid are independent classes. None of them inherit from <code class="inline">DataProvider</code>. They all <em>are</em> one, because they all have the methods.</p>
+    <div class="note">
+      <div class="note-tag">Design note</div>
+      <p>Inheritance would have been a mistake. yfinance and Massive have nothing in common at the implementation level — different auth, different serialization, different error semantics. Protocol-based duck typing lets each provider be optimized for its own internals while still being substitutable. <em>This is what "good interface" actually means.</em></p>
+    </div>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 02</span>
+    <h2>The three providers, today.</h2>
+    <div class="providers">
+      <div class="provider shipped">
+        <div class="p-tag">✓ Default · Shipped</div>
+        <h4>yfinance</h4>
+        <p>Zero-config. Public Yahoo endpoints. Adequate for individual research, slow for cross-sectional work, rate-limited under load.</p>
+      </div>
+      <div class="provider shipped">
+        <div class="p-tag">✓ Shipped</div>
+        <h4>Massive</h4>
+        <p>57 endpoints behind the same Protocol — stocks, options + Greeks, forex, crypto, indices, news, SEC filings, technicals, fundamentals, movers.</p>
+      </div>
+      <div class="provider roadmap">
+        <div class="p-tag">→ Roadmap v1.5</div>
+        <h4>Plaid</h4>
+        <p>Connect a brokerage in 20 seconds. Positions and cost basis from Fidelity, Schwab, E*TRADE, Vanguard, IBKR, Robinhood, and 12,000+ institutions.</p>
+      </div>
+    </div>
+    <pre class="code"><span class="com"># swap via environment variable, no code change</span>
+DATA_PROVIDER=yfinance     <span class="com"># default</span>
+DATA_PROVIDER=massive      <span class="com"># requires MASSIVE_API_KEY</span>
+DATA_PROVIDER=plaid        <span class="com"># v1.5, requires PLAID_CLIENT_ID + PLAID_SECRET</span></pre>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 03</span>
+    <h2>yfinance — the right default for the wrong reasons.</h2>
+    <p>yfinance is not the most reliable data source. It is rate-limited, occasionally serves stale data, and depends on Yahoo's web endpoints which Yahoo can break at any time without notice. <strong>It is the right default anyway.</strong> Why: zero config, zero cost, works for the user-trying-the-tool-for-the-first-time. The bar for "default" is "does the README example work without an API key in 90 seconds." yfinance clears it. Nothing else does.</p>
+    <p>The consequence: yfinance is for evaluation and individual analyst work. The moment the workload becomes cross-sectional or production, the recommendation is to switch to Massive. The Protocol means switching is one env var.</p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 04</span>
+    <h2>Massive — the production layer.</h2>
+    <p>Wrapped via a thin client (<code class="inline">finance_mcp/providers/massive/client.py</code>) and a set of mappers that translate Massive's response shape into the Protocol's expected types. The split matters:</p>
+    <ul>
+      <li><strong><code class="inline">client.py</code></strong> — HTTP, auth, retries, JSON parsing. Knows about Massive.</li>
+      <li><strong><code class="inline">mappers.py</code></strong> — translates Massive's payloads into the canonical pandas shapes. Knows about both.</li>
+      <li><strong><code class="inline">provider.py</code></strong> — implements the Protocol methods by composing client + mappers. Knows only about the Protocol.</li>
+    </ul>
+    <p>If Massive changes their schema tomorrow, only the mappers change. The tools and the Protocol are insulated. <em>This is what "vendor risk mitigation" looks like at the code level.</em></p>
+    <div class="arch">
+      <div class="lab">Massive provider — internal layout</div>
+      <div class="row"><span class="k">client.py</span><span class="v">HTTP, auth, retries</span><span class="s">~120 LOC</span></div>
+      <div class="row"><span class="k">mappers.py</span><span class="v">Massive payload &rarr; pandas / dict</span><span class="s">~200 LOC</span></div>
+      <div class="row"><span class="k">stocks.py</span><span class="v">price history, ticker info, splits, dividends</span><span class="s">~150 LOC</span></div>
+      <div class="row"><span class="k">options.py</span><span class="v">chain + Greeks</span><span class="s">~80 LOC</span></div>
+      <div class="row"><span class="k">currencies.py</span><span class="v">FX rates and crypto</span><span class="s">~60 LOC</span></div>
+      <div class="row"><span class="k">indices.py</span><span class="v">benchmark snapshots</span><span class="s">~40 LOC</span></div>
+      <div class="row"><span class="k">provider.py</span><span class="v">Protocol composition</span><span class="s">~100 LOC</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 05</span>
+    <h2>Plaid (v1.5) — the audience shift.</h2>
+    <p>yfinance and Massive give the user a way to type tickers and get math. Plaid changes the top of the funnel: the user authenticates a brokerage, and the book arrives. Same downstream tools. New audience — the analyst who never typed tickers because that wasn't the bottleneck.</p>
+    <p>The Plaid integration adds two Protocol methods:</p>
+    <pre class="code"><span class="kw">def</span> <span class="fn">get_positions</span>(self, account_id: <span class="typ">str</span>) -> <span class="typ">list</span>[<span class="typ">Holding</span>]: ...
+<span class="kw">def</span> <span class="fn">get_cost_basis</span>(self, account_id: <span class="typ">str</span>, ticker: <span class="typ">str</span>) -> <span class="typ">float</span>: ...
+
+<span class="kw">@dataclass</span>(frozen=<span class="kw">True</span>)
+<span class="kw">class</span> <span class="typ">Holding</span>:
+    ticker:     <span class="typ">str</span>
+    shares:     <span class="typ">float</span>
+    cost_basis: <span class="typ">float</span>
+    account:    <span class="typ">str</span></pre>
+    <p>Read-only. No order entry, no execution, no custody. The integration is an account-linking convenience layer — <strong>not a brokerage.</strong></p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 06</span>
+    <h2>What this page is not.</h2>
+    <ul>
+      <li><strong>Not a market data vendor.</strong> The library does not republish prices. Each provider keeps its own license and rate limits.</li>
+      <li><strong>Not a tick database.</strong> Daily bars only. Intraday is a different problem with different storage and a different user.</li>
+      <li><strong>Not a normalization layer for everything.</strong> The Protocol covers the methods the tools actually use. Adding a method just because some provider has it is how interfaces rot.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>One of eight category pages — <a href="index.html">return to index</a>.</p>
+    <div class="pages">
+      <a href="portfolio.html">Portfolio</a>
+      <a href="markets.html">Markets</a>
+      <a href="options.html">Options</a>
+      <a href="cross-asset.html">Cross-Asset</a>
+      <a href="fundamentals.html">Fundamentals</a>
+      <a href="quant-ml.html">Quant / ML</a>
+      <a href="personas.html">Personas</a>
+      <a href="data-layer.html" class="current">Data Layer</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

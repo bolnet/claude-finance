@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markets — Finance</title>
+<meta name="description" content="Single-ticker market analysis — price, returns, volatility, and risk metrics derived from 252 trading days of adjusted close.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="dot"></span> Finance</a>
+    <a href="index.html" class="nav-back">← back to index</a>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <div class="crumb"><a href="index.html">Finance</a> &nbsp;/&nbsp; Markets</div>
+    <span class="kicker" style="margin-top: 1rem;">Markets · Single-Asset Analytics</span>
+    <h1>One ticker. Adjusted close. <em>252 days.</em><br>The rest is arithmetic.</h1>
+    <p class="lede">Six tools, one primitive: the adjusted-close price series. Returns, volatility, and risk metrics each fall out of that series with three lines of pandas. The hard part is not the math — it's <strong>which window, which adjustment, which benchmark</strong>, and the answers are not in the textbook.</p>
+    <p class="sig">Notes from <a href="https://www.linkedin.com/in/surendrasingh/">Surendra Singh</a> — risk and analytics systems at Merrill Lynch and Fidelity.</p>
+  </div>
+</header>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 01</span>
+    <h2>The single-ticker primitive.</h2>
+    <p>Every Markets tool starts the same way: fetch price history, get adjusted close. Adjustment is non-negotiable — it folds in dividends and splits so the return series is comparable across corporate actions. A $200 stock that splits 4-for-1 doesn't drop 75%; the unadjusted series says it did, and naive code computes a -75% daily return. <strong>This is how mispriced backtests are born.</strong></p>
+    <pre class="code"><span class="com"># shipped surface — six tools, one primitive</span>
+<span class="fn">analyze_stock</span>(ticker, start, end=<span class="str">""</span>)         <span class="com"># price chart + trend summary</span>
+<span class="fn">get_returns</span>(ticker, start, end=<span class="str">""</span>)           <span class="com"># daily + cumulative</span>
+<span class="fn">get_volatility</span>(ticker, start, end=<span class="str">""</span>)        <span class="com"># annualized + 21-day rolling</span>
+<span class="fn">get_risk_metrics</span>(ticker, start, end=<span class="str">""</span>)      <span class="com"># Sharpe, drawdown, beta vs ^GSPC</span>
+<span class="fn">compare_tickers</span>(tickers, start, end=<span class="str">""</span>)      <span class="com"># normalized cumulative return chart</span>
+<span class="fn">correlation_map</span>(tickers, start, end=<span class="str">""</span>)      <span class="com"># pairwise return correlation heatmap</span>
+
+<span class="com"># shared adapter — the only place yfinance/Massive is touched</span>
+provider.<span class="fn">fetch_price_history</span>(ticker, start, end) -> DataFrame
+provider.<span class="fn">get_adjusted_prices</span>(df) -> Series</pre>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 02</span>
+    <h2>Returns — arithmetic, log, and the difference that kills models.</h2>
+    <p>Daily arithmetic returns sum poorly across time but multiply correctly. Log returns sum correctly across time but break down for large moves. The library returns arithmetic for display (because that's what the user expects to see in percent), and computes log internally where compounding matters.</p>
+    <pre class="code">daily   = prices.<span class="fn">pct_change</span>().<span class="fn">dropna</span>()        <span class="com"># arithmetic</span>
+cum     = (<span class="num">1</span> + daily).<span class="fn">cumprod</span>() - <span class="num">1</span>             <span class="com"># compounded — what you actually earned</span>
+log_r   = np.<span class="fn">log</span>(prices / prices.<span class="fn">shift</span>(<span class="num">1</span>)).<span class="fn">dropna</span>()  <span class="com"># used internally for vol</span></pre>
+    <div class="note">
+      <div class="note-tag">Design note</div>
+      <p>The naive sum of daily arithmetic returns is wrong. A +50% day followed by a −50% day leaves you at 75% of capital, not 100%. Anyone who has watched a quant intern present "average daily return × 252" has seen this go badly. The cumulative product is the only honest answer.</p>
+    </div>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 03</span>
+    <h2>Volatility — realized, rolling, and regime.</h2>
+    <p><code class="inline">get_volatility</code> returns two numbers: annualized standard deviation of daily log returns (a single point estimate over the window) and a 21-day rolling realized vol (a series, useful for spotting regime changes). <strong>One number lies; two numbers tell the story.</strong></p>
+    <pre class="code">vol_annualized = log_returns.<span class="fn">std</span>() * np.<span class="fn">sqrt</span>(<span class="num">252</span>)
+vol_rolling    = log_returns.<span class="fn">rolling</span>(<span class="num">21</span>).<span class="fn">std</span>() * np.<span class="fn">sqrt</span>(<span class="num">252</span>)</pre>
+    <p>Why √252? Variance scales linearly with time under the IID assumption; standard deviation scales with the square root. 252 is the conventional count of US trading days in a year. The IID assumption is wrong (returns cluster — vol begets vol — which is why GARCH exists), but for a quick read on a single name, √252 is the convention every desk uses. <em>Picking your battles.</em></p>
+    <p>The rolling 21-day window matters more than the headline number. Tesla annualized at 24% over a year tells you nothing about whether the last six weeks have been 12% or 60%. The rolling series tells you whether you're inside or outside the regime when you're reading the report.</p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 04</span>
+    <h2>Risk metrics, exactly as shipped.</h2>
+    <p>Sharpe, max drawdown, and beta against ^GSPC. The full per-holding decomposition is covered in the <a href="portfolio.html" style="color:var(--accent);">Portfolio</a> page; here is the math, in isolation.</p>
+    <pre class="code"><span class="kw">def</span> <span class="fn">_compute_risk_metrics</span>(returns, benchmark_returns) -> <span class="typ">dict</span>:
+    sharpe = (returns.<span class="fn">mean</span>() / returns.<span class="fn">std</span>()) * np.<span class="fn">sqrt</span>(<span class="num">252</span>)
+
+    wealth       = (<span class="num">1</span> + returns).<span class="fn">cumprod</span>()
+    max_drawdown = ((wealth - wealth.<span class="fn">cummax</span>()) / wealth.<span class="fn">cummax</span>()).<span class="fn">min</span>()
+
+    aligned = pd.<span class="fn">concat</span>([returns, benchmark_returns], axis=<span class="num">1</span>).<span class="fn">dropna</span>()
+    cov     = np.<span class="fn">cov</span>(aligned.iloc[:, <span class="num">0</span>], aligned.iloc[:, <span class="num">1</span>])
+    beta    = <span class="typ">float</span>(cov[<span class="num">0</span>, <span class="num">1</span>] / cov[<span class="num">1</span>, <span class="num">1</span>])
+
+    <span class="kw">return</span> {<span class="str">"sharpe"</span>: <span class="typ">float</span>(sharpe), <span class="str">"max_drawdown"</span>: <span class="typ">float</span>(max_drawdown), <span class="str">"beta"</span>: beta}</pre>
+    <div class="callout"><p>"Sharpe is risk-adjusted return. Max drawdown is the loss you actually had to live with. Beta is what the market did <em>to</em> you. Three numbers, three different questions, three different audiences."</p></div>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 05</span>
+    <h2>What this page is not.</h2>
+    <ul>
+      <li><strong>Not a backtest engine.</strong> No walk-forward, no slippage model, no transaction costs. Sharpe over a window ≠ strategy Sharpe.</li>
+      <li><strong>Not a factor model.</strong> Beta is single-factor against ^GSPC. No Fama-French, no Carhart momentum. Add them when the question demands them.</li>
+      <li><strong>Not a regime classifier.</strong> Rolling vol shows the regime; it does not name it. <em>Naming the regime is the analyst's job, not the tool's.</em></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>One of eight category pages — <a href="index.html">return to index</a>.</p>
+    <div class="pages">
+      <a href="portfolio.html">Portfolio</a>
+      <a href="markets.html" class="current">Markets</a>
+      <a href="options.html">Options</a>
+      <a href="cross-asset.html">Cross-Asset</a>
+      <a href="fundamentals.html">Fundamentals</a>
+      <a href="quant-ml.html">Quant / ML</a>
+      <a href="personas.html">Personas</a>
+      <a href="data-layer.html">Data Layer</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personas — Finance</title>
+<meta name="description" content="Three slash commands — /finance auto-router, /finance-analyst equity research lens, /finance-pm portfolio risk lens.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="dot"></span> Finance</a>
+    <a href="index.html" class="nav-back">← back to index</a>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <div class="crumb"><a href="index.html">Finance</a> &nbsp;/&nbsp; Personas</div>
+    <span class="kicker" style="margin-top: 1rem;">/finance · /finance-analyst · /finance-pm</span>
+    <h1>The persona is a <em>re-ranking of attention.</em><br>Not a different model.</h1>
+    <p class="lede">Three slash commands. They call the same tools, against the same data, in the same order. The difference is which number leads the report, what it gets compared against, and what the suggested next step is. <strong>Framing is the deliverable.</strong> The math is the same.</p>
+    <p class="sig">Notes from <a href="https://www.linkedin.com/in/surendrasingh/">Surendra Singh</a>.</p>
+  </div>
+</header>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 01</span>
+    <h2>The three commands.</h2>
+    <pre class="code">/finance              <span class="com"># auto-router — classifies intent, dispatches to the right tool</span>
+/finance-analyst      <span class="com"># equity-research lens — Sharpe-first, ticker-as-coverage</span>
+/finance-pm           <span class="com"># portfolio-manager lens — drawdown-first, ticker-as-position</span></pre>
+    <p>Each command loads a SKILL.md prompt that frames the conversation. The skill defines the intent classifier, the lens, and the constraints (which numbers to lead with, which to suppress, what next-step suggestion to write). The MCP tools below it do not change. <em>Three skills, one tool layer.</em></p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 02</span>
+    <h2>/finance — the auto-router.</h2>
+    <p>The default. Classifies the user's request into one of seven intents, then dispatches:</p>
+    <table class="risk-table">
+      <thead><tr><th>Intent</th><th>Trigger phrases</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>environment-check</td><td>"validate environment", "is everything installed"</td><td><code>validate_environment</code></td></tr>
+        <tr><td>health-check</td><td>"ping", "are you running"</td><td><code>ping</code></td></tr>
+        <tr><td>stock-analysis</td><td>"price chart", "show me [TICKER]"</td><td><code>analyze_stock</code></td></tr>
+        <tr><td>market-metrics</td><td>"Sharpe", "drawdown", "beta", "vol"</td><td><code>get_returns</code> / <code>get_volatility</code> / <code>get_risk_metrics</code></td></tr>
+        <tr><td>multi-ticker</td><td>"compare A vs B", "correlation"</td><td><code>compare_tickers</code> / <code>correlation_map</code></td></tr>
+        <tr><td>ml-liquidity</td><td>"liquidity model", "predict liquidity"</td><td><code>liquidity_predictor</code></td></tr>
+        <tr><td>ml-investor</td><td>"investor classifier", "segment investors"</td><td><code>investor_classifier</code></td></tr>
+      </tbody>
+    </table>
+    <p>If the intent is ambiguous, the skill instruction is to <strong>ask one clarifying question</strong> and wait. No code generation before clarification. This single rule prevents the most common failure mode of LLM tool-calling — confidently dispatching the wrong tool because the prompt was under-specified.</p>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 03</span>
+    <h2>/finance-analyst — equity research lens.</h2>
+    <p>Frames every ticker as a security under research coverage. Optimized for buy-side and sell-side note consumers. The lens decides what gets the headline:</p>
+    <div class="holdings">
+      <div class="lens">
+        <div class="lens-tag">Lead</div>
+        <h4>Sharpe ratio</h4>
+        <p>Risk-adjusted return is the universal coverage metric. Compare it to sector peers and to the index.</p>
+        <div class="leads">Beta means <span>stock-level market sensitivity</span><br>Next step: <span>compare to sector peers</span></div>
+      </div>
+      <div class="lens right">
+        <div class="lens-tag">Suppress</div>
+        <h4>Portfolio context</h4>
+        <p>The reader does not own the book. Drawdowns are noted but not led; correlation maps are not the deliverable.</p>
+        <div class="leads">Tone: <span>note-style, single-name focus</span><br>Audience: <span>research consumer, IC member</span></div>
+      </div>
+    </div>
+    <pre class="code">❯ /finance-analyst initiate coverage on NVDA</pre>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 04</span>
+    <h2>/finance-pm — portfolio manager lens.</h2>
+    <p>Frames every ticker as a holding in the book. Optimized for risk committee and LP reporting. The lens reorders the same numbers:</p>
+    <div class="holdings">
+      <div class="lens">
+        <div class="lens-tag">Lead</div>
+        <h4>Max drawdown</h4>
+        <p>Worst-case loss already realized in the window — the number a risk committee actually asks about.</p>
+        <div class="leads">Beta means <span>systematic exposure of the book</span><br>Next step: <span>check correlation against other holdings</span></div>
+      </div>
+      <div class="lens right">
+        <div class="lens-tag">Suppress</div>
+        <h4>Single-name color</h4>
+        <p>The reader owns the book. Sharpe is reported but not led; sector commentary lives in the analyst lens, not here.</p>
+        <div class="leads">Tone: <span>risk-committee memo</span><br>Audience: <span>PM, CRO, LP</span></div>
+      </div>
+    </div>
+    <pre class="code">❯ /finance-pm review risk on my holdings: AAPL, NVDA, JPM</pre>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 05</span>
+    <h2>Why three, not thirty.</h2>
+    <p>The temptation, on a stack like this, is to ship a persona for every job title — analyst, PM, IB, FP&A, accounting, retail, advisor, family office, treasury. The temptation is wrong. Each persona is a maintenance surface; each new persona is a confusion vector for the user (<em>which one do I pick?</em>); and beyond two or three, the lenses stop being meaningfully different.</p>
+    <div class="callout"><p>"Two professional lenses cover most of the value. The third — the auto-router — exists because users don't always know which lens they need."</p></div>
+    <p>The walkthroughs on the index page (Equity Research, Hedge Fund PM, Investment Banking, FP&A, Accounting) cover role-specific workflows on top of these two lenses. <strong>Workflows multiply. Lenses don't.</strong></p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 06</span>
+    <h2>What this page is not.</h2>
+    <ul>
+      <li><strong>Not a roleplay system.</strong> The persona is a prompt that re-ranks output, not a character. There is no "Warren Buffett mode."</li>
+      <li><strong>Not access control.</strong> Anyone can call any persona. The lens is editorial, not permissioned.</li>
+      <li><strong>Not a workflow engine.</strong> The persona is per-message. Multi-step workflows belong in the walkthroughs, which compose tool calls explicitly.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>One of eight category pages — <a href="index.html">return to index</a>.</p>
+    <div class="pages">
+      <a href="portfolio.html">Portfolio</a>
+      <a href="markets.html">Markets</a>
+      <a href="options.html">Options</a>
+      <a href="cross-asset.html">Cross-Asset</a>
+      <a href="fundamentals.html">Fundamentals</a>
+      <a href="quant-ml.html">Quant / ML</a>
+      <a href="personas.html" class="current">Personas</a>
+      <a href="data-layer.html">Data Layer</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

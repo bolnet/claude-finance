@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quant / ML — Finance</title>
+<meta name="description" content="Two scikit-learn pipelines on real finance CSVs — liquidity regression and investor classification, with split-before-fit discipline.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="dot"></span> Finance</a>
+    <a href="index.html" class="nav-back">← back to index</a>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <div class="crumb"><a href="index.html">Finance</a> &nbsp;/&nbsp; Quant / ML</div>
+    <span class="kicker" style="margin-top: 1rem;">scikit-learn · Pipelines · Persistence</span>
+    <h1>Two models. <em>One CSV ingestion primitive.</em><br>Boring on purpose.</h1>
+    <p class="lede">A linear regression on liquidity risk and a random-forest classifier on investor segment — both with auto-EDA, split-before-fit, persisted artifacts, and explicit RMSE / R² evaluation. <strong>The choice not to use deep learning here is the design.</strong> The data is tabular, the features are interpretable, and a regulator may need to read this code in a year.</p>
+    <p class="sig">Notes from <a href="https://www.linkedin.com/in/surendrasingh/">Surendra Singh</a> — production ML systems with explicit precision targets.</p>
+  </div>
+</header>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 01</span>
+    <h2>One ingestion primitive, two models.</h2>
+    <pre class="code"><span class="com"># auto-detect structure, IQR-clean, profile</span>
+<span class="fn">ingest_csv</span>(csv_path, target_column=<span class="str">""</span>) -> <span class="typ">str</span>
+
+<span class="com"># model 1 — regression: continuous score in [0, 1]</span>
+<span class="fn">liquidity_predictor</span>(csv_path, target_column=<span class="str">"liquidity_risk"</span>)
+<span class="fn">predict_liquidity</span>(client_features: <span class="typ">dict</span>) -> <span class="typ">str</span>     <span class="com"># LOW / MODERATE / HIGH bucket at presentation time</span>
+
+<span class="com"># model 2 — classification: discrete segment</span>
+<span class="fn">investor_classifier</span>(csv_path, target_column=<span class="str">"segment"</span>)
+<span class="fn">classify_investor</span>(profile: <span class="typ">dict</span>) -> <span class="typ">str</span></pre>
+    <p>Both train tools save a joblib artifact under <code class="inline">finance_output/models/</code>. Both predict tools load the artifact and score one row. <strong>The artifact is the contract</strong> — fitted preprocessing and the model travel together, so feature scaling, one-hot encoding, and the model itself are never out of sync.</p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 02</span>
+    <h2>EDA automation — the part most pipelines skip.</h2>
+    <p><code class="inline">ingest_csv</code> runs before any model: detects column types, drops constant columns, removes IQR outliers on numeric features, and writes summary statistics plus a charts directory. It is not glamorous; it is the step that decides whether the model that follows is honest.</p>
+    <pre class="code"><span class="kw">def</span> <span class="fn">_detect_structure</span>(df: pd.<span class="typ">DataFrame</span>) -> <span class="typ">dict</span>:
+    <span class="kw">return</span> {
+        <span class="str">"numeric"</span>:     [c <span class="kw">for</span> c <span class="kw">in</span> df.columns <span class="kw">if</span> pd.api.types.<span class="fn">is_numeric_dtype</span>(df[c])],
+        <span class="str">"categorical"</span>: [c <span class="kw">for</span> c <span class="kw">in</span> df.columns <span class="kw">if</span> pd.api.types.<span class="fn">is_object_dtype</span>(df[c])],
+        <span class="str">"constant"</span>:    [c <span class="kw">for</span> c <span class="kw">in</span> df.columns <span class="kw">if</span> df[c].<span class="fn">nunique</span>(dropna=<span class="kw">True</span>) &lt;= <span class="num">1</span>],
+        <span class="str">"high_null"</span>:   [c <span class="kw">for</span> c <span class="kw">in</span> df.columns <span class="kw">if</span> df[c].<span class="fn">isna</span>().<span class="fn">mean</span>() &gt; <span class="num">0.5</span>],
+    }</pre>
+    <div class="note">
+      <div class="note-tag">Design note</div>
+      <p>Outlier removal happens <em>before</em> the train/test split, on numeric columns only. This is a defensible asymmetry: outlier removal is part of dataset hygiene, not part of the model's learned distribution. Remove outliers post-split and your test set looks cleaner than production data — your evaluation lies. <strong>This is the kind of bug that ships a model.</strong></p>
+    </div>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 03</span>
+    <h2>Liquidity regression — the sklearn pipeline, intact.</h2>
+    <pre class="code">X_train, X_test, y_train, y_test = <span class="fn">train_test_split</span>(X, y, test_size=<span class="num">0.2</span>, random_state=<span class="num">42</span>)
+
+pipe = <span class="fn">Pipeline</span>([
+    (<span class="str">"prep"</span>, <span class="fn">ColumnTransformer</span>([
+        (<span class="str">"num"</span>, <span class="fn">StandardScaler</span>(), numeric_cols),
+        (<span class="str">"cat"</span>, <span class="fn">OneHotEncoder</span>(handle_unknown=<span class="str">"ignore"</span>), categorical_cols),
+    ])),
+    (<span class="str">"reg"</span>, <span class="fn">LinearRegression</span>()),
+])
+
+pipe.<span class="fn">fit</span>(X_train, y_train)               <span class="com"># fit ONLY on train</span>
+preds = pipe.<span class="fn">predict</span>(X_test)
+rmse  = <span class="fn">root_mean_squared_error</span>(y_test, preds)
+r2    = <span class="fn">r2_score</span>(y_test, preds)
+
+joblib.<span class="fn">dump</span>(pipe, <span class="str">"finance_output/models/liquidity_pipeline.joblib"</span>)</pre>
+    <p>Why regression, not classification: the target <code class="inline">liquidity_risk</code> ∈ [0, 1] is a continuous probability. Bucketing it into LOW / MODERATE / HIGH for the UI is fine; bucketing during training discards information. RMSE and R² report on the regression. <strong>Confusion matrices would lie about a problem that isn't classification.</strong></p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 04</span>
+    <h2>Investor classifier — random forest, three classes.</h2>
+    <p><code class="inline">investor_classifier</code> trains a <code class="inline">RandomForestClassifier</code> on a CSV of investor profile attributes, predicting one of <em>conservative / moderate / aggressive</em>. Same preprocessing pattern as the regression: <code class="inline">ColumnTransformer</code> with <code class="inline">StandardScaler</code> + <code class="inline">OneHotEncoder</code>, fitted inside the pipeline so the artifact is self-contained.</p>
+    <p>Why random forest: with mixed-type tabular features (credit score, debt ratio, region, age, income, risk tolerance, product preference) and modest sample sizes, RF gives interpretable feature importance, handles non-linearities without feature engineering, and resists overfitting through depth and bagging. <em>It is the default for a reason.</em></p>
+    <pre class="code">pipe = <span class="fn">Pipeline</span>([
+    (<span class="str">"prep"</span>, prep),
+    (<span class="str">"clf"</span>,  <span class="fn">RandomForestClassifier</span>(n_estimators=<span class="num">200</span>, random_state=<span class="num">42</span>)),
+])
+pipe.<span class="fn">fit</span>(X_train, y_train)
+acc = (pipe.<span class="fn">predict</span>(X_test) == y_test).<span class="fn">mean</span>()</pre>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 05</span>
+    <h2>Why these models, not deep learning.</h2>
+    <p>Three reasons, each load-bearing:</p>
+    <ul>
+      <li><strong>Tabular, not sequential.</strong> The data is rows of independent client/investor profiles, not time series and not text. Tree ensembles and linear models are state-of-the-art on tabular at this scale; deep learning is not.</li>
+      <li><strong>Interpretability is a feature.</strong> A regulator, a compliance officer, or an LP can read <code class="inline">LinearRegression</code> coefficients. They cannot read a 20M-parameter MLP. <em>Pretending otherwise is how AI projects die in audit.</em></li>
+      <li><strong>Sample size discipline.</strong> A 1k-row CSV does not justify a deep network. Cross-validation on a linear model gives more reliable estimates of out-of-sample performance than any neural baseline at this size.</li>
+    </ul>
+    <div class="callout"><p>"The fanciest model that fits the data is rarely the right one. The simplest model that explains the data, ships."</p></div>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 06</span>
+    <h2>What this page is not.</h2>
+    <ul>
+      <li><strong>Not an AutoML platform.</strong> No hyperparameter sweeps, no model zoo, no leaderboard. Two models, fit-for-purpose.</li>
+      <li><strong>Not a feature store.</strong> Features come from the CSV the user supplied. There is no shared feature catalog and no online/offline parity layer — those exist when the surface is multi-team production, not single-user analyst workflows.</li>
+      <li><strong>Not a deployment runtime.</strong> The model artifact is a <code class="inline">.joblib</code> file. Productionizing it is a separate concern with its own SLAs.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>One of eight category pages — <a href="index.html">return to index</a>.</p>
+    <div class="pages">
+      <a href="portfolio.html">Portfolio</a>
+      <a href="markets.html">Markets</a>
+      <a href="options.html">Options</a>
+      <a href="cross-asset.html">Cross-Asset</a>
+      <a href="fundamentals.html">Fundamentals</a>
+      <a href="quant-ml.html" class="current">Quant / ML</a>
+      <a href="personas.html">Personas</a>
+      <a href="data-layer.html">Data Layer</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

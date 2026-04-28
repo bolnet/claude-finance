@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Finance</title>
+<meta name="description" content="Portfolio analytics composed from six MCP tools — per-holding risk decomposition, diversification analysis, ML-based liquidity scoring.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0b;
+  --bg-secondary: #111113;
+  --bg-card: #16161a;
+  --bg-card-hover: #1c1c21;
+  --border: #2a2a30;
+  --border-subtle: #1e1e24;
+  --text-primary: #f0f0f2;
+  --text-secondary: #94949e;
+  --text-muted: #5c5c66;
+  --accent: #00d4aa;
+  --accent-dim: rgba(0, 212, 170, 0.12);
+  --accent-glow: rgba(0, 212, 170, 0.25);
+  --red: #ff4d6a;
+  --amber: #ffb347;
+  --blue: #4d9cff;
+  --purple: #a78bfa;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif; background: var(--bg-primary);
+  color: var(--text-primary); line-height: 1.7; overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 999;
+}
+.grid-bg {
+  position: fixed; inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px; z-index: 0;
+}
+section, header { position: relative; z-index: 1; }
+.container { max-width: 980px; margin: 0 auto; padding: 0 2rem; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem 2rem; backdrop-filter: blur(16px); background: rgba(10,10,11,0.8); border-bottom: 1px solid var(--border-subtle); }
+nav .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.nav-logo { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.9rem; color: var(--text-primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+.nav-logo .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 2px; }
+.nav-back { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.nav-back:hover { color: var(--accent); }
+.crumb { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.05em; }
+.crumb a { color: var(--text-muted); text-decoration: none; }
+.crumb a:hover { color: var(--accent); }
+
+/* HEADER */
+.page-header { padding: 9rem 0 4rem; border-bottom: 1px solid var(--border-subtle); }
+.kicker { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--accent); margin-bottom: 1.25rem; display: block; }
+h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2.6rem, 6vw, 4.2rem); font-weight: 400; line-height: 1.05; letter-spacing: -0.025em; margin-bottom: 1.5rem; }
+h1 em { font-style: italic; color: var(--accent); }
+.lede { font-size: 1.15rem; color: var(--text-secondary); max-width: 720px; line-height: 1.7; }
+.lede strong { color: var(--text-primary); font-weight: 500; }
+.sig { margin-top: 2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--text-muted); }
+.sig a { color: var(--accent); text-decoration: none; }
+
+/* SECTION */
+section.body { padding: 5rem 0; border-bottom: 1px solid var(--border-subtle); }
+section.body.alt { background: var(--bg-secondary); }
+h2 { font-family: 'Instrument Serif', serif; font-size: clamp(1.9rem, 3.5vw, 2.6rem); font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+h2 em { font-style: italic; color: var(--accent); }
+h3 { font-family: 'DM Sans', sans-serif; font-size: 1.05rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--text-primary); }
+.section-num { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.12em; margin-bottom: 1rem; display: block; }
+p { color: var(--text-secondary); font-size: 1.02rem; line-height: 1.8; margin-bottom: 1.25rem; }
+p strong { color: var(--text-primary); font-weight: 500; }
+p em { color: var(--text-primary); font-style: italic; }
+ul { list-style: none; padding-left: 0; margin-bottom: 1.5rem; }
+ul li { color: var(--text-secondary); padding: 0.4rem 0; padding-left: 1.5rem; position: relative; font-size: 0.98rem; line-height: 1.7; }
+ul li::before { content: '—'; position: absolute; left: 0; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+ul li code { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--accent); background: var(--accent-dim); padding: 0.1rem 0.4rem; border-radius: 3px; }
+
+/* CODE BLOCK */
+pre.code {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px;
+  padding: 1.5rem 1.75rem; overflow-x: auto; margin: 1.5rem 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.75;
+  color: var(--text-secondary);
+}
+pre.code .kw { color: var(--purple); }
+pre.code .fn { color: var(--blue); }
+pre.code .str { color: var(--amber); }
+pre.code .num { color: var(--accent); }
+pre.code .com { color: var(--text-muted); font-style: italic; }
+pre.code .typ { color: var(--accent); }
+
+code.inline { font-family: 'JetBrains Mono', monospace; font-size: 0.86rem; color: var(--accent); background: var(--accent-dim); padding: 0.12rem 0.45rem; border-radius: 4px; }
+
+/* RISK TABLE */
+.risk-table {
+  width: 100%; border-collapse: collapse; margin: 1.5rem 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.86rem;
+  background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px;
+  overflow: hidden;
+}
+.risk-table th { padding: 0.9rem 1rem; text-align: left; background: var(--bg-secondary); border-bottom: 1px solid var(--border); color: var(--text-muted); font-weight: 500; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.risk-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); }
+.risk-table tr:last-child td { border-bottom: none; }
+.risk-table .pos { color: var(--accent); }
+.risk-table .neg { color: var(--red); }
+.risk-table .mid { color: var(--amber); }
+
+/* HOLDINGS BLOCK */
+.holdings {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 1.75rem 0;
+  background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; overflow: hidden;
+}
+.lens { padding: 1.5rem 1.75rem; }
+.lens.right { border-left: 1px solid var(--border-subtle); }
+.lens-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.6rem; }
+.lens h4 { font-family: 'Instrument Serif', serif; font-size: 1.3rem; font-weight: 400; margin-bottom: 0.75rem; }
+.lens p { font-size: 0.9rem; line-height: 1.65; margin-bottom: 0.75rem; }
+.lens .leads { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--text-muted); margin-top: 0.75rem; }
+.lens .leads span { color: var(--accent); }
+
+/* CALLOUT */
+.callout {
+  border-left: 2px solid var(--accent); padding: 1rem 1.5rem; margin: 1.75rem 0;
+  background: var(--accent-dim); border-radius: 0 6px 6px 0;
+}
+.callout p { font-family: 'Instrument Serif', serif; font-size: 1.2rem; font-style: italic; color: var(--text-primary); line-height: 1.55; margin: 0; }
+
+.note {
+  border: 1px solid var(--border); padding: 1.25rem 1.5rem; margin: 1.5rem 0;
+  background: var(--bg-card); border-radius: 8px;
+}
+.note .note-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--amber); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.5rem; }
+.note p { font-size: 0.95rem; line-height: 1.7; margin: 0; }
+
+/* ARCHITECTURE BOX */
+.arch {
+  margin: 1.5rem 0; padding: 1.75rem; background: var(--bg-secondary);
+  border: 1px solid var(--border); border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.85;
+  color: var(--text-secondary);
+}
+.arch .lab { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem; }
+.arch .row { display: flex; gap: 1rem; align-items: baseline; padding: 0.4rem 0; border-bottom: 1px dashed var(--border-subtle); }
+.arch .row:last-child { border-bottom: none; }
+.arch .row .k { color: var(--accent); min-width: 130px; }
+.arch .row .v { color: var(--text-secondary); flex: 1; }
+.arch .row .s { color: var(--text-muted); font-size: 0.74rem; }
+
+/* PROVIDER STACK */
+.providers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+.provider { padding: 1.5rem; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-card); }
+.provider.shipped { border-color: var(--accent); }
+.provider .p-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.7rem; }
+.provider.shipped .p-tag { color: var(--accent); }
+.provider.roadmap .p-tag { color: var(--amber); }
+.provider h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary); }
+.provider p { font-size: 0.85rem; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+
+/* FOOTER */
+footer { padding: 4rem 0 5rem; text-align: center; }
+footer .container { max-width: 720px; }
+footer p { font-size: 0.85rem; color: var(--text-muted); }
+footer p a { color: var(--accent); text-decoration: none; }
+footer .pages { margin-top: 2rem; display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
+footer .pages a { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+footer .pages a:hover { color: var(--accent); }
+
+@media (max-width: 760px) {
+  .holdings { grid-template-columns: 1fr; }
+  .lens.right { border-left: none; border-top: 1px solid var(--border-subtle); }
+  .providers { grid-template-columns: 1fr; }
+  .arch .row { flex-direction: column; gap: 0.2rem; }
+}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="dot"></span> Finance</a>
+    <a href="index.html" class="nav-back">← back to index</a>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <div class="crumb"><a href="index.html">Finance</a> &nbsp;/&nbsp; Portfolio</div>
+    <span class="kicker" style="margin-top: 1rem;">Page 1 of 7 · Portfolio</span>
+    <h1>A portfolio is just a <em>list of tickers and weights.</em><br>Everything else falls out of that.</h1>
+    <p class="lede">Six MCP tools compose a portfolio surface: per-holding risk decomposition, real-vs-apparent diversification, ML-based liquidity scoring, and two professional lenses on the same data. The math is from the textbook. The interface is plain English.</p>
+    <p class="sig">Notes from <a href="https://www.linkedin.com/in/surendrasingh/">Surendra Singh</a> — 15 years building portfolio and risk systems at Merrill Lynch, Fidelity, and beyond. Last revised April 2026.</p>
+  </div>
+</header>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 01</span>
+    <h2>The portfolio object.</h2>
+    <p>There is no <code class="inline">Portfolio</code> class. There doesn't need to be. The smallest useful primitive is a list of tickers. Every analytic — Sharpe per holding, correlation across the book, drawdown in a stress window, allocation drift, beta to S&P — chains off that primitive and the price history each ticker carries.</p>
+    <pre class="code"><span class="com"># every portfolio operation reduces to one of these three calls</span>
+<span class="kw">from</span> finance_mcp.tools <span class="kw">import</span> (
+    risk_metrics,    <span class="com"># per-holding: Sharpe, max drawdown, beta vs S&P</span>
+    comparison,      <span class="com"># cross-holding: normalized cumulative performance</span>
+    correlation,     <span class="com"># cross-holding: pairwise return correlation</span>
+)
+
+<span class="com"># public signatures, exactly as shipped</span>
+<span class="fn">get_risk_metrics</span>(ticker: <span class="typ">str</span>, start: <span class="typ">str</span>, end: <span class="typ">str</span> = <span class="str">""</span>) -> <span class="typ">str</span>
+<span class="fn">compare_tickers</span>(tickers: <span class="typ">str</span>, start: <span class="typ">str</span>, end: <span class="typ">str</span> = <span class="str">""</span>) -> <span class="typ">str</span>
+<span class="fn">correlation_map</span>(tickers: <span class="typ">str</span>, start: <span class="typ">str</span>, end: <span class="typ">str</span> = <span class="str">""</span>) -> <span class="typ">str</span></pre>
+    <p>Strings in, strings out. The "string out" is deliberate — the tool returns a written interpretation alongside the numbers, because a Sharpe of 1.42 means nothing to a director who hasn't done the math in a decade. The interpretation is part of the deliverable.</p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 02</span>
+    <h2>Risk decomposition, per holding.</h2>
+    <p>Three numbers per ticker, computed from 252 trading days of adjusted close. Sharpe annualizes daily excess return over its standard deviation. Max drawdown is the worst peak-to-trough on the cumulative wealth curve. Beta is the OLS slope of the holding's returns against the S&P 500 — covariance over benchmark variance, nothing fancy.</p>
+
+    <h3>Real output, real numbers.</h3>
+    <p>A four-name book — AAPL (tech), JPM (financials), JNJ (healthcare), XOM (energy) — over the trailing year:</p>
+
+    <table class="risk-table">
+      <thead>
+        <tr><th>Holding</th><th>Sharpe</th><th>Max Drawdown</th><th>Beta vs S&P</th><th>Read</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>AAPL</td><td class="pos">1.42</td><td class="neg">−14.2%</td><td class="mid">1.12</td><td>High Sharpe, tech beta &gt; 1</td></tr>
+        <tr><td>JPM</td><td class="pos">1.18</td><td class="neg">−9.7%</td><td class="mid">1.08</td><td>Cyclicality without tech vol</td></tr>
+        <tr><td>JNJ</td><td class="mid">0.64</td><td class="neg">−7.1%</td><td class="pos">0.55</td><td>Defensive ballast</td></tr>
+        <tr><td>XOM</td><td class="mid">0.91</td><td class="neg">−11.4%</td><td class="pos">0.72</td><td>Commodity-coupled, low β</td></tr>
+      </tbody>
+    </table>
+
+    <h3>The math, exactly as shipped.</h3>
+    <pre class="code"><span class="kw">def</span> <span class="fn">_compute_risk_metrics</span>(returns: pd.<span class="typ">Series</span>, benchmark_returns: pd.<span class="typ">Series</span>) -> <span class="typ">dict</span>:
+    <span class="com">"""Pure computation — no I/O, no side effects. Testable in isolation."""</span>
+    sharpe = (returns.mean() / returns.std()) * np.sqrt(<span class="num">252</span>)
+
+    wealth = (<span class="num">1</span> + returns).cumprod()
+    max_drawdown = ((wealth - wealth.cummax()) / wealth.cummax()).min()
+
+    aligned = pd.concat([returns, benchmark_returns], axis=<span class="num">1</span>).dropna()
+    cov = np.cov(aligned.iloc[:, <span class="num">0</span>], aligned.iloc[:, <span class="num">1</span>])
+    beta = <span class="typ">float</span>(cov[<span class="num">0</span>, <span class="num">1</span>] / cov[<span class="num">1</span>, <span class="num">1</span>])
+
+    <span class="kw">return</span> {<span class="str">"sharpe"</span>: <span class="typ">float</span>(sharpe), <span class="str">"max_drawdown"</span>: <span class="typ">float</span>(max_drawdown), <span class="str">"beta"</span>: beta}</pre>
+
+    <div class="note">
+      <div class="note-tag">Design note</div>
+      <p>The pure-function split (<code class="inline">_compute_risk_metrics</code> takes Series, returns dict — no I/O) is the single most useful pattern in the codebase. It makes every metric unit-testable without touching yfinance, and means the same function works whether the data came from yfinance, Massive, or a CSV the user dropped in. <strong>Most finance tooling fails this test.</strong></p>
+    </div>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 03</span>
+    <h2>Diversification — <em>apparent vs. real.</em></h2>
+    <p>The most expensive mistake in retail and prosumer portfolios is mistaking <em>apparent</em> diversification (six tickers, six logos) for <em>real</em> diversification (six low-correlation return streams). The number that matters is pairwise correlation. <code class="inline">correlation_map</code> renders it as a heatmap and prints the matrix.</p>
+
+    <div class="callout">
+      <p>"A 4-ticker book with average pairwise ρ = 0.31 is genuinely diversified. ρ = 0.78 is one bet, in different names."</p>
+    </div>
+
+    <p>For the AAPL / JPM / JNJ / XOM book above: AAPL ↔ JPM correlates around 0.45, AAPL ↔ JNJ at 0.31, AAPL ↔ XOM at 0.28. JNJ and XOM provide the genuine downside protection — not because they were picked to, but because their return streams happen to decouple from tech in stress windows. That's a structural fact about the book, surfaced in one tool call.</p>
+
+    <p>The PM-lens interpretation that <code class="inline">/finance-pm</code> writes underneath the heatmap reads something like: <em>"Cross-correlation between JNJ and AAPL is 0.31 — meaningful diversification. The tech-financials block (AAPL, JPM at 0.45) carries most of your equity-beta risk. Adding more tech raises beta without raising Sharpe."</em> A senior analyst could write that. The point is that no one has to.</p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 04</span>
+    <h2>Liquidity risk — a sklearn pipeline that respects split-before-fit.</h2>
+    <p>Risk is not just price risk. For private wealth and FP&A use cases, the bigger question is liquidity: which clients (or which positions) can absorb a redemption shock without forcing a fire sale. <code class="inline">liquidity_predictor</code> fits a regression on a CSV of client attributes; <code class="inline">predict_liquidity</code> scores a single client against the persisted model.</p>
+
+    <h3>Pipeline shape.</h3>
+    <pre class="code"><span class="com"># split BEFORE fit — leak prevention is a safety property, not a hyperparameter</span>
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="num">0.2</span>, random_state=<span class="num">42</span>)
+
+pipe = <span class="fn">Pipeline</span>([
+    (<span class="str">"prep"</span>, <span class="fn">ColumnTransformer</span>([
+        (<span class="str">"num"</span>, <span class="fn">StandardScaler</span>(), numeric_cols),
+        (<span class="str">"cat"</span>, <span class="fn">OneHotEncoder</span>(handle_unknown=<span class="str">"ignore"</span>), categorical_cols),
+    ])),
+    (<span class="str">"reg"</span>, <span class="fn">LinearRegression</span>()),
+])
+
+pipe.<span class="fn">fit</span>(X_train, y_train)        <span class="com"># fit ONLY on train</span>
+preds = pipe.<span class="fn">predict</span>(X_test)
+rmse  = <span class="fn">root_mean_squared_error</span>(y_test, preds)
+r2    = <span class="fn">r2_score</span>(y_test, preds)
+
+joblib.<span class="fn">dump</span>(pipe, <span class="str">"finance_output/models/liquidity_pipeline.joblib"</span>)</pre>
+
+    <h3>Why regression, not classification.</h3>
+    <p>The target <code class="inline">liquidity_risk</code> is a continuous score in [0, 1] — the probability of being unable to service a near-term liquidity demand under stress. Bucketing it into LOW / MODERATE / HIGH for the UI is fine; bucketing it during training discards information. The model fits the score directly; the labels happen at presentation time. RMSE and R² report on the regression — confusion matrices would lie about a problem that isn't actually classification.</p>
+
+    <div class="note">
+      <div class="note-tag">Design note</div>
+      <p>IQR cleaning happens <em>before</em> the train/test split, on numeric columns only. That's a defensible asymmetry: outlier removal is part of dataset hygiene, not part of the model's learned distribution. If you remove outliers post-split, your test set looks cleaner than production data and your evaluation lies. <strong>This is the kind of bug that ships a model.</strong></p>
+    </div>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 05</span>
+    <h2>Two lenses on the same book.</h2>
+    <p>Both <code class="inline">/finance-analyst</code> and <code class="inline">/finance-pm</code> call the same six tools. The difference is which number leads, what it's compared against, and what the next-step suggestion is. The persona is a re-ranking of attention, not a different model.</p>
+
+    <div class="holdings">
+      <div class="lens">
+        <div class="lens-tag">/finance-analyst</div>
+        <h4>Equity Analyst lens</h4>
+        <p>Frames each holding as a security under research coverage. Optimized for buy-side and sell-side note consumers.</p>
+        <div class="leads">Leads with <span>Sharpe</span><br>Beta means stock-level market sensitivity<br>Next step: compare to sector peers</div>
+      </div>
+      <div class="lens right">
+        <div class="lens-tag">/finance-pm</div>
+        <h4>Portfolio Manager lens</h4>
+        <p>Frames each holding as a position in the book. Optimized for risk committee and LP reporting.</p>
+        <div class="leads">Leads with <span>Max drawdown</span><br>Beta means systematic exposure of the book<br>Next step: check correlation against other holdings</div>
+      </div>
+    </div>
+
+    <p>Both lenses run the identical math. The PM never sees a Sharpe-first table because that's not the question they were hired to answer. The analyst never sees a drawdown-first table because their reader doesn't own the book. <strong>Same data, different deliverable.</strong></p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 06</span>
+    <h2>Data layer.</h2>
+    <p>Three providers behind a single <code class="inline">DataProvider</code> Protocol. The portfolio code does not know which one is running. Swap via the <code class="inline">DATA_PROVIDER</code> env var.</p>
+
+    <div class="providers">
+      <div class="provider shipped">
+        <div class="p-tag">✓ Default · Shipped</div>
+        <h4>yfinance</h4>
+        <p>Zero-config price history, returns, and the inputs to every metric on this page. Adequate for individual research, slow for cross-sectional work.</p>
+      </div>
+      <div class="provider shipped">
+        <div class="p-tag">✓ Shipped</div>
+        <h4>Massive</h4>
+        <p>57 endpoints behind the same Protocol — stocks, options + Greeks, forex, crypto, indices, news, SEC filings, technicals, fundamentals, movers.</p>
+      </div>
+      <div class="provider roadmap">
+        <div class="p-tag">→ Roadmap v1.5</div>
+        <h4>Plaid</h4>
+        <p>Connect a brokerage in 20 seconds. Positions and cost basis from Fidelity, Schwab, E*TRADE, Vanguard, IBKR, Robinhood, and 12,000+ institutions.</p>
+      </div>
+    </div>
+
+    <div class="arch">
+      <div class="lab">DataProvider Protocol — duck-typed, swappable</div>
+      <div class="row"><span class="k">fetch_price_history</span><span class="v">(ticker, start, end) → DataFrame</span><span class="s">all providers</span></div>
+      <div class="row"><span class="k">get_adjusted_prices</span><span class="v">(df) → Series</span><span class="s">all providers</span></div>
+      <div class="row"><span class="k">get_options_chain</span><span class="v">(ticker, expiry) → DataFrame</span><span class="s">Massive only</span></div>
+      <div class="row"><span class="k">get_positions</span><span class="v">(account_id) → list[Holding]</span><span class="s">Plaid (v1.5)</span></div>
+    </div>
+
+    <p>The Plaid integration changes the audience. With yfinance and Massive, the user types tickers. With Plaid, the user authenticates a brokerage and the book arrives. Same downstream math; new top-of-funnel.</p>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 07</span>
+    <h2>What this is not.</h2>
+    <p>It's worth being explicit, because the absence of these things is the design, not an oversight:</p>
+    <ul>
+      <li>This is <strong>not a robo-advisor.</strong> There is no allocation recommendation engine, no glide path, no risk-tolerance questionnaire. That's a different product, with a different regulatory surface, owned by people whose job that is.</li>
+      <li>This is <strong>not a brokerage.</strong> No order entry, no execution, no custody. Plaid (when it ships) is read-only.</li>
+      <li>This is <strong>not investment advice.</strong> Every tool returns a written interpretation alongside the numbers. The interpretation is descriptive, not prescriptive. Position sizing, allocation targets, and rebalancing decisions belong to the PM.</li>
+      <li>This is <strong>not a backtest engine.</strong> Forward-looking simulation, scenario stress, and Monte Carlo live elsewhere. This stack scores what already happened.</li>
+    </ul>
+    <p>What it <em>is</em>: a fast, inspectable, plain-English layer between a finance professional and the math they used to wait three weeks for IT to deliver.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>One of seven category pages — <a href="index.html">return to index</a>.</p>
+    <div class="pages">
+      <a href="portfolio.html">Portfolio</a>
+      <a href="index.html#tools">Markets</a>
+      <a href="index.html#tools">Options &amp; Technicals</a>
+      <a href="index.html#tools">Cross-Asset</a>
+      <a href="index.html#tools">Fundamentals</a>
+      <a href="index.html#tools">Quant / ML</a>
+      <a href="index.html#commands">Personas</a>
+      <a href="index.html#stack">Data Layer</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

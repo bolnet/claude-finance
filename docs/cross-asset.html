@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cross-Asset — Finance</title>
+<meta name="description" content="Forex, crypto, and indices — one stack across asset classes, behind a single DataProvider Protocol.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="dot"></span> Finance</a>
+    <a href="index.html" class="nav-back">← back to index</a>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <div class="crumb"><a href="index.html">Finance</a> &nbsp;/&nbsp; Cross-Asset</div>
+    <span class="kicker" style="margin-top: 1rem;">Forex · Crypto · Indices</span>
+    <h1>Stocks are <em>one</em> asset class.<br>Risk doesn't live in just one.</h1>
+    <p class="lede">Five tools across three asset classes: forex (quote, convert), crypto (snapshot, movers), and indices (snapshot). Same Protocol-shaped data layer, same downstream math. The point is not breadth for its own sake — it's that <strong>USDJPY, BTC, and ^GSPC all decompose into the same risk question</strong> when the desk needs to answer it before lunch.</p>
+    <p class="sig">Notes from <a href="https://www.linkedin.com/in/surendrasingh/">Surendra Singh</a>.</p>
+  </div>
+</header>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 01</span>
+    <h2>One stack, three asset classes.</h2>
+    <pre class="code"><span class="com"># forex — ISO 4217 currency pairs</span>
+<span class="fn">forex_quote</span>(from_currency: <span class="typ">str</span>, to_currency: <span class="typ">str</span>) -> <span class="typ">str</span>
+<span class="fn">forex_convert</span>(from_currency: <span class="typ">str</span>, to_currency: <span class="typ">str</span>, amount: <span class="typ">float</span> = <span class="num">1.0</span>) -> <span class="typ">str</span>
+
+<span class="com"># crypto — symbol-keyed, exchange-aware via Massive</span>
+<span class="fn">crypto_snapshot</span>(ticker: <span class="typ">str</span>) -> <span class="typ">str</span>
+<span class="fn">crypto_movers</span>(direction: <span class="typ">str</span> = <span class="str">"gainers"</span>, limit: <span class="typ">int</span> = <span class="num">10</span>) -> <span class="typ">str</span>
+
+<span class="com"># indices — the benchmark layer</span>
+<span class="fn">indices_snapshot</span>(tickers: <span class="typ">str</span>) -> <span class="typ">str</span>     <span class="com"># ^GSPC, ^DJI, ^IXIC, ^VIX, ...</span></pre>
+    <p>The asymmetry is deliberate. FX has <em>convert</em> because users actually need to denominate one currency in another (a real workflow — "what's this €120k retainer in USD?"). Crypto has <em>movers</em> because the asset class is dominated by sentiment-driven leaderboards. Indices have only <em>snapshot</em> because they exist to be benchmarks, not to be traded directly.</p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 02</span>
+    <h2>Forex — convert vs. quote.</h2>
+    <p>Two tools that look similar and answer different questions. <code class="inline">forex_quote</code> returns the rate ("EUR to USD is 1.0842"). <code class="inline">forex_convert</code> applies the rate to an amount and returns the converted value with the rate inlined. Naive wrappers around the same call — but the wording matters. A user who asks <em>"how much is €50,000 in dollars"</em> wants a number, not an exchange-rate fact sheet.</p>
+    <pre class="code"><span class="com"># under the hood: same provider call, different framing</span>
+rate   = provider.<span class="fn">get_fx_rate</span>(from_currency, to_currency)
+result = amount * rate
+<span class="kw">return</span> <span class="fn">format_output</span>(<span class="str">f"{amount} {from_currency} = {result:.2f} {to_currency} (rate {rate:.4f})"</span>)</pre>
+    <div class="note">
+      <div class="note-tag">Design note</div>
+      <p>ISO 4217 codes are non-negotiable. "Yen" is ambiguous (CNY? JPY?); "JPY" is not. The tool rejects unrecognized codes and returns the canonical list, because <em>silent currency mismatches are the kind of bug that ends up in regulatory letters</em>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 03</span>
+    <h2>Crypto — different market, different hours, different metric set.</h2>
+    <p>Crypto markets do not close. There is no "previous close" the way there is for equities — there is the price 24 hours ago. Volatility is annualized by √365, not √252, because the asset class trades every day. Volume figures are exchange-fragmented; a single canonical "BTC volume" requires aggregating across spot exchanges, and providers disagree on which exchanges count.</p>
+    <pre class="code"><span class="com"># crypto-specific defaults</span>
+TRADING_DAYS_PER_YEAR = <span class="num">365</span>            <span class="com"># equities use 252</span>
+RETURN_BASIS          = <span class="str">"24h"</span>           <span class="com"># equities use "previous close"</span>
+VOLUME_AGGREGATION    = <span class="str">"exchange_weighted"</span></pre>
+    <p><code class="inline">crypto_movers</code> returns the top gainers or losers over the last 24 hours. Useful as a sentiment scan, dangerous as a trading signal — leaderboards are dominated by low-cap names with thin liquidity, and the move you see at 9 AM is rarely the move you can transact at 9:01.</p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 04</span>
+    <h2>Indices — the benchmark layer.</h2>
+    <p>Indices exist to be the denominator. Beta is computed against ^GSPC; sector rotation is read against ^IXIC vs. ^DJI; risk-on/risk-off is read against ^VIX. <code class="inline">indices_snapshot</code> returns the level, the day's change, and the year-to-date — three numbers that frame everything else on the screen.</p>
+    <table class="risk-table">
+      <thead><tr><th>Symbol</th><th>Index</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td>^GSPC</td><td>S&amp;P 500</td><td>The default beta benchmark. Large-cap US equity.</td></tr>
+        <tr><td>^DJI</td><td>Dow Jones Industrial</td><td>30 names, price-weighted. Cyclical proxy.</td></tr>
+        <tr><td>^IXIC</td><td>NASDAQ Composite</td><td>Tech-heavy. Use for sector decomposition.</td></tr>
+        <tr><td>^RUT</td><td>Russell 2000</td><td>Small-cap. Liquidity and credit signal.</td></tr>
+        <tr><td>^VIX</td><td>CBOE Volatility</td><td>30-day implied vol on S&amp;P options. <em>Fear gauge.</em></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="body">
+  <div class="container">
+    <span class="section-num">§ 05</span>
+    <h2>Cross-asset correlation in stress.</h2>
+    <p>The reason this page exists as a single category, not three: <em>correlations regime-shift in stress</em>. In calm markets, BTC and ^GSPC have low correlation. In a March-2020-style flight-to-cash, every asset class correlates to 1 against the dollar. A risk system that treats stocks, crypto, and FX in separate silos misses that, structurally.</p>
+    <div class="callout"><p>"Diversification is a property of the regime, not of the portfolio. The portfolio you held does not know it stopped being diversified."</p></div>
+    <p>The toolset exposes the data needed to see the shift — pull crypto and equity index returns through the same <code class="inline">correlation_map</code>, and the regime change is visible. <strong>Acting on it is still the analyst's job.</strong></p>
+  </div>
+</section>
+
+<section class="body alt">
+  <div class="container">
+    <span class="section-num">§ 06</span>
+    <h2>What this page is not.</h2>
+    <ul>
+      <li><strong>Not a derivatives book.</strong> No FX forwards, no swap pricing, no NDFs. Spot rates and conversions only.</li>
+      <li><strong>Not a crypto exchange.</strong> Read-only data. No wallet, no execution.</li>
+      <li><strong>Not an index constructor.</strong> The library reads existing indices; it does not build custom ones.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>One of eight category pages — <a href="index.html">return to index</a>.</p>
+    <div class="pages">
+      <a href="portfolio.html">Portfolio</a>
+      <a href="markets.html">Markets</a>
+      <a href="options.html">Options</a>
+      <a href="cross-asset.html" class="current">Cross-Asset</a>
+      <a href="fundamentals.html">Fundamentals</a>
+      <a href="quant-ml.html">Quant / ML</a>
+      <a href="personas.html">Personas</a>
+      <a href="data-layer.html">Data Layer</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
