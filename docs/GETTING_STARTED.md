@@ -133,8 +133,8 @@ This is the primary method. The MCP server runs locally via stdio and Claude Cod
 **Step 1: Clone the repository**
 
 ```bash
-git clone https://github.com/bolnet/Claude-Finance.git
-cd Claude-Finance
+git clone https://github.com/bolnet/finance.git
+cd finance
 ```
 
 **Step 2: Create a virtual environment and install dependencies**
@@ -166,23 +166,23 @@ Create or edit `.mcp.json` in the project root:
 {
   "mcpServers": {
     "finance": {
-      "command": "/absolute/path/to/Claude-Finance/.venv/bin/python",
+      "command": "/absolute/path/to/finance/.venv/bin/python",
       "args": ["-m", "finance_mcp.server"],
       "env": {
         "PYTHONUNBUFFERED": "1",
-        "PYTHONPATH": "/absolute/path/to/Claude-Finance/src"
+        "PYTHONPATH": "/absolute/path/to/finance/src"
       }
     }
   }
 }
 ```
 
-Replace `/absolute/path/to/Claude-Finance` with the actual path where you cloned the repo.
+Replace `/absolute/path/to/finance` with the actual path where you cloned the repo.
 
 **Step 4: Start Claude Code from the project directory**
 
 ```bash
-cd Claude-Finance
+cd finance
 claude
 ```
 
@@ -205,8 +205,8 @@ The plugin method bundles the MCP server with slash commands and skills so Claud
 **Step 1: Clone the repository**
 
 ```bash
-git clone https://github.com/bolnet/Claude-Finance.git
-cd Claude-Finance
+git clone https://github.com/bolnet/finance.git
+cd finance
 ```
 
 **Step 2: Install Python dependencies**
@@ -251,8 +251,8 @@ finance-mcp-plugin/
   "name": "finance-mcp",
   "version": "1.4.0",
   "description": "Private Equity plugin for Claude Code — deal flow, portfolio monitoring, and ML-powered analytics for PE professionals.",
-  "homepage": "https://github.com/bolnet/Claude-Finance",
-  "repository": "https://github.com/bolnet/Claude-Finance",
+  "homepage": "https://github.com/bolnet/finance",
+  "repository": "https://github.com/bolnet/finance",
   "license": "MIT",
   "keywords": ["finance", "stocks", "yfinance", "ml", "market-analysis", "portfolio", "mcp", "private-equity"]
 }
@@ -263,7 +263,7 @@ Claude Code discovers the plugin when you open the project directory. All 19 sla
 **Step 4: Start Claude Code**
 
 ```bash
-cd Claude-Finance
+cd finance
 claude
 ```
 
@@ -288,8 +288,8 @@ Connect the finance server to claude.ai via an HTTP tunnel so you can use the to
 **Step 1: Clone and install** (same as Method 1, Steps 1-2)
 
 ```bash
-git clone https://github.com/bolnet/Claude-Finance.git
-cd Claude-Finance
+git clone https://github.com/bolnet/finance.git
+cd finance
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
@@ -632,7 +632,7 @@ To test with your own data, provide any CSV file path:
 ## Project Structure
 
 ```
-Claude-Finance/
+finance/
 ├── .mcp.json                        # MCP server config (Claude Code)
 ├── pyproject.toml                   # Package metadata & dependencies
 ├── requirements.txt                 # Dependency list
@@ -681,7 +681,7 @@ Claude-Finance/
 Your virtual environment is not activated or dependencies are missing:
 
 ```bash
-cd Claude-Finance
+cd finance
 source .venv/bin/activate
 pip install -e .
 ```
