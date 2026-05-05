@@ -112,7 +112,7 @@ Three complementary surfaces for finance professionals:
 
 ## About
 
-Built by [Surendra Singh](https://www.linkedin.com/in/surendrasingh/) — 15 years building technology for Wall Street (Merrill Lynch, Fidelity, fintech startups). Now building it *for* the people who run it.
+Built by [Surendra Singh](https://www.linkedin.com/in/singhsurendra/) — 15 years building technology for Wall Street (Merrill Lynch, Fidelity, fintech startups). Now building it *for* the people who run it.
 
 ## License
 
