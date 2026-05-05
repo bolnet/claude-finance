@@ -21,6 +21,7 @@ No Python. No tickets. No waiting.
 > (Cross-Portco Benchmarking), IC memos, DD checklists, and value-creation plans
 > live in their own focused repo: **[bolnet/private-equity](https://github.com/bolnet/private-equity)**.
 
+> **Looking for the Agent Memory Solution?** live in their own focused repo: **[bolnet/attestor](https://github.com/bolnet/attestor)**.
 ## Data layer
 
 Three providers stacked for progressive capability:
